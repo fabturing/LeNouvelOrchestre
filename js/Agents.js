@@ -1,17 +1,24 @@
+
+const VOL_FLUTE = -8;
+const VOL_DRUM = -6;
+const VOL_BASSE = -5;
+
+
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
-    this.aura = 1
     this.flute = new Tone.Sampler({
       urls: {
-          C3: "C3.mp3",
+          C4: "C3.mp3",
       },
       baseUrl: "samples/flute/",
       }).toDestination();
+      this.flute.volume.value = VOL_FLUTE ;
 
   }
 
   playNote(note){
+    console.log("flutiste joue : ", note)
     this.flute.triggerAttackRelease(note, "8n");
   }
 
@@ -45,6 +52,7 @@ class Liza extends Agent {
       },
       baseUrl: "samples/drum/",
       }).toDestination();
+      this.drum.volume.value = VOL_DRUM ;
   }
 
   playNote(note){
@@ -75,10 +83,18 @@ class Liza extends Agent {
 class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
+    this.basse = new Tone.Sampler({
+      urls: {
+          C3: "C2.mp3",
+      },
+      baseUrl: "samples/basse/",
+      }).toDestination();
+    this.basse.volume.value = VOL_BASSE ;
   }
 
   playNote(note){
-    this.debugSynth.triggerAttackRelease(note, "2n");
+  note = Tonal.Note.transpose(note, "-8P");
+    this.basse.triggerAttackRelease(note, "2n");
   }
 
 
@@ -98,4 +114,5 @@ class Crocodus extends Agent {
   }
 
 }
+
 
