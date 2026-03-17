@@ -112,7 +112,7 @@ class Agent {
     return new Block(a, b, c, structure);
   }
   
-  updateBlocks(){
+  updateBlock(){
     this.currentBlock = this.generateBlock()
   }
 
