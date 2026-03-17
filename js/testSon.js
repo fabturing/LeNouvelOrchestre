@@ -21,10 +21,10 @@ flute = new Tone.Sampler({
 function testSample(){
 
 switch (n){
-  case 0 : flute.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
-  case 1 : flute.triggerAttackRelease(["E4"], "8n"); console.log(n); break;
-  case 2 : flute.triggerAttackRelease(["G4"], "8n"); console.log(n); break;
-  case 3 : flute.triggerAttackRelease(["B4"], "8n");console.log(n); break;
+  case 0 : flute.triggerAttackRelease(["C4"], "2n"); console.log(n); break;
+  case 1 : flute.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
+  case 2 : flute.triggerAttackRelease(["C4"], "16n"); console.log(n); break;
+  case 3 : flute.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
   }
   n = (n+1)%4;
 }
