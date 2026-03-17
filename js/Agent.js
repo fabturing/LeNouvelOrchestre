@@ -13,7 +13,7 @@ class Agent {
 
 
   playNote(note){
-    this.debugSynth.triggerAttackRelease(note, "8n");
+    this.debugSynth.triggerAttackRelease(note, "1n");
   }
 
   generateStructure(){
@@ -37,7 +37,9 @@ class Agent {
 
   playStep(step){
     let note = this.currentBlock.getNote(step);
-    this.playNote(note)
+    if(note){
+      this.playNote(note)
+    }
   }
 
 
@@ -66,7 +68,6 @@ class Agent {
     this.debugBox.querySelectorAll('[data-attribute]').forEach(element=>{
       let attribute = element.dataset.attribute;
       let value = this[attribute];
-      console.log(element, attribute, value);
       element.innerHTML = value;
     });
   }

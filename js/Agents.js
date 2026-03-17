@@ -1,10 +1,18 @@
 class Flutist extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
+    this.flute = new Tone.Sampler({
+      urls: {
+          C3: "C3.mp3",
+      },
+      baseUrl: "samples/flute/",
+      }).toDestination();
+
   }
 
   playNote(note){
-    this.debugSynth.triggerAttackRelease(note, "8n");
+    console.log("flutiste joue : ", note)
+    this.flute.triggerAttackRelease(note, "8n");
   }
 
   generateStructure(){
@@ -17,8 +25,9 @@ class Flutist extends Agent {
 
   generateScale(){
 
-    let scale = Tonal.Scale.get('C3 enigmatic').notes;
-    return ['A1'];
+    let scale = Tonal.Scale.get('C4 enigmatic');
+
+    return scale.notes;
   }
 
 }
