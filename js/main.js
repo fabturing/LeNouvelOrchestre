@@ -6,6 +6,7 @@ let orchesta;
 
 function main(){
   document.getElementById('test-son').addEventListener("click", testSon);
+  document.getElementById('test-drum').addEventListener("click", testDrum);
   document.getElementById('play').addEventListener("click", play);
   document.getElementById('stop').addEventListener("click", stop);
 
@@ -19,4 +20,5 @@ function play(){
 
 function stop(){
   Tone.Transport.stop();
+
 }
