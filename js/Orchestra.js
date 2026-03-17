@@ -11,6 +11,7 @@ class Orchestra {
     agent.setOrchestra(this);
     agent.createDebugBox();
     agent.updateDebugBox();
+
   }
 
   getLeader(){

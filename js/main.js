@@ -13,6 +13,7 @@ function main(){
   orchestra.addAgent(new Jief());
   orchestra.addAgent(new Liza());
   orchestra.addAgent(new Crocodus());
+  orchestra.updateBlocks();
 }
 
 function play(){

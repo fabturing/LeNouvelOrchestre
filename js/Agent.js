@@ -15,7 +15,7 @@ class Agent {
     this.pattern = this.generatePattern();
     this.scale = this.generateScale();
     this.structure = this.generateStructure();
-    this.currentBlock = this.generateBlock();
+    this.currentBlock;
     this.debugSynth = new Tone.Synth().toDestination();
   }
 
@@ -47,11 +47,13 @@ class Agent {
 
   // getter for current part
   get currentPart(){
+    if(!this.currentBlock) return null;
     return this.currentBlock.getPart(this.orchestra.step);
   }
 
   // getter for if the agent is playing this step
   get isPlyaing(){
+    if(!this.currentBlock) return null;
     return this.currentBlock.getNote(this.orchestra.step);
   }
 
@@ -80,8 +82,8 @@ class Agent {
 
     const meloToPattern = (pattern)=>pattern.map(step=>step?1:0);
 
-    let patternModel1 = meloModel1 ? meloToPattern(patternModel1) : pattern;
-    let patternModel2 = meloModel2 ? meloToPattern(patternModel1) : pattern;
+    let patternModel1 = meloModel1 ? meloToPattern(meloModel1) : pattern;
+    let patternModel2 = meloModel2 ? meloToPattern(meloModel2) : pattern;
 
     let mergedPattern = pattern.map((step, i)=>{
       return (step + patternModel1[i] + patternModel2[i])/3
@@ -95,8 +97,8 @@ class Agent {
 
   generatePart(part){
 
-    let meloModel1 = this.previousBlock[part];
-    let meloModel2 = this.orchestra.getLeader().currentBlock[part];
+    let meloModel1 = this.previousBlock? this.previousBlock[part] : undefined;
+    let meloModel2 = this.orchestra.getLeader().currentBlock ? this.orchestra.getLeader().currentBlock[part] : undefined;
 
     // If there is lines, generate melody for each lines
     if(this.lines){
