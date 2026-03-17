@@ -5,8 +5,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 let orchesta;
 
 function main(){
-  document.getElementById('test-son').addEventListener("click", testSon);
-  document.getElementById('test-drum').addEventListener("click", testDrum);
+  document.getElementById('test').addEventListener("click", testSon);
   document.getElementById('play').addEventListener("click", play);
   document.getElementById('stop').addEventListener("click", stop);
 

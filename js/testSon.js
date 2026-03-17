@@ -29,25 +29,13 @@ switch (n){
   n = (n+1)%4;
 }
 
-function testBeat(){
 
-switch (m){
-  case 0 : drum.triggerAttackRelease(["C3"], "8n"); console.log(m); break;
-  case 1 : drum.triggerAttackRelease(["C4"], "8n"); console.log(m); break;
-  case 2 : drum.triggerAttackRelease(["C5"], "8n"); console.log(m); break;
-  }
-  m = (m+1)%3;
-}
 
 
 
 
 function testSon(){
   testSample();
-}
-
-function testDrum(){
-  testBeat();
 }
 
 
