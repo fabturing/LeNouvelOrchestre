@@ -57,7 +57,7 @@ class Liza extends Agent {
       this.drum.volume.value = VOL_DRUM ;
   }
 
-  playNote(note, ){
+  playNote(note){
     if(note.hihat){
       let velocite = 1-Math.random()/2;
       this.drum.triggerAttackRelease('C5', "8n", Tone.now(), velocite);
