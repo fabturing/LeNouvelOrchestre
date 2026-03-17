@@ -35,23 +35,27 @@ class Flutist extends Agent {
 
 class Drummer extends Agent {
   constructor(){
+
     super("Liza", "Batteuse qui fais que fumer des clopes");
-    this.lines = ['hithat', 'kick'];
+    this.lines = ['hihat', 'kick', 'snare'];
     this.drum = new Tone.Sampler({
       urls: {
-          C3: "C3.mp3",
-          C4: "C4.mp3",
-          C5: "C5.mp3",
+          C3: "C3.mp3", //kick
+          C4: "C4.mp3", //snare
+          C5: "C5.mp3", //hihat
       },
       baseUrl: "samples/drum/",
       }).toDestination();
   }
 
   playNote(note){
-    if(note.hithat){
-      this.drum.triggerAttackRelease('C3', "8n");
+    if(note.hihat){
+      this.drum.triggerAttackRelease('C5', "8n");
     }
     if(note.kick){
+      this.drum.triggerAttackRelease('C3', "8n");
+    }
+    if(note.snare){
       this.drum.triggerAttackRelease('C4', "8n");
     }
 
@@ -59,8 +63,9 @@ class Drummer extends Agent {
 
   generatePattern(){
     return {
-     hithat : [1,0,1/2,0,1,0,1/2,0],
-     kick :   [1,0,1/2,0,1,0,1/2,0],
+     hihat : [.9,.9,.9,.9,.9,.9,.9,.9,],
+     kick :   [1,.1,1/4,.1,3/4,.1,1/4,.1],
+     snare : [0,.1,1/2,.2,.1,.1,1/2,.2],
     };
   }
 
