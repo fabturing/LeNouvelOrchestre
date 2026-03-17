@@ -18,6 +18,11 @@ class Block {
     return fullBlock[index];
   }
 
+  getPart(step){
+    let index = Math.floor(step/this.A.length)%this.structure.length
+    return this.structure[index];
+  }
+
   repr(){
     return `A: ${this.A}<br/>B: ${this.B}<br/>C: ${this.C}<br/>STRUCTURE: ${this.structure}`
   }

@@ -3,10 +3,12 @@ class Orchestra {
     this.agents = []
     this.step = 0;
     this.loop = new Tone.Loop((time)=>this.playStep(time), "8n").start(0);
+    this.blockSize = 4*8;
   }
 
   addAgent(agent){
     this.agents.push(agent);
+    agent.setOrchestra(this);
     agent.createDebugBox();
     agent.updateDebugBox();
   }

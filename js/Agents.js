@@ -78,7 +78,7 @@ class Crocodus extends Agent {
   }
 
   playNote(note){
-    this.debugSynth.triggerAttackRelease(note, "1");
+    this.debugSynth.triggerAttackRelease(note, "2n");
   }
 
 
