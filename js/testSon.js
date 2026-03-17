@@ -30,10 +30,6 @@ switch (n){
 }
 
 
-
-
-
-
 function testSon(){
   testSample();
 }
