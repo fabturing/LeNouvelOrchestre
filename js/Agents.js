@@ -35,7 +35,7 @@ class Flutist extends Agent {
 
 class Drummer extends Agent {
   constructor(){
-    super("Liza", "Batteuse qui fais que fumer des clopes");
+    super("Liza", "Batteuse qui fais que fumer des clopes", ['hithat', 'kick']);
     this.lines = ['hithat', 'kick'];
     this.drum = new Tone.Sampler({
       urls: {
@@ -48,6 +48,7 @@ class Drummer extends Agent {
   }
 
   playNote(note){
+        console.log("Liza joue : ", note)
     if(note.hithat){
       this.drum.triggerAttackRelease('C3', "8n");
     }

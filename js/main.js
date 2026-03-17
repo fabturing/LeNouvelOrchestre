@@ -11,7 +11,8 @@ function main(){
   document.getElementById('stop').addEventListener("click", stop);
 
   orchestra = new Orchestra();
-  orchestra.addAgent(new Flutist())
+  orchestra.addAgent(new Flutist());
+  orchestra.addAgent(new Drummer());
 }
 
 function play(){
