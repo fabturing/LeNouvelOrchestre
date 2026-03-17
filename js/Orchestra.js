@@ -13,11 +13,25 @@ class Orchestra {
     agent.updateDebugBox();
   }
 
+  getLeader(){
+    return this.agents.sort((agent)=>agent.aura)[0];
+  }
+
+  updateBlocks(){
+    this.agents.sort((agent)=>agent.aura);
+    this.agents.forEach(agent=>{
+      agent.updateBlock();
+    });
+  }
+
   playStep(time){
     this.agents.forEach(agent=>{
       agent.playStep(this.step)
       agent.updateDebugBox();
     });
     this.step ++;
+    if(this.step % this.blockSize == 0){
+      this.updateBlocks();
+    }
   }
 }

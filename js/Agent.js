@@ -38,6 +38,7 @@ class Agent {
     return ['A1'];
   }
 
+
   // getter for debugging block
   get currentBlockRepr(){
     return this.currentBlock.repr();
@@ -53,6 +54,7 @@ class Agent {
   get isPlyaing(){
     return this.currentBlock.getNote(this.orchestra.step);
   }
+
 
   setOrchestra(orchestra){
     this.orchestra = orchestra;
@@ -110,6 +112,10 @@ class Agent {
     return new Block(a, b, c, structure);
   }
   
+  updateBlocks(){
+    this.currentBlock = this.generateBlock()
+  }
+
   createDebugBox(){
     const template = document.getElementById('agent-debug-box');
     this.debugBox = template.content.firstElementChild.cloneNode(true);
