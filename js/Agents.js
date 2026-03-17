@@ -70,3 +70,33 @@ class Drummer extends Agent {
   }
 
 }
+
+
+
+class Crocodus extends Agent {
+  constructor(){
+    super("Crocodus", "un crocodile qui joue du synthé personne ne l'aime");
+  }
+
+  playNote(note){
+    this.debugSynth.triggerAttackRelease(note, "2n");
+  }
+
+
+  generateStructure(){
+    return ['A','B','A','B'];
+  }
+
+  generatePattern(){
+    return [1, 0, 0, 0, 1, 0, 0, 0];
+  }
+
+  generateScale(){
+
+    let scale = Tonal.Scale.get('C4 minor');
+
+    return scale.notes;
+  }
+
+}
+

@@ -1,5 +1,10 @@
+body {
+  background: #facade;
+}
 .agent-debug-box table {
+  background: white;
   border-collapse: collapse;
+  margin: 1em;
 }
 
 .agent-debug-box td,
