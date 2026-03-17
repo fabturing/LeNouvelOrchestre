@@ -2,7 +2,8 @@ class Orchestra {
   constructor(){
     this.agents = []
     this.step = 0;
-    this.loop = new Tone.Loop((time)=>this.playStep(time), "8n").start(0);
+   Tone.Transport.bpm.value = 120;
+  Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
     this.blockSize = 4*8;
   }
 
