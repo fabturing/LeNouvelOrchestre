@@ -1,6 +1,7 @@
 class Agent {
   constructor(name, description) {
     this.name = name;
+    this.line;
     this.descritption = description;
     this.aura = 0;
     this.pattern = this.generatePattern();
@@ -28,14 +29,12 @@ class Agent {
     return ['A1'];
   }
 
-
-
-
   get currentBlockRepr(){
     return this.currentBlock.repr();
   }
 
   playStep(step){
+
     let note = this.currentBlock.getNote(step);
     if(note){
       this.playNote(note)

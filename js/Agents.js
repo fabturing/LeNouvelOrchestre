@@ -36,5 +36,32 @@ class Flutist extends Agent {
 class Drummer extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fais que fumer des clopes");
+    this.lines = ['hithat', 'kick'];
+    this.drum = new Tone.Sampler({
+      urls: {
+          C3: "C3.mp3",
+          C4: "C4.mp3",
+          C5: "C5.mp3",
+      },
+      baseUrl: "samples/drum/",
+      }).toDestination();
   }
+
+  playNote(note){
+    if(note.hithat){
+      this.drum.triggerAttackRelease('C3', "8n");
+    }
+    if(note.kick){
+      this.drum.triggerAttackRelease('C4', "8n");
+    }
+
+  }
+
+  generatePattern(){
+    return {
+     hithat : [1,0,1/2,0,1,0,1/2,0],
+     kick :   [1,0,1/2,0,1,0,1/2,0],
+    };
+  }
+
 }
