@@ -1,8 +1,10 @@
 class Agent {
-  constructor(name, description) {
+  constructor(name, description, lines) {
     this.name = name;
-    this.line;
     this.descritption = description;
+    this.lines = lines;
+
+
     this.aura = 0;
     this.pattern = this.generatePattern();
     this.scale = this.generateScale();
@@ -33,9 +35,11 @@ class Agent {
     return this.currentBlock.repr();
   }
 
-  playStep(step){
 
+
+  playStep(step){
     let note = this.currentBlock.getNote(step);
+    console.log(this.name, "joue : ", note);
     if(note){
       this.playNote(note)
     }
@@ -43,10 +47,36 @@ class Agent {
 
 
   generateMelo(){
+
     const randomChoice = (arr)=>arr[Math.floor(arr.length * Math.random())];
-    let rythm = this.pattern.map((prob)=> Math.random() < prob);
-    let melo = rythm.map((play) => play? randomChoice(this.scale) : null);
-    return melo;
+    const generate = (pattern, scale)=>{
+      let rythm = pattern.map((prob)=> Math.random() < prob);
+      let melo = rythm.map((play) => play? randomChoice(scale) : null);
+      return melo;
+    }
+    if(this.lines){
+      let meloByLines = Object.fromEntries(this.lines.map(line => {
+        let pattern = this.pattern[line] || this.pattern;
+        let scale = this.scale[line] || this.scale;
+        let melo = generate(pattern, scale);
+        return [line, melo];
+      }));
+
+      let meloLength = meloByLines[this.lines[0]].length;
+
+      let melo = [];
+      for(let i = 0; i <= meloLength;  i++){
+        let step = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
+        melo[i]= step;
+      }
+      return melo;
+
+
+    }
+    else {
+      return generate(this.pattern, this.scale);
+    }
+
   }
 
   generateBlock(){

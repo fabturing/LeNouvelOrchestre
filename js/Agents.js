@@ -1,4 +1,4 @@
-class Flutist extends Agent {
+class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
     this.flute = new Tone.Sampler({
@@ -33,11 +33,11 @@ class Flutist extends Agent {
 }
 
 
-class Drummer extends Agent {
+class Liza extends Agent {
   constructor(){
 
-    super("Liza", "Batteuse qui fais que fumer des clopes");
-    this.lines = ['hihat', 'kick', 'snare'];
+    super("Liza", "Batteuse qui fais que fumer des clopes", ['hihat', 'kick', 'snare']);
+
     this.drum = new Tone.Sampler({
       urls: {
           C3: "C3.mp3", //kick
@@ -67,6 +67,34 @@ class Drummer extends Agent {
      kick :   [1,.1,1/4,.1,3/4,.1,1/4,.1],
      snare : [0,.1,0.8,.2,.3,.1,0.8,.2],
     };
+  }
+
+}
+
+
+class Crocodus extends Agent {
+  constructor(){
+    super("Crocodus", "un crocodile qui joue du synthé personne ne l'aime");
+  }
+
+  playNote(note){
+    this.debugSynth.triggerAttackRelease(note, "1");
+  }
+
+
+  generateStructure(){
+    return ['A','B','A','B'];
+  }
+
+  generatePattern(){
+    return [1, 0, 0, 0, 1, 0, 0, 0];
+  }
+
+  generateScale(){
+
+    let scale = Tonal.Scale.get('C4 minor');
+
+    return scale.notes;
   }
 
 }
