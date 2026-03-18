@@ -11,12 +11,14 @@ class Agent {
 
     // Other attributes
     this.orchestra;
+    this.muted = false;
     this.aura = 0;
     this.pattern = this.generatePattern();
     this.scale = this.generateScale();
     this.structure = this.generateStructure();
     this.currentBlock;
     this.debugSynth = new Tone.Synth().toDestination();
+    this.debugBox = new DebugBox('agent-debug-box', this)
   }
 
   // Default method for playing a note. Should be overrided.
@@ -44,7 +46,6 @@ class Agent {
     return this.currentBlock.repr();
   }
 
-
   // getter for current part
   get currentPart(){
     if(!this.currentBlock) return null;
@@ -53,8 +54,26 @@ class Agent {
 
   // getter for if the agent is playing this step
   get isPlaying(){
-    if(!this.currentBlock) return null;
-    return this.currentBlock.getNote(this.orchestra.step);
+    // Orchestra not playing means not playing
+    if(!this.orchestra.playing) return false;
+    // no current block means not playing
+    if(!this.currentBlock) return false;
+    let note = this.currentNote;
+    // no note means not playing
+    if(!note) return false;
+    // note defined as non-empty string means playing
+    if(typeof note === 'string' && note.length) return true;
+    // for note defined as object, check for non-empty line
+    if(typeof note === 'object'){
+      for(let line in note){
+        if(note[line]) return true;
+      }
+      return false
+    }
+  }
+
+  get currentNote(){
+    return this.currentBlock?.getNote(this.orchestra.step)
   }
 
 
@@ -62,11 +81,14 @@ class Agent {
     this.orchestra = orchestra;
   }
 
+  toggleMute(){
+    this.muted = !this.muted;
+  }
 
   playStep(step){
 
     let note = this.currentBlock.getNote(step);
-    if(note){
+    if(note && !this.muted){
       this.playNote(note)
     }
   }
@@ -139,17 +161,13 @@ class Agent {
     this.currentBlock = this.generateBlock()
   }
 
-  createDebugBox(){
-    const template = document.getElementById('agent-debug-box');
-    this.debugBox = template.content.firstElementChild.cloneNode(true);
-    document.body.appendChild(this.debugBox);
+  initDebugBox(){
+   this.debugBox.init();
   }
   
   updateDebugBox(){
-    this.debugBox.querySelectorAll('[data-attribute]').forEach(element=>{
-      let attribute = element.dataset.attribute;
-      let value = this[attribute];
-      element.innerHTML = value;
-    });
+      this.debugBox.update();
   }
+
 }
+

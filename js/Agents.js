@@ -19,7 +19,6 @@ class Jief extends Agent {
   }
 
   playNote(note){
-    console.log("flutiste joue : ", note)
     this.flute.triggerAttackRelease(note, "8n");
   }
 

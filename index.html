@@ -7,6 +7,7 @@
     <script src="http://unpkg.com/tone"></script>
     <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/DebugBox.js"></script>
     <script src="js/Block.js"></script>
     <script src="js/Agent.js"></script>
     <script src="js/Agents.js"></script>
@@ -15,23 +16,46 @@
     <title>LeNouvelOrchestre</title>
   </head>
   <body>
+
+
+    <button id="test">test</button>
+    <button id="play">play/stop</button>
+
+
+
+    <template id="orchestra-debug-box">
+      <div class="debug-box">
+        <table>
+          <thead><tr><th colspan="2">Orchestra</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
+            <tr><th scope="row">Playing</th><td><span data-attribute="playing"></span></td></tr>
+            <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
+            <tr><th scope="row">Step</th><td><span data-attribute="step"></span></td></tr>
+            <tr><th scope="row">Bloc progress</th><td><progress value="0" max="1" data-progress="blocProgress"></progress></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
     <template id="agent-debug-box">
-      <div class="agent-debug-box">
+      <div class="debug-box">
         <table>
           <thead><tr><th colspan="2">Agent</th></tr></thead>
           <tbody>
             <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
             <tr><th scope="row">Description</th><td><span data-attribute="descritption"></span></td></tr>
-            <tr><th scope="row">Aura</th><td><span data-attribute="aura"></span></td></tr>
-            <tr><th scope="row">Is playing ?</th><td><span data-attribute="isPlaiyng"></span></td></tr>
+            <tr><th scope="row">Aura</th><td><progress value="0" max="1" data-progress="aura"></progress> (<span data-attribute="aura"></span>)</td></tr>
+            <tr><th scope="row">Is playing ?</th><td><span data-attribute="isPlaying"></span> (<span data-attribute="currentNote"></span>)</td></tr>
             <tr><th scope="row">Part</th><td><span data-attribute="currentPart"></span></td></tr>
-
+            <tr><th scope="row">Mute</th><td><button data-method="toggleMute">Toggle Mute</button> (muted: <span data-attribute="muted"></span>)</td></tr>
           </tbody>
         </table>
+      </div>
     </template>
 
-    <button id="test">test</button>
-    <button id="play">play/stop</button>
+
+    <div><img src="sprites/iddle.png" id="dancer"/></div>
 
   </body>
 </html>

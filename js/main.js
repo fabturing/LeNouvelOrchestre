@@ -10,16 +10,18 @@ function main(){
   document.getElementById('play').addEventListener("click", play);
 
   orchestra = new Orchestra();
-  orchestra.addAgent(new Jief());
-  orchestra.addAgent(new Liza());
-  orchestra.addAgent(new Crocodus());
+  let jief = orchestra.addAgent(new Jief());
+  let liza = orchestra.addAgent(new Liza());
+  let crocodus = orchestra.addAgent(new Crocodus());
+  jief.aura = 0.9;
   orchestra.updateBlocks();
+  orchestra.initDebugBox();
 }
 
 function play(){
 switch (bool){
-  case 0 : Tone.Transport.start();console.log("Play"); break;
-  case 1 : Tone.Transport.stop();console.log("Stop"); break;
+  case 0 : orchestra.start(); break;
+  case 1 : orchestra.stop(); break;
   }
   bool = (bool+1)%2;  
 }

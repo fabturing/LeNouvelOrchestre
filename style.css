@@ -1,15 +1,21 @@
 body {
   background: #facade;
 }
-.agent-debug-box table {
+.debug-box table {
   background: white;
   border-collapse: collapse;
   margin: 1em;
 }
 
-.agent-debug-box td,
-.agent-debug-box th {
+.debug-box td,
+.debug-box th {
     padding: .1em .3em;
     border:1px solid black;
 
+}
+
+#dancer {
+  position: absolute;
+  bottom: 10px;
+  right:10px;
 }
