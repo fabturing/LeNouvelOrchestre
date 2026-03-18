@@ -1,9 +1,11 @@
+const TEMPO = 120 //bpm
+
 class Orchestra {
   constructor(){
     this.name = "Le Nouvel Orchestre";
     this.agents = []
     this.step = 0;
-    Tone.Transport.bpm.value = 120;
+    Tone.Transport.bpm.value = TEMPO;
     Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
     this.blockSize = 4*8;
     this.playing = false;

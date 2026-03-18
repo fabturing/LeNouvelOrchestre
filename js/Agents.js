@@ -58,13 +58,13 @@ class Liza extends Agent {
   playNote(note){
     if(note.hihat){
       let velocite = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C5', "8n", Tone.now(), velocite);
+      this.drum.triggerAttackRelease('C5', "8n", "1n", velocite);
     }
     if(note.kick){
-      this.drum.triggerAttackRelease('C3', "8n");
+      this.drum.triggerAttackRelease('C3', "8n", "1n");
     }
     if(note.snare){
-      this.drum.triggerAttackRelease('C4', "8n");
+      this.drum.triggerAttackRelease('C4', "8n", "1n");
     }
 
   }
