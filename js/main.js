@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 let orchesta;
+let bool = 0;
 
 function main(){
-  document.getElementById('test').addEventListener("click", testSon);
+  document.getElementById('test').addEventListener("click", test);
   document.getElementById('play').addEventListener("click", play);
-  document.getElementById('stop').addEventListener("click", stop);
 
   orchestra = new Orchestra();
   orchestra.addAgent(new Jief());
@@ -17,10 +17,10 @@ function main(){
 }
 
 function play(){
-  Tone.Transport.start();
+switch (bool){
+  case 0 : Tone.Transport.start();console.log("Play"); break;
+  case 1 : Tone.Transport.stop();console.log("Stop"); break;
+  }
+  bool = (bool+1)%2;  
 }
 
-function stop(){
-  Tone.Transport.stop();
-
-}

@@ -1,7 +1,7 @@
 let n = 0;
 let m = 0;
 
-flute = new Tone.Sampler({
+flutio = new Tone.Sampler({
       urls: {
           C3: "C3.mp3",
       },
@@ -18,20 +18,16 @@ flute = new Tone.Sampler({
       baseUrl: "samples/drum/",
       }).toDestination();
 
-function testSample(){
+function test(){
 
 switch (n){
-  case 0 : flute.triggerAttackRelease(["C4"], "2n"); console.log(n); break;
-  case 1 : flute.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
-  case 2 : flute.triggerAttackRelease(["C4"], "16n"); console.log(n); break;
-  case 3 : flute.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
+  case 0 : flutio.triggerAttackRelease(["C4"], "2n"); console.log(n); break;
+  case 1 : flutio.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
+  case 2 : flutio.triggerAttackRelease(["C4"], "16n"); console.log(n); break;
+  case 3 : flutio.triggerAttackRelease(["C4"], "8n"); console.log(n); break;
   }
   n = (n+1)%4;
 }
 
-
-function testSon(){
-  testSample();
-}
 
 

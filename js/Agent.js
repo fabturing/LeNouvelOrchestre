@@ -52,7 +52,7 @@ class Agent {
   }
 
   // getter for if the agent is playing this step
-  get isPlyaing(){
+  get isPlaying(){
     if(!this.currentBlock) return null;
     return this.currentBlock.getNote(this.orchestra.step);
   }

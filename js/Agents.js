@@ -29,7 +29,7 @@ class Jief extends Agent {
   }
 
   generatePattern(){
-    return [1, 1/3, 2/3, 1/3, 4/5, 1/3, 2/3, 1/3];
+    return [.9, 1/3, 2/3, 1/3, 4/5, 1/3, 2/3, 1/3];
   }
 
   generateScale(){
@@ -115,7 +115,7 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-    return [1, 0, 1/5, 1/4, 1, 0, 1/5, 1/4];
+    return [.97, .05, .1, 1/4, .95, 0.1, .2, 0.2];
   }
 
   generateScale(){
