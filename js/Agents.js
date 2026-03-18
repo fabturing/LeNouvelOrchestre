@@ -18,8 +18,8 @@ class Jief extends Agent {
 
   }
 
-  playNote(note){
-    this.flute.triggerAttackRelease(note, "8n");
+  playNote(note, time){
+    this.flute.triggerAttackRelease(note, "8n", time);
   }
 
   generateStructure(){
@@ -55,16 +55,16 @@ class Liza extends Agent {
       this.drum.volume.value = VOL_DRUM ;
   }
 
-  playNote(note){
+  playNote(note, time){
     if(note.hihat){
       let velocite = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C5', "8n", "1n", velocite);
+      this.drum.triggerAttackRelease('C5', "8n", time, velocite);
     }
     if(note.kick){
-      this.drum.triggerAttackRelease('C3', "8n", "1n");
+      this.drum.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
-      this.drum.triggerAttackRelease('C4', "8n", "1n");
+      this.drum.triggerAttackRelease('C4', "8n", time);
     }
 
   }
@@ -103,9 +103,9 @@ class Crocodus extends Agent {
     this.basse.volume.value = VOL_BASSE ;
   }
 
-  playNote(note){
+  playNote(note, time){
   note = Tonal.Note.transpose(note, "-8P");
-    this.basse.triggerAttackRelease(note, "4n");
+    this.basse.triggerAttackRelease(note, "4n", time);
   }
 
 

@@ -22,8 +22,8 @@ class Agent {
   }
 
   // Default method for playing a note. Should be overrided.
-  playNote(note){
-    this.debugSynth.triggerAttackRelease(note, "1n");
+  playNote(note, time){
+    this.debugSynth.triggerAttackRelease(note, "1n", time);
   }
 
   // Default method for generating a structure. Should be overrided.
@@ -85,11 +85,11 @@ class Agent {
     this.muted = !this.muted;
   }
 
-  playStep(step){
+  playStep(step, time){
 
     let note = this.currentBlock.getNote(step);
     if(note && !this.muted){
-      this.playNote(note)
+      this.playNote(note, time)
     }
   }
 

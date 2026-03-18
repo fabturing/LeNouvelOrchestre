@@ -59,9 +59,10 @@ class Orchestra {
   }
 
   playStep(time){
+
     document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png'
     this.agents.forEach(agent=>{
-      agent.playStep(this.step)
+      agent.playStep(this.step, time)
     });
 
     this.updateDebugBox();
