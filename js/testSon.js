@@ -1,25 +1,20 @@
 let n = 0;
 let m = 0;
 
-flutio = new Tone.Sampler({
+ filter = new Tone.Filter(1000, "lowpass").toDestination();
+
+
+   flutio = new Tone.Sampler({
       urls: {
           C3: "C3.mp3",
       },
       baseUrl: "samples/flute/",
-      }).toDestination();
+      }).connect(filter);
 
-      drum = new Tone.Sampler({
-      urls: {
-          C3: "C3.mp3",
-          C4: "C4.mp3",
-          C5: "C5.mp3",
-
-      },
-      baseUrl: "samples/drum/",
-      }).toDestination();
 
 function test(){
 
+      
 switch (n){
   case 0 : flutio.triggerAttackRelease(["C4"], "2n"); console.log(n); break;
   case 1 : flutio.triggerAttackRelease(["C4"], "8n"); console.log(n); break;

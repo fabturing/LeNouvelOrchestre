@@ -1,14 +1,13 @@
 
 const VOL_FLUTE = -8;
 const VOL_DRUM = -12;
-const VOL_BASSE = -5;
-const VOL_HH_FAIBLE = 7; // Nombre maximum de dB qu'on retranchera à VOL_DRUM pour obtenir des HH au son plus faible 
-
+const VOL_BASSE = -7;
 
 
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
+       
     this.flute = new Tone.Sampler({
       urls: {
           C4: "C3.mp3",
@@ -95,18 +94,19 @@ class Liza extends Agent {
 class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
+    const filtre = new Tone.Filter( 1000, "lowpass").toDestination();
     this.basse = new Tone.Sampler({
       urls: {
           C4: "C2.mp3",
       },
       baseUrl: "samples/basse/",
-      }).toDestination();
+      }).connect(filtre);
     this.basse.volume.value = VOL_BASSE ;
   }
 
   playNote(note){
   note = Tonal.Note.transpose(note, "-8P");
-    this.basse.triggerAttackRelease(note, "2n");
+    this.basse.triggerAttackRelease(note, "4n");
   }
 
 
