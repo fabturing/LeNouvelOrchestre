@@ -1,7 +1,8 @@
 
 const VOL_FLUTE = -8;
-const VOL_DRUM = -12;
+const VOL_DRUM = -15;
 const VOL_BASSE = -7;
+let densité_hh = Math.random();
 
 
 class Jief extends Agent {
@@ -64,30 +65,28 @@ class Liza extends Agent {
       this.drum.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
+    let velocite = 1-Math.random()/2;
       this.drum.triggerAttackRelease('C4', "8n", time);
     }
 
   }
   
-   generatePattern(){
-    return {
-     hihat : [.9,.9,.9,.9,.9,.9,.9,.9],
-     kick :   [1,0,1,0,1,0,1,0],
-      snare : [0,0,0,0,0,0,0,0],
-
-    };
-  }
-
- /* generatePattern(){
-    return {
-     hihat : [.9,.9,.9,.9,.9,.9,.9,.9],
-     kick :   [1,.1,1/4,.1,3/4,.1,1/4,.1],
-     snare : [0,.1,0.8,.2,.3,.1,0.8,.2],
-    };
-  }*/
+  generatePattern(){
+    let pattern_hh = [.8,.9,.8,.9,.8,.9,.8,.9];
+    densité_hh = Math.min(1, densité_hh + ((Math.random()-0.45)*0.05));
+    if(densité_hh < 0.1 ){
+      for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = 0}
+    }
+    else {for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = pattern_hh[i]*densité_hh}
+    }
+      return {
+       hihat : pattern_hh,
+       kick :   [.95,.05,.05,.05,.3,.05,.2,.05],
+       snare : [0,.05,0.6,.1,.2,.1,0.6,.1]
+       }
+      }
 
 }
-
 
 
 class Crocodus extends Agent {
