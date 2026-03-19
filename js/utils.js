@@ -1,3 +1,11 @@
+
+// Return a random element of an array
+function randomChoice (arr){
+  return arr[Math.floor(arr.length * Math.random())];
+}
+
+
+
 // Return a DOM object for representing a multilines information
 // `object` is the multinine object
 // `func` is the function to be called on each line to represent it

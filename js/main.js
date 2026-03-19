@@ -19,7 +19,7 @@ function main(){
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   jief.aura = 0.9;
-  orchestra.updateBlocks();
+  orchestra.initBlocks();
   orchestra.initDebugBox();
 }
 

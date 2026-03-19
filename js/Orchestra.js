@@ -65,6 +65,15 @@ class Orchestra {
   // Method for  updating agents Blocks
   updateBlocks(){
     this.sortAgents();
+    let part = randomChoice(["A","B","C"])
+    this.agents.forEach(agent=>{
+      agent.updatePart(part);
+    });
+  }
+
+    // Method for  initializating agents Blocks
+  initBlocks(){
+    this.sortAgents();
     this.agents.forEach(agent=>{
       agent.updateBlock();
     });

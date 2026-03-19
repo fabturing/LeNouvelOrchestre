@@ -118,7 +118,6 @@ class Agent {
     let rythm = mergedPattern.map((prob)=> Math.random() < prob);
 
     // Generate and return the new melo  from rythm and merged scales
-    const randomChoice = (arr)=>arr[Math.floor(arr.length * Math.random())];
     let melo = rythm.map((play) => play? randomChoice(mergedScale) : null);
 
     return melo;
@@ -182,10 +181,24 @@ class Agent {
     return new Block(A, B, C, structure, this.lines);
   }
   
+  // Method for copying a block
+  copyBlock(block){
+      return new Block(block.A, block.B, block.C, block.structure, block.lines);
+  }
+
   // Method for updating agent's block
   updateBlock(){
     this.previousBlock = this.currentBlock;
     this.currentBlock = this.generateBlock()
+  }
+
+  // Method for updating one part of agent's block
+  updatePart(part){
+    this.previousBlock = this.currentBlock;
+    this.currentBlock = this.copyBlock(this.currentBlock);
+    let pattern = this.generatePattern();
+    let scale =  this.generateScale();
+    this.currentBlock[part] = this.generatePart('A', pattern, scale);
   }
 
   // Debug methods
