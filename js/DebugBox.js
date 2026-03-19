@@ -33,7 +33,6 @@ class DebugBox {
 
   // Update DebugBox Informations
   update(){
-
     // Update [data-attribute] elements
     this.element.querySelectorAll('[data-attribute]').forEach(el=>{
       let attribute = el.dataset.attribute;

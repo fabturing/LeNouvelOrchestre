@@ -3,7 +3,9 @@
 
 // Settings
 const TEMPO = 120; //bpm
-const BLOCK_SIZE = 4*8; //steps
+const PART_SIZE = 8; //steps
+const PARTS_PER_BLOCK = 4; //parts
+const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
 const NAME = "Le Nouvel Orchestre";
 
 class Orchestra {
@@ -22,9 +24,18 @@ class Orchestra {
     Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
   }
 
-  // Getter for blocProgress, from 0 to 1
-  get blocProgress(){
+  // Getter for blockProgress, from 0 to 1
+  get blockProgress(){
     return (this.step%BLOCK_SIZE)/BLOCK_SIZE;
+  }
+
+  // Getter for blockStep, from 0 to block size
+  get blockStep(){
+    return (this.step%BLOCK_SIZE);
+  }
+  // Getter for partStep, from 0 to part size
+  get partStep(){
+    return (this.step%PART_SIZE);
   }
 
   // Getter for leader name

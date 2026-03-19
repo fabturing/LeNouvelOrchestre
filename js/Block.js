@@ -25,15 +25,37 @@ class Block {
     return fullBlock[index];
   }
 
+  // Return the part index at a given step
+  getPartIndex(step){
+    return Math.floor(step/this.A.length)%this.structure.length
+  };
+
   // Return the part identifier (e.g. "A") at a given step
   getPart(step){
-    let index = Math.floor(step/this.A.length)%this.structure.length
-    return this.structure[index];
+    return this.structure[this.getPartIndex(step)];
   }
 
   // Return a human-readable HTML block representation
+
   repr(){
-    return `A: ${this.A}<br/>B: ${this.B}<br/>C: ${this.C}<br/>STRUCTURE: ${this.structure}`
+    let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
+    let ARepr = debugSequence(this.A, (this.getPart(orchestra.step)=='A') ? orchestra.partStep : undefined);
+    let BRepr = debugSequence(this.B, (this.getPart(orchestra.step)=='B') ? orchestra.partStep : undefined);
+    let CRepr = debugSequence(this.C, (this.getPart(orchestra.step)=='C') ? orchestra.partStep : undefined);
+    return `A: ${ARepr.outerHTML}<br/>B: ${BRepr.outerHTML}<br/>C: ${CRepr.outerHTML}<br/>STRUCTURE: ${structureRepr.outerHTML}`
   }
 }
 
+function debugSequence(array, index){
+  let container = document.createElement('div');
+  container.classList.add('debug-sequence');
+  array.forEach((step, i)=>{
+    let stepElement = document.createElement('div');
+    stepElement.classList.add('step');
+    if(index === i) stepElement.classList.add('current');
+    if(!step) stepElement.classList.add('empty');
+    stepElement.innerHTML = step;
+    container.appendChild(stepElement);
+  })
+  return container;
+}
