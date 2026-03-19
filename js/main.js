@@ -1,14 +1,18 @@
+// Main script file
+
 document.addEventListener("DOMContentLoaded", function(event) {
     main();
 });
 
 let orchesta;
-let bool = 0;
 
+// Main function
 function main(){
+  // Init buttons
   document.getElementById('test').addEventListener("click", test);
   document.getElementById('play').addEventListener("click", play);
 
+  // Init Orchestra
   orchestra = new Orchestra();
   let jief = orchestra.addAgent(new Jief());
   let liza = orchestra.addAgent(new Liza());
@@ -18,11 +22,11 @@ function main(){
   orchestra.initDebugBox();
 }
 
+// Function triggered by the play button
 function play(){
-switch (bool){
-  case 0 : orchestra.start(); break;
-  case 1 : orchestra.stop(); break;
+  switch (orchestra.playing){
+    case false : orchestra.start(); break;
+    case true : orchestra.pause(); break;
   }
-  bool = (bool+1)%2;  
 }
 

@@ -1,14 +1,17 @@
+// This file define Agents classes for specific agents
+// Agents should extends the Agent class.
 
+// Settings
 const VOL_FLUTE = -8;
 const VOL_DRUM = -14;
 const VOL_BASSE = -7;
+
 let densité_hh = Math.random(); // Ajouter aux attributs visibles sur la console de liza
 
 
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
-       
     this.flute = new Tone.Sampler({
       urls: {
           C4: "C3.mp3",
@@ -16,7 +19,6 @@ class Jief extends Agent {
       baseUrl: "samples/flute/",
       }).toDestination();
       this.flute.volume.value = VOL_FLUTE ;
-
   }
 
   playNote(note, time){
@@ -32,19 +34,15 @@ class Jief extends Agent {
   }
 
   generateScale(){
-
     let scale = Tonal.Scale.get('C4 minor');
-
     return scale.notes;
   }
-
 }
 
 
 class Liza extends Agent {
   constructor(){
-
-    super("Liza", "Batteuse qui fait que fumer des clopes",['hihat', 'kick', 'snare']);
+    super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
     this.drum = new Tone.Sampler({
       urls: {
           C3: "C3.mp3", //kick
@@ -65,7 +63,7 @@ class Liza extends Agent {
       this.drum.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
-    let velocite_snr = 1-Math.random()/2;
+      let velocite_snr = 1-Math.random()/2;
       this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
     }
 
@@ -78,16 +76,19 @@ class Liza extends Agent {
     densité_hh = Math.max(0.4, densité_hh);
     console.log("densité_hh=", densité_hh);
     if(densité_hh < 0.5 ){
-      for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = 0}
-    }
-    else {for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = pattern_hh[i]*densité_hh}
-    }
-      return {
-       hihat : pattern_hh,
-       kick :   [.95,.05,.05,.05,.3,.05,.2,.05],
-       snare : [0,.05,0.6,.1,.2,.1,0.6,.1]
-       }
+      for (let i = 0; i < pattern_hh.length; i++) {
+        pattern_hh[i] = 0;
       }
+    }
+    else {for (let i = 0; i < pattern_hh.length; i++) {
+      pattern_hh[i] = pattern_hh[i]*densité_hh}
+    }
+    return {
+     hihat : pattern_hh,
+     kick : [.95,.05,.05,.05,.3,.05,.2,.05],
+     snare : [0,.05,0.6,.1,.2,.1,0.6,.1]
+   }
+  }
 
 }
 

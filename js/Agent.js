@@ -1,5 +1,7 @@
-class Agent {
+// This file define the Agent class.
+// An Agent is a musician in the Orchestra.
 
+class Agent {
   constructor(name, description, lines) {
     // Name of the agent
     this.name = name;
@@ -13,12 +15,12 @@ class Agent {
     this.orchestra;
     this.muted = false;
     this.aura = 0;
+    this.currentBlock;
     this.pattern = this.generatePattern();
     this.scale = this.generateScale();
     this.structure = this.generateStructure();
-    this.currentBlock;
     this.debugSynth = new Tone.Synth().toDestination();
-    this.debugBox = new DebugBox('agent-debug-box', this)
+    this.debugBox = new DebugBox('agent-debug-box', this);
   }
 
   // Default method for playing a note. Should be overrided.
@@ -72,101 +74,121 @@ class Agent {
     }
   }
 
+  // Getter for current played note
   get currentNote(){
     return this.currentBlock?.getNote(this.orchestra.step)
   }
 
-
+  // Method to be called after agent creation to attach an orchestra
   setOrchestra(orchestra){
     this.orchestra = orchestra;
   }
 
+  // Method for turning mute on or off.
   toggleMute(){
     this.muted = !this.muted;
   }
 
+  // Method to be called on each step
   playStep(step, time){
-
     let note = this.currentBlock.getNote(step);
+    // Call play note only if there is a note and agent not muted
     if(note && !this.muted){
       this.playNote(note, time)
     }
   }
 
-  // Function for generating a melody giving a pattern, a scale and models
+  // Method for generating a melody from a pattern, a scale and models (models are optionals)
   generateMelo(pattern, scale, meloModel1, meloModel2){
 
-    const randomChoice = (arr)=>arr[Math.floor(arr.length * Math.random())];
-
-    let mergedScale = scale
+    // Merge the given scale with notes in each models
+    let mergedScale = scale;
     if(meloModel1) mergedScale = mergedScale.concat(meloModel1.filter(note=>note));
     if(meloModel2) mergedScale = mergedScale.concat(meloModel2.filter(note=>note));
 
+    // Extract pattern from models
     const meloToPattern = (pattern)=>pattern.map(step=>step?1:0);
-
     let patternModel1 = meloModel1 ? meloToPattern(meloModel1) : pattern;
     let patternModel2 = meloModel2 ? meloToPattern(meloModel2) : pattern;
 
+    // Merge pattern with models' patterns
     let mergedPattern = pattern.map((step, i)=>{
       return (step + patternModel1[i] + patternModel2[i])/3
     });
 
+    // Generate a rythm from merged pattern
     let rythm = mergedPattern.map((prob)=> Math.random() < prob);
+
+    // Generate and return the new melo  from rythm and merged scales
+    const randomChoice = (arr)=>arr[Math.floor(arr.length * Math.random())];
     let melo = rythm.map((play) => play? randomChoice(mergedScale) : null);
 
     return melo;
   }
 
+  // Method for generating a part. (part should be "A", "B" or "C")
   generatePart(part){
 
-    let meloModel1 = this.previousBlock? this.previousBlock[part] : undefined;
-    let meloModel2 = this.orchestra.getLeader().currentBlock ? this.orchestra.getLeader().currentBlock[part] : undefined;
+    // Get a first model from previous block
+    let meloModel1;
+    if(this.previousBlock) meloModel1 = this.previousBlock[part];
+    else meloModel1 = undefined;
+
+    // Get a second model from leader block
+    let meloModel2;
+    if(this.orchestra.getLeader() == this) meloModel2 = undefined;
+    else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
+    else meloModel2 = this.orchestra.getLeader().currentBlock[part];
+
+    // Prepare melody generation
+    let pattern = this.pattern;
+    let scale = this.scale;
+    let melo = [];
 
     // If there is lines, generate melody for each lines
     if(this.lines){
       let meloByLines = Object.fromEntries(this.lines.map(line => {
-        let pattern = this.pattern[line] || this.pattern;
-        let scale = this.scale[line] || this.scale;
-        let melo = this.generateMelo(pattern, scale);
-        return [line, melo];
+        let linePattern = pattern[line] || pattern;
+        let lineScale = scale[line] || scale;
+        let lineMelo = this.generateMelo(linePattern, lineScale);
+        return [line, lineMelo];
       }));
 
       // Convert object of array to array of objects
       let meloLength = meloByLines[this.lines[0]].length;
-      let melo = [];
       for(let i = 0; i < meloLength;  i++){
-        let step = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
-        melo[i]= step;
+        melo[i] = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
       }
-      return melo;
     }
     // Else generate a single melody
     else {
-      return this.generateMelo(this.pattern, this.scale, meloModel1, meloModel2);
+      melo = this.generateMelo(this.pattern, this.scale, meloModel1, meloModel2);
     }
 
-
+    return melo;
   }
 
+  // Method for generating a block
   generateBlock(){
-    let a = this.generatePart('A');
-    let b = this.generatePart('B');
-    let c = this.generatePart('C');
+    let A = this.generatePart('A');
+    let B = this.generatePart('B');
+    let C = this.generatePart('C');
     let structure = this.structure;
-    return new Block(a, b, c, structure);
+    return new Block(A, B, C, structure);
   }
   
+  // Method for updating agent's block
   updateBlock(){
     this.previousBlock = this.currentBlock;
     this.currentBlock = this.generateBlock()
   }
 
+  // Debug methods
   initDebugBox(){
    this.debugBox.init();
   }
-  
   updateDebugBox(){
-      this.debugBox.update();
+    this.debugBox.update();
   }
 
 }
