@@ -51,7 +51,21 @@ class Liza extends Agent {
       this.drum.volume.value = VOL_DRUM ;
       this.hhDensity = Math.random(); // Ajouter aux attributs visibles sur la console de liza
   }
+/*
+  playNote.hihat(note, time){
+    let velocite_hh = 1-Math.random()/2;
+    this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
+  )
 
+  playNote.kick(note, time){
+    this.drum.triggerAttackRelease('C3', "8n", time);
+  }
+
+  playNote.snare(note, time){
+    let velocite_snr = 1-Math.random()/2;
+    this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
+  }
+*/
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;

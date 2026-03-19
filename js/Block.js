@@ -3,31 +3,56 @@
 
 
 class Block {
-  constructor(A, B, C, structure){
-    // Three parts of the block. Each part is an array of notes.
+  constructor(A, B, C, structure,lines){
+    // Three parts of the block. Each part is an array of notes
+    // Parts can also be objects for multi-lines agents
     this.A = A;
     this.B = B;
     this.C = C;
     // The structure is an array of part identifier (e.g. ["A", "B", "A", "B"])
-    this.structure = structure
+    this.structure = structure;
+    // Array of lines for multilines blocks
+    this.lines = lines
   }
 
   // Return the full block in the form of a concatenatd array of notes
   getFullBlock(){
     let parts = this.structure.map(part=>this[part]);
-    return Array.prototype.concat.apply([], parts);
+
+    if(this.lines){
+      let fullBlock = {};
+      this.lines.forEach((line)=>{
+        let lineParts = parts.map(part=>part[line]);
+        fullBlock[line] = Array.prototype.concat.apply([], lineParts);
+      });
+      return fullBlock;
+    }
+     else{
+      return Array.prototype.concat.apply([], parts);
+    }
   }
 
   // Return the note at given step
   getNote(step){
     let fullBlock = this.getFullBlock()
-    let index = step % fullBlock.length;
-    return fullBlock[index];
+    let index = step % BLOCK_SIZE;
+    if(this.lines){
+      let note = {};
+      this.lines.forEach((line)=>{
+        note[line] = fullBlock[line][index];
+      });
+      return note;
+    }
+    else {
+      return fullBlock[index];
+    }
+
+
   }
 
   // Return the part index at a given step
   getPartIndex(step){
-    return Math.floor(step/this.A.length)%this.structure.length
+    return Math.floor(step/PART_SIZE)%PARTS_PER_BLOCK;
   };
 
   // Return the part identifier (e.g. "A") at a given step
@@ -39,23 +64,20 @@ class Block {
 
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
-    let ARepr = debugSequence(this.A, (this.getPart(orchestra.step)=='A') ? orchestra.partStep : undefined);
-    let BRepr = debugSequence(this.B, (this.getPart(orchestra.step)=='B') ? orchestra.partStep : undefined);
-    let CRepr = debugSequence(this.C, (this.getPart(orchestra.step)=='C') ? orchestra.partStep : undefined);
-    return `A: ${ARepr.outerHTML}<br/>B: ${BRepr.outerHTML}<br/>C: ${CRepr.outerHTML}<br/>STRUCTURE: ${structureRepr.outerHTML}`
+    return `A: ${this.partRepr('A').outerHTML}<br/>
+            B: ${this.partRepr('B').outerHTML}<br/>
+            C: ${this.partRepr('C').outerHTML}<br/>
+            STRUCTURE: ${structureRepr.outerHTML}`;
+    }
+
+  partRepr(part){
+    let index = (this.getPart(orchestra.step)==part) ? orchestra.partStep : undefined;
+    if(this.lines){
+      return debugMultiLines(this[part], (line)=>{return debugSequence(line, index)})
+    }
+    else {
+      return debugSequence(this[part], index);
+    }
   }
 }
 
-function debugSequence(array, index){
-  let container = document.createElement('div');
-  container.classList.add('debug-sequence');
-  array.forEach((step, i)=>{
-    let stepElement = document.createElement('div');
-    stepElement.classList.add('step');
-    if(index === i) stepElement.classList.add('current');
-    if(!step) stepElement.classList.add('empty');
-    stepElement.innerHTML = step;
-    container.appendChild(stepElement);
-  })
-  return container;
-}

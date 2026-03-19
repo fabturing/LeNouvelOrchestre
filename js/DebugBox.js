@@ -37,7 +37,9 @@ class DebugBox {
     this.element.querySelectorAll('[data-attribute]').forEach(el=>{
       let attribute = el.dataset.attribute;
       let value = this.object[attribute];
-      el.innerHTML = value;
+      el.innerHTML = '';
+      if(value && typeof value == 'object') el.appendChild(debugMultiLines(value));
+      else el.innerHTML = value;
     });
 
     // Update [data-progress] elements

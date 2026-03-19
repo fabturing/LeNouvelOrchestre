@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 let orchesta;
+let jief, liza, crocodus;
 
 // Main function
 function main(){
@@ -14,9 +15,9 @@ function main(){
 
   // Init Orchestra
   orchestra = new Orchestra();
-  let jief = orchestra.addAgent(new Jief());
-  let liza = orchestra.addAgent(new Liza());
-  let crocodus = orchestra.addAgent(new Crocodus());
+  jief = orchestra.addAgent(new Jief());
+  liza = orchestra.addAgent(new Liza());
+  crocodus = orchestra.addAgent(new Crocodus());
   jief.aura = 0.9;
   orchestra.updateBlocks();
   orchestra.initDebugBox();

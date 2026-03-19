@@ -1,15 +1,36 @@
 body {
   background: #facade;
-}
-.debug-box table {
-  background: white;
-  border-collapse: collapse;
-  margin: 1em;
+  font-family: monospace;
+  font-size: 10pt;
 }
 
-.debug-box td,
-.debug-box th {
-    padding: .1em .3em;
+
+table{
+    border-collapse: collapse;
+
+}
+
+th{
+
+}
+
+.debug-box>table {
+  background: white;
+  margin: 1em;
+  min-width:600px
+}
+.debug-box>table>tbody>tr>th,
+.debug-box>table>thead>tr>th{
+  width:120px;
+    background:#eee;
+  color:#333;
+
+}
+
+.debug-box>table>tbody>tr>td,
+.debug-box>table>tbody>tr>th,
+.debug-box>table>thead>tr>th{
+    padding: 5px;
     border:1px solid black;
 
 }
@@ -24,18 +45,18 @@ body {
 .debug-sequence {
   display: flex;
   border:1px solid black;
-  margin:.2em;
 }
 
 .debug-sequence .step{
   text-align: center;
   flex: 1 1 0px;
+  height:1.2em;
 }
 .debug-sequence .step.current{
   background: yellow;
 }
 .debug-sequence .step.empty{
-  background: lightgray;
+  background: gray;
 }
 .debug-sequence .step.current.empty{
   background: gold;
@@ -43,4 +64,13 @@ body {
 
 .debug-sequence .step:not(:last-child){
   border-right:1px solid black;
+}
+
+.debug-multi-lines {
+  width:30em;
+  margin:0;
+}
+
+.debug-multi-lines th {
+  width:2em;
 }

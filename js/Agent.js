@@ -88,7 +88,12 @@ class Agent {
 
   // Method to be called on each step
   playStep(step, time){
-    let note = this.currentBlock.getNote(step);
+/*    if(this.lines){
+      this.lines.forEach(line=>{
+        let note = this.currentBlock.getNote(step, line);
+      })
+    }
+  */  let note = this.currentBlock.getNote(step);
     // Call play note only if there is a note and agent not muted
     if(note && !this.muted){
       this.playNote(note, time)
@@ -154,6 +159,9 @@ class Agent {
       for(let i = 0; i < meloLength;  i++){
         melo[i] = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
       }
+
+      //TEST
+      melo = meloByLines
     }
     // Else generate a single melody
     else {
@@ -171,7 +179,7 @@ class Agent {
     let A = this.generatePart('A', pattern, scale);
     let B = this.generatePart('B', pattern, scale);
     let C = this.generatePart('C', pattern, scale);
-    return new Block(A, B, C, structure);
+    return new Block(A, B, C, structure, this.lines);
   }
   
   // Method for updating agent's block

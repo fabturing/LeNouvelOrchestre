@@ -97,6 +97,12 @@ class Orchestra {
       agent.playStep(this.step, time)
     });
 
+    // Debug
+    this.updateDebugBox();
+
+    //Animate the dancer
+    Tone.Draw.schedule(()=>{document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png',time});
+
     // Increment step count
     this.step ++;
 
@@ -105,11 +111,6 @@ class Orchestra {
       this.updateBlocks();
     }
 
-    // Debug
-    this.updateDebugBox();
-
-    //Animate the dancer
-    document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png';
   }
 
   // Debug Methods
