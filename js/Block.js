@@ -60,8 +60,47 @@ class Block {
     return this.structure[this.getPartIndex(step)];
   }
 
-  // Return a human-readable HTML block representation
+  // Return a simplified single line part to be used as a model
+  getPartAsModel(partId){
+    let part = this[partId];
+    // If no multi lines return the part
+    if(!this.lines){
+      return part;
+    }
+    // Else, flatten the part
+    else{
+      let flattenedPart = []
+      // Count how many note in the part accross every lines
+      let totalNoteCount = 0;
+      this.lines.forEach(line=>{
+        part[line].forEach(step=>{
+          if(step) totalNoteCount++;
+        });
+      });
+      // Compute the average number of note per step
+      let averageDensity = totalNoteCount / PART_SIZE;
+      // Write the flatten part with a note in each step where the number of note is greater than average.
+      for(let i=0; i<PART_SIZE; i++){
+        let stepNoteCount = 0;
+        let stepNote;
+        this.lines.forEach(line=>{
+          if(part[line][i]) {
+            stepNoteCount++;
+            stepNote = part[line][i];
+          }
+        });
+        if(stepNoteCount >= averageDensity){
+          flattenedPart[i]=stepNote;
+        }
+        else{
+          flattenedPart[i]=undefined;
+        }
+      }
+      return flattenedPart;
+    }
+  }
 
+  // Return a human-readable HTML block representation
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
     return `A: ${this.partRepr('A').outerHTML}<br/>

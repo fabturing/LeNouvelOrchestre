@@ -88,12 +88,7 @@ class Agent {
 
   // Method to be called on each step
   playStep(step, time){
-/*    if(this.lines){
-      this.lines.forEach(line=>{
-        let note = this.currentBlock.getNote(step, line);
-      })
-    }
-  */  let note = this.currentBlock.getNote(step);
+    let note = this.currentBlock.getNote(step);
     // Call play note only if there is a note and agent not muted
     if(note && !this.muted){
       this.playNote(note, time)
@@ -133,14 +128,14 @@ class Agent {
 
     // Get a first model from previous block
     let meloModel1;
-    if(this.previousBlock) meloModel1 = this.previousBlock[part];
+    if(this.previousBlock) meloModel1 = this.previousBlock.getPartAsModel(part);
     else meloModel1 = undefined;
 
     // Get a second model from leader block
     let meloModel2;
     if(this.orchestra.getLeader() == this) meloModel2 = undefined;
     else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
-    else meloModel2 = this.orchestra.getLeader().currentBlock[part];
+    else meloModel2 = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
 
     //  melody generation
     let melo = [];
@@ -150,7 +145,7 @@ class Agent {
       let meloByLines = Object.fromEntries(this.lines.map(line => {
         let linePattern = pattern[line] || pattern;
         let lineScale = scale[line] || scale;
-        let lineMelo = this.generateMelo(linePattern, lineScale);
+        let lineMelo = this.generateMelo(linePattern, lineScale, meloModel1, meloModel2);
         return [line, lineMelo];
       }));
 
