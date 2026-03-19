@@ -16,9 +16,6 @@ class Agent {
     this.muted = false;
     this.aura = 0;
     this.currentBlock;
-    this.pattern = this.generatePattern();
-    this.scale = this.generateScale();
-    this.structure = this.generateStructure();
     this.debugSynth = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
   }
@@ -127,7 +124,7 @@ class Agent {
   }
 
   // Method for generating a part. (part should be "A", "B" or "C")
-  generatePart(part){
+  generatePart(part, pattern, scale){
 
     // Get a first model from previous block
     let meloModel1;
@@ -140,9 +137,7 @@ class Agent {
     else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
     else meloModel2 = this.orchestra.getLeader().currentBlock[part];
 
-    // Prepare melody generation
-    let pattern = this.pattern;
-    let scale = this.scale;
+    //  melody generation
     let melo = [];
 
     // If there is lines, generate melody for each lines
@@ -162,7 +157,7 @@ class Agent {
     }
     // Else generate a single melody
     else {
-      melo = this.generateMelo(this.pattern, this.scale, meloModel1, meloModel2);
+      melo = this.generateMelo(pattern, scale, meloModel1, meloModel2);
     }
 
     return melo;
@@ -170,10 +165,12 @@ class Agent {
 
   // Method for generating a block
   generateBlock(){
-    let A = this.generatePart('A');
-    let B = this.generatePart('B');
-    let C = this.generatePart('C');
-    let structure = this.structure;
+    let pattern = this.generatePattern();
+    let scale =  this.generateScale();
+    let structure = this.generateStructure();
+    let A = this.generatePart('A', pattern, scale);
+    let B = this.generatePart('B', pattern, scale);
+    let C = this.generatePart('C', pattern, scale);
     return new Block(A, B, C, structure);
   }
   

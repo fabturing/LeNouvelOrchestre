@@ -6,9 +6,6 @@ const VOL_FLUTE = -8;
 const VOL_DRUM = -14;
 const VOL_BASSE = -7;
 
-let densité_hh = Math.random(); // Ajouter aux attributs visibles sur la console de liza
-
-
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
@@ -52,6 +49,7 @@ class Liza extends Agent {
       baseUrl: "samples/drum/",
       }).toDestination();
       this.drum.volume.value = VOL_DRUM ;
+      this.hhDensity = Math.random(); // Ajouter aux attributs visibles sur la console de liza
   }
 
   playNote(note, time){
@@ -70,21 +68,20 @@ class Liza extends Agent {
   }
   
   generatePattern(){
-    let pattern_hh = [.9,1,.9,1,.9,1,.9,1];
-    densité_hh = densité_hh + ( (Math.random()-0.5)*0.1); //Faire intervenir aura ici
-    densité_hh = Math.min(1, densité_hh);
-    densité_hh = Math.max(0.4, densité_hh);
-    console.log("densité_hh=", densité_hh);
-    if(densité_hh < 0.5 ){
-      for (let i = 0; i < pattern_hh.length; i++) {
-        pattern_hh[i] = 0;
-      }
+    let hhPattern = [.9,1,.9,1,.9,1,.9,1];
+
+    // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
+    this.hhDensity = this.hhDensity + ((Math.random()-0.5)*0.1); //Faire intervenir aura ici
+    this.hhDensity = Math.min(1, this.hhDensity);
+    this.hhDensity = Math.max(0.4, this.hhDensity);
+    console.log("this.hhDensity=", this.hhDensity);
+    for (let i = 0; i < hhPattern.length; i++) {
+      hhPattern[i] = hhPattern[i]*this.hhDensity;
+      if(this.hhDensity < 0.5 ) hhPattern[i] = 0;
     }
-    else {for (let i = 0; i < pattern_hh.length; i++) {
-      pattern_hh[i] = pattern_hh[i]*densité_hh}
-    }
+
     return {
-     hihat : pattern_hh,
+     hihat : hhPattern,
      kick : [.95,.05,.05,.05,.3,.05,.2,.05],
      snare : [0,.05,0.6,.1,.2,.1,0.6,.1]
    }
