@@ -49,7 +49,12 @@ class Liza extends Agent {
       baseUrl: "samples/drum/",
       }).toDestination();
       this.drum.volume.value = VOL_DRUM ;
-      this.hhDensity = Math.random(); // Ajouter aux attributs visibles sur la console de liza
+      this.density = {
+        hihat:Math.random(),
+        kick:1,
+        snare:1,
+      }
+
       this.ignoreLeaderBlockInfluence = true;
   }
 /*
@@ -86,13 +91,12 @@ class Liza extends Agent {
     let hhPattern = [.9,1,.9,1,.9,1,.9,1];
 
     // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
-    this.hhDensity = this.hhDensity + ((Math.random()-0.5)*0.1); //Faire intervenir aura ici
-    this.hhDensity = Math.min(1, this.hhDensity);
-    this.hhDensity = Math.max(0.4, this.hhDensity);
-    console.log("this.hhDensity=", this.hhDensity);
+    this.density.hihat = this.density.hihat + ((Math.random()-0.5)*0.1); //Faire intervenir aura ici
+    this.density.hihat = Math.min(1, this.density.hihat);
+    this.density.hihat = Math.max(0.4, this.density.hihat);
     for (let i = 0; i < hhPattern.length; i++) {
-      hhPattern[i] = hhPattern[i]*this.hhDensity;
-      if(this.hhDensity < 0.5 ) hhPattern[i] = 0;
+      hhPattern[i] = hhPattern[i]*this.density.hihat;
+      if(this.density.hihat < 0.5 ) hhPattern[i] = 0;
     }
 
     return {

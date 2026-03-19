@@ -16,6 +16,7 @@ class Agent {
     this.orchestra;
     this.muted = false;
     this.aura = 0;
+    this.density = 1;
     this.currentBlock;
     this.debugSynth = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
