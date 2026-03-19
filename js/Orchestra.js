@@ -98,7 +98,7 @@ class Orchestra {
     this.updateDebugBox();
 
     //Animate the dancer
-    document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png')
+    document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png';
   }
 
   // Debug Methods
