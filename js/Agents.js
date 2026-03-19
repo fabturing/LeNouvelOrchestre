@@ -1,8 +1,8 @@
 
 const VOL_FLUTE = -8;
-const VOL_DRUM = -15;
+const VOL_DRUM = -14;
 const VOL_BASSE = -7;
-let densité_hh = Math.random();
+let densité_hh = Math.random(); // Ajouter aux attributs visibles sur la console de liza
 
 
 class Jief extends Agent {
@@ -58,23 +58,26 @@ class Liza extends Agent {
 
   playNote(note, time){
     if(note.hihat){
-      let velocite = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C5', "8n", time, velocite);
+      let velocite_hh = 1-Math.random()/2;
+      this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
     }
     if(note.kick){
       this.drum.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
-    let velocite = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C4', "8n", time);
+    let velocite_snr = 1-Math.random()/2;
+      this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
     }
 
   }
   
   generatePattern(){
-    let pattern_hh = [.8,.9,.8,.9,.8,.9,.8,.9];
-    densité_hh = Math.min(1, densité_hh + ((Math.random()-0.45)*0.05));
-    if(densité_hh < 0.1 ){
+    let pattern_hh = [.9,1,.9,1,.9,1,.9,1];
+    densité_hh = densité_hh + ( (Math.random()-0.5)*0.1); //Faire intervenir aura ici
+    densité_hh = Math.min(1, densité_hh);
+    densité_hh = Math.max(0.4, densité_hh);
+    console.log("densité_hh=", densité_hh);
+    if(densité_hh < 0.5 ){
       for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = 0}
     }
     else {for (let i = 0; i < pattern_hh.length; i++) {pattern_hh[i] = pattern_hh[i]*densité_hh}
