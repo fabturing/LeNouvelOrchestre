@@ -50,6 +50,7 @@ class Liza extends Agent {
       }).toDestination();
       this.drum.volume.value = VOL_DRUM ;
       this.hhDensity = Math.random(); // Ajouter aux attributs visibles sur la console de liza
+      this.ignoreLeaderBlockInfluence = true;
   }
 /*
   playNote.hihat(note, time){

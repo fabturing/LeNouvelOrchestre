@@ -27,6 +27,15 @@ class DebugBox {
         this.update();
       });
     });
+    // Init [data-check] elements
+    this.element.querySelectorAll('[data-check]').forEach(el=>{
+      let attribute = el.dataset.check;
+      el.addEventListener('click', ()=>{
+        let value = el.checked;
+        this.object[attribute] = value;
+        this.update();
+      });
+    });
 
     this.update();
   }
@@ -47,6 +56,12 @@ class DebugBox {
       let attribute = el.dataset.progress;
       let value = this.object[attribute];
       el.value = value;
+    });
+    // Update [data-check] elements
+    this.element.querySelectorAll('[data-check]').forEach(el=>{
+      let attribute = el.dataset.check;
+      let value = this.object[attribute];
+      el.checked = value;
     });
   }
 }

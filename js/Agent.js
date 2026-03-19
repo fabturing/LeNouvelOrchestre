@@ -10,8 +10,9 @@ class Agent {
     // Array of identifiants for the lines of the agent
     // Keep that undefined if there is only one line.
     this.lines = lines;
-
     // Other attributes
+    this.ignoreLeaderBlockInfluence = false;
+    this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
     this.aura = 0;
@@ -126,14 +127,18 @@ class Agent {
   // Method for generating a part. (part should be "A", "B" or "C")
   generatePart(part, pattern, scale){
 
+
+
     // Get a first model from previous block
     let meloModel1;
-    if(this.previousBlock) meloModel1 = this.previousBlock.getPartAsModel(part);
+    if(this.ignorePreviousBlockInfluence) meloModel1 = undefined;
+    else if(this.previousBlock) meloModel1 = this.previousBlock.getPartAsModel(part);
     else meloModel1 = undefined;
 
     // Get a second model from leader block
     let meloModel2;
-    if(this.orchestra.getLeader() == this) meloModel2 = undefined;
+    if(this.ignoreLeaderBlockInfluence) meloModel2 = undefined;
+    else if(this.orchestra.getLeader() == this) meloModel2 = undefined;
     else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
     else meloModel2 = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
 
