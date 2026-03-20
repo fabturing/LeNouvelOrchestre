@@ -1,20 +1,34 @@
 // This file define Agents classes for specific agents
 // Agents should extends the Agent class.
 
-// Settings
-const VOL_FLUTE = -8;
+// Settings-----------
+
+// Jief joue de la FLUTE
+const VOL_FLUTE = -8; //Volume en dB, max 0
+const PAN_FLUTE = -0.6; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
+//Liza joue des DRUM
 const VOL_DRUM = -14;
+const PAN_DRUM = 0;
+
+//Crocodus joue de la BASSE
 const VOL_BASSE = -7;
+const PAN_BASSE = 0;
+
+//---------------------
 
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
+
+    const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
+
     this.flute = new Tone.Sampler({
       urls: {
           C4: "C3.mp3",
       },
       baseUrl: "samples/flute/",
-      }).toDestination();
+      }).connect(panflute);
       this.flute.volume.value = VOL_FLUTE ;
   }
 
@@ -40,6 +54,9 @@ class Jief extends Agent {
 class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
+
+    const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
+
     this.drum = new Tone.Sampler({
       urls: {
           C3: "C3.mp3", //kick
@@ -47,7 +64,7 @@ class Liza extends Agent {
           C5: "C5.mp3", //hihat
       },
       baseUrl: "samples/drum/",
-      }).toDestination();
+      }).connect(pandrum);
       this.drum.volume.value = VOL_DRUM ;
       this.density = {
         hihat:Math.random(),
@@ -112,13 +129,16 @@ class Liza extends Agent {
 class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
-    const filtre = new Tone.Filter( 1000, "lowpass").toDestination();
+
+    const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
+    const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);
+
     this.basse = new Tone.Sampler({
       urls: {
           C4: "C2.mp3",
       },
       baseUrl: "samples/basse/",
-      }).connect(filtre);
+      }).connect(filtrebasse);
     this.basse.volume.value = VOL_BASSE ;
   }
 
