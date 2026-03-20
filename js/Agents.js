@@ -38,8 +38,14 @@ class Jief extends Agent {
   }
 
   playNote(note, time){
-
-    this.flute.triggerAttackRelease(note, "8n", time);
+    let blockStep = this.orchestra.blockStep;
+    let nextNote = this.currentBlock.getNote(blockStep+1);
+    let duration = Tone.Time("8n");
+    // For even steps, if the next note is silent, double the duration.
+    if(!nextNote && blockStep%2==0){
+      duration = duration * 2;
+    }
+    this.flute.triggerAttackRelease(note, duration, time);
   }
 
   generateStructure(){
