@@ -5,10 +5,10 @@
 
 // Jief joue de la FLUTE
 const VOL_FLUTE = -8; //Volume en dB, max 0
-const PAN_FLUTE = -0.6; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+const PAN_FLUTE = -0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
-const VOL_DRUM = -14;
+const VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
