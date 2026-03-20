@@ -1,26 +1,31 @@
 // This file define Agents classes for specific agents
 // Agents should extends the Agent class.
 
-// Settings-----------
+// Settings MIXAGE -----------
 
 // Jief joue de la FLUTE
-const VOL_FLUTE = -8; //Volume en dB, max 0
+let VOL_FLUTE = -8; //Volume en dB, max 0
 const PAN_FLUTE = -0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
-const VOL_DRUM = -13.5;
+let VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-const VOL_BASSE = -7;
+let VOL_BASSE = -7;
 const PAN_BASSE = 0;
 
-//---------------------
+//Normaliser volumes
+let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
+VOL_FLUTE = VOL_FLUTE + maxvol;
+VOL_DRUM = VOL_DRUM + maxvol;
+VOL_BASSE = VOL_BASSE + maxvol;
+
 
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
-
+//FX
     const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
 
     this.flute = new Tone.Sampler({
@@ -33,6 +38,7 @@ class Jief extends Agent {
   }
 
   playNote(note, time){
+
     this.flute.triggerAttackRelease(note, "8n", time);
   }
 
@@ -54,7 +60,7 @@ class Jief extends Agent {
 class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
-
+//FX
     const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
 
     this.drum = new Tone.Sampler({
@@ -129,7 +135,7 @@ class Liza extends Agent {
 class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
-
+//FX
     const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
     const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);
 
