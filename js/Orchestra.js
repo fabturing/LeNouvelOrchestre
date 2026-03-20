@@ -71,12 +71,14 @@ class Orchestra {
     });
   }
 
-    // Method for  initializating agents Blocks
-  initBlocks(){
+    // Method for  initializating Orchestra
+  init(){
     this.sortAgents();
     this.agents.forEach(agent=>{
       agent.updateBlock();
+      agent.anim.init();
     });
+    this.initDebugBox();
   }
 
   // Start the music

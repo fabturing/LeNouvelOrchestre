@@ -25,9 +25,9 @@ VOL_BASSE = VOL_BASSE + maxvol;
 class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
+    this.anim = new Anim('jief', false);
 //FX
     const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
-
     this.flute = new Tone.Sampler({
       urls: {
           C4: "C3.mp3",
@@ -66,6 +66,7 @@ class Jief extends Agent {
 class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
+        this.anim = new Anim('liza', true);
 //FX
     const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
 
@@ -141,6 +142,7 @@ class Liza extends Agent {
 class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
+    this.anim = new Anim('crocodus', true);
 //FX
     const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
     const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);

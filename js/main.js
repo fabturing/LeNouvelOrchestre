@@ -19,8 +19,8 @@ function main(){
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   jief.aura = 0.9;
-  orchestra.initBlocks();
-  orchestra.initDebugBox();
+  orchestra.init();
+
 }
 
 // Function triggered by the play button

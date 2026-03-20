@@ -91,9 +91,9 @@ class Agent {
   // Method to be called on each step
   playStep(step, time){
     let note = this.currentBlock.getNote(step);
-    // Call play note only if there is a note and agent not muted
-    if(note && !this.muted){
-      this.playNote(note, time)
+    if(this.isPlaying){
+      this.playNote(note, time);
+      this.anim.animate(time);
     }
   }
 
