@@ -46,7 +46,8 @@ class Jief extends Agent {
     if(!nextNote && blockStep%2==0){
       duration = duration * 2;
     }
-    this.flute.triggerAttackRelease(note, duration, time);
+    let velocite_flute = 1-Math.random()/3;
+    this.flute.triggerAttackRelease(note, duration, time, velocite_flute);
   }
 
   generateStructure(){
