@@ -26,6 +26,7 @@ class Jief extends Agent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret");
     this.anim = new Anim('jief', false);
+    this.category = 'melodic';
 //FX
     const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
     this.flute = new Tone.Sampler({
@@ -67,6 +68,7 @@ class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
         this.anim = new Anim('liza', true);
+        this.category = 'perc';
 //FX
     const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
 
@@ -143,6 +145,7 @@ class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
     this.anim = new Anim('crocodus', true);
+    this.category = 'melodic';
 //FX
     const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
     const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);
