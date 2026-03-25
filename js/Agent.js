@@ -127,46 +127,33 @@ class Agent {
 
   // Method for generating a part. (part should be "A", "B" or "C")
   generatePart(part, pattern, scale){
-
-
-
     // Get a first model from previous block
-    let meloModel1;
-    if(this.ignorePreviousBlockInfluence) meloModel1 = undefined;
-    else if(this.previousBlock) meloModel1 = this.previousBlock.getPartAsModel(part);
-    else meloModel1 = undefined;
+    let previousModel;
+    if(this.ignorePreviousBlockInfluence) previousModel = undefined;
+    else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(part);
+    else previousModel = undefined;
 
     // Get a second model from leader block
-    let meloModel2;
-    if(this.ignoreLeaderBlockInfluence) meloModel2 = undefined;
-    else if(this.orchestra.getLeader() == this) meloModel2 = undefined;
-    else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
-    else meloModel2 = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
+    let leaderModel;
+    if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
+    else if(this.orchestra.getLeader() == this) leaderModel = undefined;
+    else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
+    else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
 
     //  melody generation
     let melo = [];
 
     // If there is lines, generate melody for each lines
     if(this.lines){
-      let meloByLines = Object.fromEntries(this.lines.map(line => {
+      this.lines.forEach(line=>{
         let linePattern = pattern[line] || pattern;
         let lineScale = scale[line] || scale;
-        let lineMelo = this.generateMelo(linePattern, lineScale, meloModel1, meloModel2);
-        return [line, lineMelo];
-      }));
-
-      // Convert object of array to array of objects
-      let meloLength = meloByLines[this.lines[0]].length;
-      for(let i = 0; i < meloLength;  i++){
-        melo[i] = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
-      }
-
-      //TEST
-      melo = meloByLines
+        melo[line] = this.generateMelo(linePattern, lineScale, previousModel, leaderModel);
+      });
     }
     // Else generate a single melody
     else {
-      melo = this.generateMelo(pattern, scale, meloModel1, meloModel2);
+      melo = this.generateMelo(pattern, scale, previousModel, leaderModel);
     }
 
     return melo;
