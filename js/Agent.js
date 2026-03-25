@@ -16,11 +16,23 @@ class Agent {
     this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
-    this.aura = 0;
+    this.aura = 1;
     this.density = 1;
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
+  }
+
+  // Method for  initializating Agent
+  init(){
+    this.anim.init();
+    this.updateBlock();
+    this.aura = Math.random();
+  }
+
+  // Method for updating to be call on each block end
+  update(){
+    this.aura += Math.random()/10;
   }
 
   // Default method for playing a note. Should be overrided.
@@ -41,7 +53,6 @@ class Agent {
   generateScale(){
     return ['A1'];
   }
-
 
   // getter for debugging block
   get currentBlockRepr(){
@@ -97,6 +108,8 @@ class Agent {
       this.anim.animate(time);
     }
   }
+
+
 
   // Method for generating a melody from a pattern, a scale and models (models are optionals)
   generateMelo(pattern, scale, meloModel1, meloModel2){
@@ -189,14 +202,4 @@ class Agent {
     let scale =  this.generateScale();
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
   }
-
-  // Debug methods
-  initDebugBox(){
-   this.debugBox.init();
-  }
-  updateDebugBox(){
-    this.debugBox.update();
-  }
-
 }
-

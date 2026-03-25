@@ -9,6 +9,12 @@ function percent(n){
   return n/100;
 }
 
+// Return the value passed. But if its a number, round to second decimal.
+function roundIfNumber(n){
+  if(!isNaN(n)) return Math.round(n*100)/100;
+  return n;
+}
+
 // Return a DOM object for representing a multilines information
 // `object` is the multinine object
 // `func` is the function to be called on each line to represent it
@@ -21,7 +27,7 @@ function debugMultiLines(object, func){
     let row = document.createElement('tr');
     let lineElement = document.createElement('td');
     if(func) lineElement.appendChild(func(object[line]));
-    else lineElement.innerHTML = object[line]
+    else lineElement.innerHTML = roundIfNumber(object[line]);
     let headerElement = document.createElement('th');
     headerElement.innerHTML = line
 
@@ -42,6 +48,7 @@ function debugSequence(array, index){
     stepElement.classList.add('step');
     if(index === i) stepElement.classList.add('current');
     if(!step) stepElement.classList.add('empty');
+    step = roundIfNumber(step);
     stepElement.innerHTML = step;
     container.appendChild(stepElement);
   })

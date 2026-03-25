@@ -62,23 +62,31 @@ class Orchestra {
     return this.agents[0];
   }
 
-  // Method for  updating agents Blocks
-  updateBlocks(){
-    this.sortAgents();
-    let part = randomChoice(["A","B","C"])
-    this.agents.forEach(agent=>{
-      agent.updatePart(part);
-    });
-  }
-
     // Method for  initializating Orchestra
   init(){
     this.sortAgents();
     this.agents.forEach(agent=>{
-      agent.updateBlock();
-      agent.anim.init();
+      agent.init();
     });
+    this.update();
     this.initDebugBox();
+  }
+
+  // Method for updating to be call on each block end
+  update(){
+    this.updatedPart = randomChoice(["A","B","C"])
+    this.agents.forEach(agent=>{
+      agent.update();
+    });
+
+    // Normalise aura
+    let aurasSum = this.agents.reduce((acc, agent)=>acc+agent.aura,0);
+    this.agents.forEach(agent=>{agent.aura /= aurasSum});
+
+    this.sortAgents();
+    this.agents.forEach(agent=>{
+      agent.updatePart(this.updatedPart);
+    });
   }
 
   // Start the music
@@ -95,9 +103,14 @@ class Orchestra {
 
     // Debug
     this.updateDebugBox();
+  }
 
-    //Animate the dancer
-    document.getElementById('dancer').src = 'sprites/iddle.png';
+  // Method for going to next Block
+  nextBlock(){
+    let remainingSteps = BLOCK_SIZE - this.blockStep;
+    this.step += remainingSteps;
+    this.update();
+    this.updateDebugBox();
   }
 
   // Method for playing a step
@@ -111,15 +124,12 @@ class Orchestra {
     // Debug
     this.updateDebugBox();
 
-    //Animate the dancer
-    Tone.Draw.schedule(()=>{document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png',time});
-
     // Increment step count
     this.step ++;
 
-    // At the  end of the block, update Blocks.
+    // At the  end of the block, update.
     if(this.step % BLOCK_SIZE == 0){
-      this.updateBlocks();
+      this.update();
     }
 
   }
@@ -127,10 +137,10 @@ class Orchestra {
   // Debug Methods
   initDebugBox(){
    this.debugBox.init();
-   this.agents.forEach(agent=>{agent.initDebugBox()});
+   this.agents.forEach(agent=>{agent.debugBox.init()});
   }
   updateDebugBox(){
     this.debugBox.update();
-    this.agents.forEach(agent=>{agent.updateDebugBox()});
+    this.agents.forEach(agent=>{agent.debugBox.update()});
   }
 }

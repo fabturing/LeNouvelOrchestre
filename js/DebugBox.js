@@ -51,6 +51,7 @@ class DebugBox {
     this.element.querySelectorAll('[data-attribute]').forEach(el=>{
       let attribute = el.dataset.attribute;
       let value = this.object[attribute];
+      value = roundIfNumber(value);
       el.innerHTML = '';
       if(value && typeof value == 'object') el.appendChild(debugMultiLines(value));
       else el.innerHTML = value;
@@ -62,6 +63,7 @@ class DebugBox {
       let value = this.object[attribute];
       el.value = value;
     });
+
     // Update [data-check] elements
     this.element.querySelectorAll('[data-check]').forEach(el=>{
       let attribute = el.dataset.check;
