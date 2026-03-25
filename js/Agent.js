@@ -19,13 +19,13 @@ class Agent {
     this.aura = 0;
     this.density = 1;
     this.currentBlock;
-    this.debugSynth = new Tone.Synth().toDestination();
+    this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
   }
 
   // Default method for playing a note. Should be overrided.
   playNote(note, time){
-    this.debugSynth.triggerAttackRelease(note, "1n", time);
+    this.instrument.triggerAttackRelease(note, "1n", time);
   }
 
   // Default method for generating a structure. Should be overrided.
