@@ -4,7 +4,10 @@ function randomChoice (arr){
   return arr[Math.floor(arr.length * Math.random())];
 }
 
-
+// Return percent value
+function percent(n){
+  return n/100;
+}
 
 // Return a DOM object for representing a multilines information
 // `object` is the multinine object

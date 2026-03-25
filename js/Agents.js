@@ -13,7 +13,7 @@ const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
 let VOL_BASSE = -7;
-const PAN_BASSE = 1;
+const PAN_BASSE = 0;
 
 //Normaliser volumes
 let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
@@ -54,7 +54,8 @@ class Jief extends Agent {
   }
 
   generatePattern(){
-    return [.9, 1/3, 2/3, 1/3, 4/5, 1/3, 2/3, 1/3];
+    const pattern = [90, 33, 66, 33, 80, 33, 66, 33]
+    return pattern.map(percent);
   }
 
   generateScale(){
@@ -107,21 +108,25 @@ class Liza extends Agent {
   }
   
   generatePattern(){
-    let hhPattern = [1,1,1,1,1,1,1,1];
+    const hhPattern = [100,100,100,100,100,100,100,100];
+    const kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
+    const snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
 
     // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
     this.density.hihat = this.density.hihat + ((Math.random()-0.5)*0.4); //Faire intervenir aura ici
     this.density.hihat = Math.min(1, this.density.hihat);
     this.density.hihat = Math.max(0.6, this.density.hihat);
+
+    // Apply density to pattern
     for (let i = 0; i < hhPattern.length; i++) {
       hhPattern[i] = hhPattern[i]*this.density.hihat;
       if(this.density.hihat < 0.5 ) hhPattern[i] = 0;
     }
 
     return {
-     hihat : hhPattern,
-     kick : [.95,.05,.05,.05,.3,.05,.2,.05],
-     snare : [.001 ,.05,.05,.05,.9,.05,.1,.05]
+     hihat : hhPattern.map(percent),
+     kick : kickPattern.map(percent),
+     snare : snarePattern.map(percent)
    }
   }
 
@@ -160,7 +165,8 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-    return [.97, .05, .1, 1/4, .95, 0.1, .2, 0.2];
+    const pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+    return pattern.map(percent);
   }
 
   generateScale(){
