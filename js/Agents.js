@@ -13,7 +13,7 @@ const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
 let VOL_BASSE = -7;
-const PAN_BASSE = 0;
+const PAN_BASSE = 1;
 
 //Normaliser volumes
 let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
@@ -27,15 +27,15 @@ class Jief extends Agent {
     super("Jiéf", "Petit flutiste debout sur un tabouret");
     this.anim = new Anim('jief', false);
     this.category = 'melodic';
-//FX
-    const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
-    this.flute = new Tone.Sampler({
-      urls: {
-          C4: "C3.mp3",
-      },
+    //FX
+
+    this.instrument = new Tone.Sampler({
+      urls: {C4: "C3.mp3"},
       baseUrl: "samples/flute/",
-      }).connect(panflute);
-      this.flute.volume.value = VOL_FLUTE ;
+    });
+    const pan = new Tone.Panner(PAN_FLUTE).toDestination();
+    this.instrument.connect(pan)
+    this.instrument.volume.value = VOL_FLUTE ;
   }
 
   playNote(note, time){
@@ -46,7 +46,7 @@ class Jief extends Agent {
     if(!nextNote && blockStep%2==0){
       duration = duration * 2;
     }
-    this.flute.triggerAttackRelease(note, duration, time);
+    this.instrument.triggerAttackRelease(note, duration, time);
   }
 
   generateStructure(){
@@ -67,54 +67,41 @@ class Jief extends Agent {
 class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
-        this.anim = new Anim('liza', true);
-        this.category = 'perc';
-//FX
-    const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
+    this.anim = new Anim('liza', true);
+    this.category = 'perc';
 
-    this.drum = new Tone.Sampler({
-      urls: {
-          C3: "C3.mp3", //kick
-          C4: "C4.mp3", //snare
-          C5: "C5.mp3", //hihat
-      },
-      baseUrl: "samples/drum/",
-      }).connect(pandrum);
-      this.drum.volume.value = VOL_DRUM ;
-      this.density = {
-        hihat:Math.random(),
-        kick:1,
-        snare:1,
-      }
+    this.instrument = new Tone.Sampler({
+    urls: {
+        C3: "C3.mp3", //kick
+        C4: "C4.mp3", //snare
+        C5: "C5.mp3", //hihat
+    },
+    baseUrl: "samples/drum/",
+    })
+    const pan = new Tone.Panner(PAN_DRUM).toDestination();
+    this.instrument.connect(pan)
+    this.instrument.volume.value = VOL_DRUM ;
 
-      this.ignoreLeaderBlockInfluence = true;
-  }
-/*
-  playNote.hihat(note, time){
-    let velocite_hh = 1-Math.random()/2;
-    this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
-  )
+    this.density = {
+      hihat:Math.random(),
+      kick:1,
+      snare:1,
+    }
 
-  playNote.kick(note, time){
-    this.drum.triggerAttackRelease('C3', "8n", time);
+    this.ignoreLeaderBlockInfluence = true;
   }
 
-  playNote.snare(note, time){
-    let velocite_snr = 1-Math.random()/2;
-    this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
-  }
-*/
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
+      this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
     }
     if(note.kick){
-      this.drum.triggerAttackRelease('C3', "8n", time);
+      this.instrument.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
       let velocite_snr = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
+      this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
     }
 
   }
@@ -147,21 +134,24 @@ class Crocodus extends Agent {
     this.anim = new Anim('crocodus', true);
     this.category = 'melodic';
 //FX
-    const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
-    const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);
 
-    this.basse = new Tone.Sampler({
-      urls: {
-          C4: "C2.mp3",
-      },
+
+    this.instrument = new Tone.Sampler({
+      urls: {C4: "C2.mp3"},
       baseUrl: "samples/basse/",
-      }).connect(filtrebasse);
-    this.basse.volume.value = VOL_BASSE ;
+    });
+
+    const pan = new Tone.Panner (PAN_BASSE).toDestination();
+    this.instrument.connect(pan);
+    const filter = new Tone.Filter( 1000, "lowpass")
+    this.instrument.connect(filter);
+    this.instrument.volume.value = VOL_BASSE ;
   }
 
+
   playNote(note, time){
-  note = Tonal.Note.transpose(note, "-8P");
-    this.basse.triggerAttackRelease(note, "4n", time);
+    note = Tonal.Note.transpose(note, "-8P");
+    this.instrument.triggerAttackRelease(note, "4n", time);
   }
 
 
@@ -174,9 +164,7 @@ class Crocodus extends Agent {
   }
 
   generateScale(){
-
     let scale = Tonal.Scale.get('C4 minor');
-
     return scale.notes;
   }
 
