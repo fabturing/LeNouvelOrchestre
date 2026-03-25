@@ -51,7 +51,7 @@ class Agent {
   }
   // Default method for generating a scale. Should be overrided.
   generateScale(){
-    return ['A1'];
+    return ['C4'];
   }
 
   // getter for debugging block
