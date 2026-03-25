@@ -33,6 +33,12 @@ class Orchestra {
   get blockStep(){
     return (this.step%BLOCK_SIZE);
   }
+
+  // Getter for blockCount
+  get blockCount(){
+    return Math.floor(this.step/BLOCK_SIZE);
+  }
+
   // Getter for partStep, from 0 to part size
   get partStep(){
     return (this.step%PART_SIZE);
