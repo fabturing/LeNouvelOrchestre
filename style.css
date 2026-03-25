@@ -14,13 +14,27 @@ th{
 
 }
 
+.debug-box.closed>table tbody{
+  display: none;
+}
+
+.debug-box>table>thead{
+  text-align:left;
+  background:#eee;
+  color:#333;
+  cursor:pointer;
+}
+.debug-box>table thead:hover {
+  background: white;
+}
+
 .debug-box>table {
   background: white;
   margin: 1em;
   min-width:600px
 }
-.debug-box>table>tbody>tr>th,
-.debug-box>table>thead>tr>th{
+
+.debug-box>table>tbody>tr>th{
   width:120px;
     background:#eee;
   color:#333;

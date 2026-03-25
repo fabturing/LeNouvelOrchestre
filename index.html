@@ -30,14 +30,17 @@
     <template id="orchestra-debug-box">
       <div class="debug-box">
         <table>
-          <thead><tr><th colspan="2">Orchestra</th></tr></thead>
+          <thead><tr><th colspan="2">Orchestra - <span data-attribute="name"></span></th></tr></thead>
           <tbody>
             <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
             <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
             <tr><th scope="row">Step</th><td><span data-attribute="step"></span></td></tr>
             <tr><th scope="row">Block progress</th><td><progress value="0" max="1" data-progress="blockProgress"></progress></td></tr>
             <tr><th scope="row">Playing</th><td><span data-attribute="playing"></span></td></tr>
-            <tr><th scope="row">Controls</th><td><button data-method="start">Start</button><button data-method="pause">Pause</button></td></tr>
+            <tr><th scope="row">Controls</th><td>
+               <button data-method="start">Start</button>
+               <button data-method="pause">Pause</button>
+             </td></tr>
           </tbody>
         </table>
       </div>
@@ -46,7 +49,7 @@
     <template id="agent-debug-box">
       <div class="debug-box">
         <table>
-          <thead><tr><th colspan="2">Agent</th></tr></thead>
+          <thead><tr><th colspan="2">Agent - <span data-attribute="name"></span></th></tr></thead>
           <tbody>
             <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
             <tr><th scope="row">Description</th><td><span data-attribute="descritption"></span></td></tr>
@@ -56,7 +59,7 @@
             <tr><th scope="row">Density</th><td><span data-attribute="density"></span></td></tr>
             <tr><th scope="row">Part</th><td><span data-attribute="currentPart"></span></td></tr>
 
-            <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>"
+            <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>
             <tr><th scope="row">Block</th><td><span data-attribute="currentBlockRepr"></span></td></tr>
             <tr><th scope="row">Ignore Previous Block Influence</th><td><input type="checkbox" data-check="ignorePreviousBlockInfluence"/></td></tr>
             <tr><th scope="row">Ignore Leader Block Influence</th><td><input type="checkbox" data-check="ignoreLeaderBlockInfluence"/></td></tr>

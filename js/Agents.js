@@ -27,15 +27,15 @@ class Jief extends Agent {
     super("Jiéf", "Petit flutiste debout sur un tabouret");
     this.anim = new Anim('jief', false);
     this.category = 'melodic';
-//FX
-    const panflute = new Tone.Panner (PAN_FLUTE).toDestination();
-    this.flute = new Tone.Sampler({
-      urls: {
-          C4: "C3.mp3",
-      },
+    //FX
+
+    this.instrument = new Tone.Sampler({
+      urls: {C4: "C3.mp3"},
       baseUrl: "samples/flute/",
-      }).connect(panflute);
-      this.flute.volume.value = VOL_FLUTE ;
+    });
+    const pan = new Tone.Panner(PAN_FLUTE).toDestination();
+    this.instrument.connect(pan)
+    this.instrument.volume.value = VOL_FLUTE ;
   }
 
   playNote(note, time){
@@ -46,8 +46,10 @@ class Jief extends Agent {
     if(!nextNote && blockStep%2==0){
       duration = duration * 2;
     }
+
     let velocite_flute = 1-Math.random()/3;
     this.flute.triggerAttackRelease(note, duration, time, velocite_flute);
+
   }
 
   generateStructure(){
@@ -55,7 +57,8 @@ class Jief extends Agent {
   }
 
   generatePattern(){
-    return [.9, 1/3, 2/3, 1/3, 4/5, 1/3, 2/3, 1/3];
+    const pattern = [90, 33, 66, 33, 80, 33, 66, 33]
+    return pattern.map(percent);
   }
 
   generateScale(){
@@ -68,74 +71,65 @@ class Jief extends Agent {
 class Liza extends Agent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
-        this.anim = new Anim('liza', true);
-        this.category = 'perc';
-//FX
-    const pandrum = new Tone.Panner (PAN_DRUM).toDestination();
+    this.anim = new Anim('liza', true);
+    this.category = 'perc';
 
-    this.drum = new Tone.Sampler({
-      urls: {
-          C3: "C3.mp3", //kick
-          C4: "C4.mp3", //snare
-          C5: "C5.mp3", //hihat
-      },
-      baseUrl: "samples/drum/",
-      }).connect(pandrum);
-      this.drum.volume.value = VOL_DRUM ;
-      this.density = {
-        hihat:Math.random(),
-        kick:1,
-        snare:1,
-      }
+    this.instrument = new Tone.Sampler({
+    urls: {
+        C3: "C3.mp3", //kick
+        C4: "C4.mp3", //snare
+        C5: "C5.mp3", //hihat
+    },
+    baseUrl: "samples/drum/",
+    })
+    const pan = new Tone.Panner(PAN_DRUM).toDestination();
+    this.instrument.connect(pan)
+    this.instrument.volume.value = VOL_DRUM ;
 
-      this.ignoreLeaderBlockInfluence = true;
-  }
-/*
-  playNote.hihat(note, time){
-    let velocite_hh = 1-Math.random()/2;
-    this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
-  )
+    this.density = {
+      hihat:Math.random(),
+      kick:1,
+      snare:1,
+    }
 
-  playNote.kick(note, time){
-    this.drum.triggerAttackRelease('C3', "8n", time);
+    this.ignoreLeaderBlockInfluence = true;
   }
 
-  playNote.snare(note, time){
-    let velocite_snr = 1-Math.random()/2;
-    this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
-  }
-*/
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C5', "8n", time, velocite_hh);
+      this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
     }
     if(note.kick){
-      this.drum.triggerAttackRelease('C3', "8n", time);
+      this.instrument.triggerAttackRelease('C3', "8n", time);
     }
     if(note.snare){
       let velocite_snr = 1-Math.random()/2;
-      this.drum.triggerAttackRelease('C4', "8n", time, velocite_snr);
+      this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
     }
 
   }
   
   generatePattern(){
-    let hhPattern = [1,1,1,1,1,1,1,1];
+    const hhPattern = [100,100,100,100,100,100,100,100];
+    const kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
+    const snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
 
     // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
     this.density.hihat = this.density.hihat + ((Math.random()-0.5)*0.4); //Faire intervenir aura ici
     this.density.hihat = Math.min(1, this.density.hihat);
     this.density.hihat = Math.max(0.6, this.density.hihat);
+
+    // Apply density to pattern
     for (let i = 0; i < hhPattern.length; i++) {
       hhPattern[i] = hhPattern[i]*this.density.hihat;
       if(this.density.hihat < 0.5 ) hhPattern[i] = 0;
     }
 
     return {
-     hihat : hhPattern,
-     kick : [.95,.05,.05,.05,.3,.05,.2,.05],
-     snare : [.001 ,.05,.05,.05,.9,.05,.1,.05]
+     hihat : hhPattern.map(percent),
+     kick : kickPattern.map(percent),
+     snare : snarePattern.map(percent)
    }
   }
 
@@ -148,21 +142,24 @@ class Crocodus extends Agent {
     this.anim = new Anim('crocodus', true);
     this.category = 'melodic';
 //FX
-    const panbasse = new Tone.Panner (PAN_BASSE).toDestination();
-    const filtrebasse = new Tone.Filter( 1000, "lowpass").connect(panbasse);
 
-    this.basse = new Tone.Sampler({
-      urls: {
-          C4: "C2.mp3",
-      },
+
+    this.instrument = new Tone.Sampler({
+      urls: {C4: "C2.mp3"},
       baseUrl: "samples/basse/",
-      }).connect(filtrebasse);
-    this.basse.volume.value = VOL_BASSE ;
+    });
+
+    const pan = new Tone.Panner (PAN_BASSE).toDestination();
+    this.instrument.connect(pan);
+    const filter = new Tone.Filter( 1000, "lowpass")
+    this.instrument.connect(filter);
+    this.instrument.volume.value = VOL_BASSE ;
   }
 
+
   playNote(note, time){
-  note = Tonal.Note.transpose(note, "-8P");
-    this.basse.triggerAttackRelease(note, "4n", time);
+    note = Tonal.Note.transpose(note, "-8P");
+    this.instrument.triggerAttackRelease(note, "4n", time);
   }
 
 
@@ -171,16 +168,16 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-    return [.97, .05, .1, 1/4, .95, 0.1, .2, 0.2];
+    const pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+    return pattern.map(percent);
   }
 
   generateScale(){
-
     let scale = Tonal.Scale.get('C4 minor');
-
     return scale.notes;
   }
 
 }
+
 
 

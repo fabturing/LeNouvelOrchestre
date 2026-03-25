@@ -19,6 +19,11 @@ class DebugBox {
     this.element = template.content.firstElementChild.cloneNode(true);
     document.body.appendChild(this.element);
 
+    // toggleOpen
+    this.element.querySelector('thead').addEventListener('click', ()=>{
+      this.element.classList.toggle('closed')
+    });
+
     // Init [data-method] elements
     this.element.querySelectorAll('[data-method]').forEach(el=>{
       let method = el.dataset.method;
