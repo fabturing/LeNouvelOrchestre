@@ -18,6 +18,8 @@ class Agent {
     this.muted = false;
     this.aura = 1;
     this.density = 1;
+    this.mood = 0.5;
+    this.moodPosition = Math.random()*100
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
@@ -33,6 +35,7 @@ class Agent {
   // Method for updating to be call on each block end
   update(){
     this.aura += Math.random()/10;
+    this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount/10)+1)/2;
   }
 
   // Default method for playing a note. Should be overrided.

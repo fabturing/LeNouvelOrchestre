@@ -38,18 +38,40 @@ class Jief extends Agent {
     this.instrument.volume.value = VOL_FLUTE ;
   }
 
-  playNote(note, time){
-    let blockStep = this.orchestra.blockStep;
-    let nextNote = this.currentBlock.getNote(blockStep+1);
+  getNoteDuration(){
+
     let duration = Tone.Time("8n");
-    // For even steps, if the next note is silent, double the duration.
-    if(!nextNote && blockStep%2==0){
-      duration = duration * 2;
+    let blockStep = this.orchestra.blockStep;
+
+    // Mode short notes
+    if(this.mood < .33){
+      return duration;
     }
 
-    let velocite = 1-Math.random()/3;
-    this.instrument.triggerAttackRelease(note, duration, time, velocite);
+    // Mode long notes
+    else if(this.mood < .66){
+      let stepsAfter = 1;
+      while(stepsAfter+blockStep<BLOCK_SIZE && !this.currentBlock.getNote(blockStep+stepsAfter)){
+        stepsAfter ++;
+      }
+      return duration * stepsAfter;
+    }
+    // Mode both
+    else {
+      let nextNote = this.currentBlock.getNote(blockStep+1);
+      // For even steps, if the next note is silent, double the duration.
+      if(!nextNote && blockStep%2==0){
+        return duration * 2;
+      }
+      return duration;
+    }
 
+  }
+
+  playNote(note, time){
+    let velocite = 1-Math.random()/3;
+    let duration = this.getNoteDuration()
+    this.instrument.triggerAttackRelease(note, duration, time, velocite);
   }
 
   generateStructure(){

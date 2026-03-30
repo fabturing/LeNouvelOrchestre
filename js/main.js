@@ -9,6 +9,10 @@ let jief, liza, crocodus;
 
 // Main function
 function main(){
+
+  //Init Perlin noise
+  noise.seed(Math.random());
+
   // Init buttons
   document.getElementById('test').addEventListener("click", test);
   document.getElementById('play').addEventListener("click", play);
