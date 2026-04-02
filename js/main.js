@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 let orchesta;
-let jief, liza, crocodus;
+let jief, liza, crocodus, pierrehenry;
 
 // Main function
 function main(){
@@ -22,7 +22,11 @@ function main(){
   jief = orchestra.addAgent(new Jief());
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
+  pierrehenry = orchestra.addAgent(new PierreHenry());
+
+
   orchestra.init();
+
 
 }
 
