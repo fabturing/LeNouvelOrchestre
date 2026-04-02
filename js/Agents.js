@@ -137,28 +137,28 @@ class Liza extends Agent {
   
   generatePattern(){
 
-    const hhPattern, kickPattern, snarePattern;
+    let hhPattern, kickPattern, snarePattern;
 
-    // Mood : ?????
+    // Mood : Straight
     if(this.mood < .33){
 
-    hhPattern = [100,100,100,100,100,100,100,100];
-    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
-    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
+    hhPattern = [95,99,99,99,95,99,99,99];
+    kickPattern = [100, 5, 10, 5, 20, 5, 10, 5];
+    snarePattern = [0, 0, 5, 0, 100, 5, 10, 0];
     }
-    // Mood : ?????
-    else if(this.mood < .33){
-    hhPattern = [100,100,100,100,100,100,100,100];
-    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
-    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
-      return duration;
+    // Mood : Light
+    else if(this.mood < .66){
+    hhPattern = [60,60,60,60,60,60,60,60];
+    kickPattern = [97, 10, 5, 5, 5, 5, 10, 5];
+    snarePattern = [0, 5, 5, 5, 90, 5, 10, 5];
+
     }
-    // Mood : ?????
-    else if(this.mood < .33){
-    hhPattern = [100,100,100,100,100,100,100,100];
-    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
-    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
-      return duration;
+    // Mood : Speed
+    else if(this.mood < 1){
+    hhPattern = [5,100,5,100,10,100,5,100];
+    kickPattern = [98, 2, 20, 2, 98, 2, 20, 2];
+    snarePattern = [0, 0, 98, 5, 0, 0, 98, 5];
+
     }
 
 
