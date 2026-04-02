@@ -211,6 +211,9 @@ class Crocodus extends Agent {
     const filter = new Tone.Filter( 1000, "lowpass")
     this.instrument.connect(filter);
     this.instrument.volume.value = VOL_BASSE ;
+        // moods
+    this.addMood('normal', 50);
+    this.addMood('dense', 25);
   }
 
 
@@ -225,7 +228,15 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-    const pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+    // Mood : normal
+    if(this.moodIs('normal')){
+      const pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+    }
+    // Mood : Light
+    else if(this.moodIs('straight')){
+      let pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+
+    }
     return pattern.map(percent);
   }
 
