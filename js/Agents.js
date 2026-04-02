@@ -36,6 +36,11 @@ class Jief extends Agent {
     const pan = new Tone.Panner(PAN_FLUTE).toDestination();
     this.instrument.connect(pan)
     this.instrument.volume.value = VOL_FLUTE ;
+
+    // moods
+    this.addMood('court', 33);
+    this.addMood('long', 33);
+    this.addMood('courtlong', 33);
   }
 
   getNoteDuration(){
@@ -44,13 +49,13 @@ class Jief extends Agent {
     let blockStep = this.orchestra.blockStep;
 
     // Mood : court
-    if(this.mood < .33){
+    if(this.moodIs('court')){
 
       return duration;
     }
 
     // Mood : long
-    else if(this.mood < .66){
+    else if(this.moodIs('long')){
       let stepsAfter = 1;
       while(stepsAfter+blockStep<BLOCK_SIZE
         && !this.currentBlock.getNote(blockStep+stepsAfter)
@@ -60,7 +65,7 @@ class Jief extends Agent {
       return duration * stepsAfter;
     }
     // Mood : longcourt
-    else {
+    else if(this.moodIs('courtlong')) {
       let nextNote = this.currentBlock.getNote(blockStep+1);
       // For even steps, if the next note is silent, double the duration.
       if(!nextNote && blockStep%2==0){
@@ -118,6 +123,11 @@ class Liza extends Agent {
     }
 
     this.ignoreLeaderBlockInfluence = true;
+
+        // moods
+    this.addMood('straight', 50);
+    this.addMood('light', 50);
+    this.addMood('speed', 25);
   }
 
   playNote(note, time){
@@ -140,24 +150,24 @@ class Liza extends Agent {
     let hhPattern, kickPattern, snarePattern;
 
     // Mood : Straight
-    if(this.mood < .33){
+    if(this.moodIs('light')){
 
-    hhPattern = [95,99,99,99,95,99,99,99];
-    kickPattern = [100, 5, 10, 5, 20, 5, 10, 5];
-    snarePattern = [0, 0, 5, 0, 100, 5, 10, 0];
+      hhPattern = [95,99,99,99,95,99,99,99];
+      kickPattern = [100, 5, 10, 5, 20, 5, 10, 5];
+      snarePattern = [0, 0, 5, 0, 100, 5, 10, 0];
     }
     // Mood : Light
-    else if(this.mood < .66){
-    hhPattern = [60,60,60,60,60,60,60,60];
-    kickPattern = [97, 10, 5, 5, 5, 5, 10, 5];
-    snarePattern = [0, 5, 5, 5, 90, 5, 10, 5];
+    else if(this.moodIs('straight')){
+      hhPattern = [60,60,60,60,60,60,60,60];
+      kickPattern = [97, 10, 5, 5, 5, 5, 10, 5];
+      snarePattern = [0, 5, 5, 5, 90, 5, 10, 5];
 
     }
     // Mood : Speed
-    else if(this.mood < 1){
-    hhPattern = [5,100,5,100,10,100,5,100];
-    kickPattern = [98, 2, 20, 2, 98, 2, 20, 2];
-    snarePattern = [0, 0, 98, 5, 0, 0, 98, 5];
+    else if(this.moodIs('speed')){
+      hhPattern = [5,100,5,100,10,100,5,100];
+      kickPattern = [98, 2, 20, 2, 98, 2, 20, 2];
+      snarePattern = [0, 0, 98, 5, 0, 0, 98, 5];
 
     }
 

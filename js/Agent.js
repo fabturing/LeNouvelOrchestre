@@ -21,6 +21,7 @@ class Agent {
     this.mood = 0.5; // mood value;
     this.moods = []; // definition of moods (see addMove)
     this.moodPosition = Math.random()*100; // where does the agent mood is read in the perlin space;
+    this.moodIsLocked = false;
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
@@ -30,7 +31,7 @@ class Agent {
 
   // Getter for moodName
   get moodName(){
-    return this.moods[this.moodIndex].name;
+    return this.moods[this.moodIndex]?.name;
   }
 
 
@@ -39,10 +40,8 @@ class Agent {
     let totalPortions = this.moods.reduce((a,mood)=>a+mood.portion,0);
     let currentPortion = 0;
     let portionToReach = this.mood * totalPortions;
-  console.log(totalPortions, currentPortion, portionToReach)
     for(let i = 0; i < this.moods.length; i++){
       currentPortion += this.moods[i].portion;
-      console.log(i, currentPortion)
       if(currentPortion>portionToReach){
        return i;
       }
@@ -68,7 +67,9 @@ class Agent {
   // Method for updating to be call on each block end
   update(){
     this.aura += Math.random()/10;
-    this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount/10)+1)/2;
+    if(!this.moodIsLocked){
+      this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount/10)+1)/2;
+    }
   }
 
   // Default method for playing a note. Should be overrided.
