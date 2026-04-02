@@ -248,4 +248,64 @@ class Crocodus extends Agent {
 }
 
 
+class PierreHenry extends Agent {
+  constructor(){
+    super("Pierre-Henry", "???");
+    this.anim = new Anim('default', true);
+        this.ignoreLeaderBlockInfluence = true;
+//FX
+  }
 
+  playNote(note, time){
+    this.instrument.triggerAttackRelease(note, "4n", time);
+  }
+
+  generateStructure(){
+    return ['A','B','A','B'];
+  }
+
+  generatePattern(){
+    const pattern = [100,0,0,0,0,0,0,0]
+    return pattern.map(percent);
+  }
+
+  generateScale(){
+    let scale = Tonal.Scale.get('C4 minor');
+    return scale.notes;
+  }
+
+}
+
+/*
+class PierreHenry extends Agent {
+  constructor(){
+    super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
+    this.anim = new Anim('default', true);
+    this.category = 'melodic';
+
+  }
+
+
+  playNote(note, time){
+    this.instrument.triggerAttackRelease(note, "4n", time);
+  }
+
+
+  generateStructure(){
+    return ['A','B','A','B'];
+  }
+
+  generatePattern(){
+    const pattern = [100,0,0,0,100,0,0,0,0];
+    return pattern.map(percent);
+  }
+
+  generateScale(){
+    let scale = Tonal.Scale.get('C4 minor');
+    return scale.notes;
+  }
+
+}
+
+
+*/

@@ -228,13 +228,18 @@ class Agent {
   // Method for updating agent's block
   updateBlock(){
     this.previousBlock = this.currentBlock;
-    this.currentBlock = this.generateBlock()
+    this.currentBlock = this.generateBlock();
   }
 
   // Method for updating one part of agent's block
   updatePart(part){
     this.previousBlock = this.currentBlock;
-    this.currentBlock = this.copyBlock(this.currentBlock);
+    if(!this.currentBlock) {
+      this.currentBlock = this.generateBlock();
+    }
+    else{
+      this.currentBlock = this.copyBlock(this.currentBlock);
+    }
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
