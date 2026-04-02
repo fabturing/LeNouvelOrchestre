@@ -228,13 +228,14 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
+  let pattern;
     // Mood : normal
     if(this.moodIs('normal')){
-      const pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+      pattern = [97, 5, 10, 25, 95, 10, 20, 20]
     }
     // Mood : Light
-    else if(this.moodIs('straight')){
-      let pattern = [97, 5, 10, 25, 95, 10, 20, 20]
+    else if(this.moodIs('dense')){
+      pattern = [97, 5, 10, 25, 95, 10, 20, 20]
 
     }
     return pattern.map(percent);
@@ -250,7 +251,7 @@ class Crocodus extends Agent {
 
 class PierreHenry extends Agent {
   constructor(){
-    super("Pierre-Henry", "???");
+    super("Pierre-Henry", "?Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
     this.anim = new Anim('default', true);
         this.ignoreLeaderBlockInfluence = true;
 //FX
@@ -276,36 +277,3 @@ class PierreHenry extends Agent {
 
 }
 
-/*
-class PierreHenry extends Agent {
-  constructor(){
-    super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
-    this.anim = new Anim('default', true);
-    this.category = 'melodic';
-
-  }
-
-
-  playNote(note, time){
-    this.instrument.triggerAttackRelease(note, "4n", time);
-  }
-
-
-  generateStructure(){
-    return ['A','B','A','B'];
-  }
-
-  generatePattern(){
-    const pattern = [100,0,0,0,100,0,0,0,0];
-    return pattern.map(percent);
-  }
-
-  generateScale(){
-    let scale = Tonal.Scale.get('C4 minor');
-    return scale.notes;
-  }
-
-}
-
-
-*/
