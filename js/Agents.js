@@ -43,20 +43,23 @@ class Jief extends Agent {
     let duration = Tone.Time("8n");
     let blockStep = this.orchestra.blockStep;
 
-    // Mode short notes
+    // Mood : court
     if(this.mood < .33){
+
       return duration;
     }
 
-    // Mode long notes
+    // Mood : long
     else if(this.mood < .66){
       let stepsAfter = 1;
-      while(stepsAfter+blockStep<BLOCK_SIZE && !this.currentBlock.getNote(blockStep+stepsAfter)){
+      while(stepsAfter+blockStep<BLOCK_SIZE
+        && !this.currentBlock.getNote(blockStep+stepsAfter)
+        && stepsAfter <= 2){
         stepsAfter ++;
       }
       return duration * stepsAfter;
     }
-    // Mode both
+    // Mood : longcourt
     else {
       let nextNote = this.currentBlock.getNote(blockStep+1);
       // For even steps, if the next note is silent, double the duration.
@@ -133,9 +136,31 @@ class Liza extends Agent {
   }
   
   generatePattern(){
-    const hhPattern = [100,100,100,100,100,100,100,100];
-    const kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
-    const snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
+
+    const hhPattern, kickPattern, snarePattern;
+
+    // Mood : ?????
+    if(this.mood < .33){
+
+    hhPattern = [100,100,100,100,100,100,100,100];
+    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
+    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
+    }
+    // Mood : ?????
+    else if(this.mood < .33){
+    hhPattern = [100,100,100,100,100,100,100,100];
+    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
+    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
+      return duration;
+    }
+    // Mood : ?????
+    else if(this.mood < .33){
+    hhPattern = [100,100,100,100,100,100,100,100];
+    kickPattern = [95, 5, 5, 5, 30, 5, 20, 5];
+    snarePattern = [0.1, 5, 5, 5, 90, 5, 10, 5];
+      return duration;
+    }
+
 
     // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
     this.density.hihat = this.density.hihat + ((Math.random()-0.5)*0.4); //Faire intervenir aura ici
