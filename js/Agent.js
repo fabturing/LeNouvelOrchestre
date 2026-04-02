@@ -18,13 +18,46 @@ class Agent {
     this.muted = false;
     this.aura = 1;
     this.density = 1;
-    this.mood = 0.5;
-    this.moodPosition = Math.random()*100
+    this.mood = 0.5; // mood value;
+    this.moods = []; // definition of moods (see addMove)
+    this.moodPosition = Math.random()*100; // where does the agent mood is read in the perlin space;
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
   }
 
+  // Moods methods
+
+  // Getter for moodName
+  get moodName(){
+    return this.moods[this.moodIndex].name;
+  }
+
+
+  // Getter for moodIndex
+  get moodIndex(){
+    let totalPortions = this.moods.reduce((a,mood)=>a+mood.portion,0);
+    let currentPortion = 0;
+    let portionToReach = this.mood * totalPortions;
+  console.log(totalPortions, currentPortion, portionToReach)
+    for(let i = 0; i < this.moods.length; i++){
+      currentPortion += this.moods[i].portion;
+      console.log(i, currentPortion)
+      if(currentPortion>portionToReach){
+       return i;
+      }
+    }
+  }
+
+  // Add a new pôssible mood to the agent
+  addMood(name, portion){
+    this.moods.push({name:name, portion:portion});
+  }
+
+  // Returns true if mood
+  moodIs(name){
+    return this.moodName == name
+  }
   // Method for  initializating Agent
   init(){
     this.anim.init();
