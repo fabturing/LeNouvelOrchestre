@@ -129,10 +129,10 @@ class Liza extends Agent {
     this.ignoreLeaderBlockInfluence = true;
 
         // moods
-    this.addMood('light', 30);
+    this.addMood('light', 40);
     this.addMood('straight', 30);
     this.addMood('double',20 );
-    this.addMood('speed', 25);
+    this.addMood('speed', 30);
   }
 
   playNote(note, time){
