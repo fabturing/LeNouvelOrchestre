@@ -104,6 +104,8 @@ class Agent {
 
   // getter for if the agent is playing this step
   get isPlaying(){
+    //agent is muted ?
+    if(this.muted) return false;
     // Orchestra not playing means not playing
     if(!this.orchestra.playing) return false;
     // no current block means not playing
