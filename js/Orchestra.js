@@ -53,7 +53,7 @@ class Orchestra {
   addAgent(agent){
     this.agents.push(agent);
     agent.setOrchestra(this);
-    console.log('agent ajouté :', agent)
+
     return agent;
   }
 
@@ -71,14 +71,11 @@ class Orchestra {
 
     // Method for  initializating Orchestra
   init(){
-    this.sortAgents();
-    console.log('agents : ', this.agents)
 
-        console.log('agents  0: ', this.agents[0].name)
     this.agents.forEach(agent=>{
-      console.log('agent init :', agent, agent.name, agent.currentBlock)
       agent.init();
     });
+    this.sortAgents();
     this.update();
     this.initDebugBox();
   }

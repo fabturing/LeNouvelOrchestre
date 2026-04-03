@@ -60,7 +60,7 @@ class Agent {
   // Method for  initializating Agent
   init(){
     this.anim.init();
-    this.updateBlock();
+    //this.updateBlock();
     this.aura = Math.random();
   }
 

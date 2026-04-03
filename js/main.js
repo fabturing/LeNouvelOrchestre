@@ -19,11 +19,11 @@ function main(){
 
   // Init Orchestra
   orchestra = new Orchestra();
+
   jief = orchestra.addAgent(new Jief());
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   pierrehenry = orchestra.addAgent(new PierreHenry());
-
 
   orchestra.init();
 
