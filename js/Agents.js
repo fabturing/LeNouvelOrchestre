@@ -142,19 +142,25 @@ class Liza extends Agent {
 
       if(this.moodIs('double')){
         let time_delayed = time + Tone.Time("16n").toSeconds();
-        this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);}
-
+        this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+        this.anim.animate(time_delayed);
+      }
       else if(this.moodIs('speed')){
         let random = Math.random();
         if(random < 0.2){
           let time_delayed = time + Tone.Time("16n").toSeconds();
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);}
+          this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+          this.anim.animate(time_delayed);
+        }
         else if(random < 0.4){
           let time_delayed = time + Tone.Time("16t").toSeconds();
           let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
           this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);}
-            }
+          this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
+          this.anim.animate(time_delayed);
+          this.anim.animate(time_delayed2);
+        }
+      }
 
 
       }
@@ -268,6 +274,7 @@ class Crocodus extends Agent {
             && stepsAfter <= 1){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
             this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            this.anim.animate(time_delayed);
             stepsAfter ++;
           }
     }
@@ -282,6 +289,7 @@ class Crocodus extends Agent {
             && stepsAfter <= 8){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
             this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            this.anim.animate(time_delayed);
             stepsAfter ++;
           }
     }
