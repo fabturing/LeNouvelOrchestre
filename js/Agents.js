@@ -246,13 +246,45 @@ class Crocodus extends Agent {
     this.instrument.volume.value = VOL_BASSE ;
         // moods
     this.addMood('normal', 50);
+    this.addMood('rebond', 50);
     this.addMood('dense', 25);
   }
 
 
   playNote(note, time){
     note = Tonal.Note.transpose(note, "-8P");
+
+    if(this.moodIs('normal')){
     this.instrument.triggerAttackRelease(note, "4n", time);
+    }
+
+    else if(this.moodIs('rebond')){
+    let blockStep = this.orchestra.blockStep;
+    let time_delayed = time;
+    this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+      let stepsAfter = 1;
+          while(stepsAfter+blockStep<BLOCK_SIZE
+            && !this.currentBlock.getNote(blockStep+stepsAfter)
+            && stepsAfter <= 1){
+            time_delayed = time_delayed + Tone.Time("8n").toSeconds();
+            this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            stepsAfter ++;
+          }
+    }
+
+    else if(this.moodIs('dense')){
+    let blockStep = this.orchestra.blockStep;
+    let time_delayed = time;
+    this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+      let stepsAfter = 1;
+          while(stepsAfter+blockStep<BLOCK_SIZE
+            && !this.currentBlock.getNote(blockStep+stepsAfter)
+            && stepsAfter <= 8){
+            time_delayed = time_delayed + Tone.Time("8n").toSeconds();
+            this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            stepsAfter ++;
+          }
+    }
   }
 
 
@@ -261,16 +293,7 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-  let pattern;
-    // Mood : normal
-    if(this.moodIs('normal')){
-      pattern = [97, 5, 10, 25, 95, 10, 20, 20]
-    }
-    // Mood : Light
-    else if(this.moodIs('dense')){
-      pattern = [97, 5, 10, 25, 95, 10, 20, 20]
-
-    }
+  let pattern = [97, 5, 10, 25, 95, 10, 20, 20];
     return pattern.map(percent);
   }
 
@@ -287,6 +310,7 @@ class PierreHenry extends Agent {
     super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
     this.anim = new Anim('default', true);
     this.ignoreLeaderBlockInfluence = true;
+    this.category = 'melodic';
 //FX
     const pan = new Tone.Panner(PAN_XYLO).toDestination();
     this.instrument.connect(pan)
@@ -295,6 +319,7 @@ class PierreHenry extends Agent {
 
   playNote(note, time){
     this.instrument.triggerAttackRelease(note, "4n", time);
+
   }
 
   generateStructure(){
