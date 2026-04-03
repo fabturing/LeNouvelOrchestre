@@ -1,6 +1,8 @@
 // This file define the Agent class.
 // An Agent is a musician in the Orchestra.
 
+const MOOD_SPEED = 0.05;
+
 class Agent {
   constructor(name, description, lines) {
     // Name of the agent
@@ -68,7 +70,7 @@ class Agent {
   update(){
     this.aura += Math.random()/10;
     if(!this.moodIsLocked){
-      this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount/10)+1)/2;
+      this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount*MOOD_SPEED)+1)/2;
     }
   }
 
