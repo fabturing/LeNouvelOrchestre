@@ -12,11 +12,11 @@ let VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -9;
+let VOL_BASSE = -15;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -7; //Volume en dB, max 0
+let VOL_XYLO = -5; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Normaliser volumes
@@ -247,7 +247,7 @@ class Crocodus extends Agent {
 
     const pan = new Tone.Panner (PAN_BASSE).toDestination();
     this.instrument.connect(pan);
-    const filter = new Tone.Filter( 850, "lowpass")
+    const filter = new Tone.Filter( 750, "lowpass")
     this.instrument.connect(filter);
     this.instrument.volume.value = VOL_BASSE ;
         // moods
