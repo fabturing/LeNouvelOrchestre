@@ -213,6 +213,26 @@ class Agent {
     return melo;
   }
 
+  // generate an array of chords from a pattern and a melody
+  generateChords(pattern, melo){
+    return pattern.map((step, i)=>{
+      if (step && melody[i]){
+        let chord = [
+          this.scale[melody[i]],
+          this.scale[melody[i]+2],
+          this.scale[melody[i]+4]
+        ];
+        if (Tonal.Note.octave(chord[2]) > 4) {
+          chord = chord.map(Tonal.Note.transposeBy("-8P"));
+        }
+        return chord;
+      }
+      else {
+        return null;
+      }
+    });
+  }
+
   // Method for generating a block
   generateBlock(){
     let pattern = this.generatePattern();

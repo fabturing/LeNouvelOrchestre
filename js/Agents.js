@@ -12,11 +12,11 @@ let VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -7;
+let VOL_BASSE = -9;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -20; //Volume en dB, max 0
+let VOL_XYLO = -7; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Normaliser volumes
@@ -247,7 +247,7 @@ class Crocodus extends Agent {
 
     const pan = new Tone.Panner (PAN_BASSE).toDestination();
     this.instrument.connect(pan);
-    const filter = new Tone.Filter( 1000, "lowpass")
+    const filter = new Tone.Filter( 850, "lowpass")
     this.instrument.connect(filter);
     this.instrument.volume.value = VOL_BASSE ;
         // moods
@@ -319,14 +319,21 @@ class PierreHenry extends Agent {
     this.anim = new Anim('default', true);
     this.ignoreLeaderBlockInfluence = true;
     this.category = 'melodic';
+
 //FX
+    this.instrument = new Tone.Sampler({
+      urls: {C3: "xylo_long.mp3"},
+      baseUrl: "samples/xylo/",
+    });
     const pan = new Tone.Panner(PAN_XYLO).toDestination();
     this.instrument.connect(pan)
     this.instrument.volume.value = VOL_XYLO ;
   }
 
   playNote(note, time){
+
     this.instrument.triggerAttackRelease(note, "4n", time);
+    this.instrument.triggerAttackRelease( Tonal.Note.transpose(note, "5P") , "4n", time + Math.random()/50 );
 
   }
 
@@ -335,7 +342,7 @@ class PierreHenry extends Agent {
   }
 
   generatePattern(){
-    const pattern = [100,0,0,0,0,0,0,0]
+    const pattern = [100,0,0,0,95,0,0,0];
     return pattern.map(percent);
   }
 
