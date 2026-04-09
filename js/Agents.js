@@ -383,6 +383,9 @@ class PierreHenry extends Agent {
         this.instrument.triggerAttackRelease(quinte, "8n", stepTime2);
         this.instrument.triggerAttackRelease(octave, "8n", stepTime3);
       }
+      this.anim.animate(stepTime1);
+      this.anim.animate(stepTime2);
+      this.anim.animate(stepTime3);
     }
 
   }
