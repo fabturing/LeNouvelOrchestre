@@ -343,7 +343,7 @@ class PierreHenry extends Agent {
   }
 
   playNote(note, time){
-    let agents = this.orchestra.agents;
+    let agents = this.orchestra.agentsOnStage;
   // Le premier agent de la catégorie bass
   let bassAgent = agents.find(agent=>agent.category=='bass');
   // Si il existe ET qu'il est en train de jouer une note

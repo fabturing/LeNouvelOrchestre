@@ -25,6 +25,11 @@ class Orchestra {
     Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
   }
 
+  // Getter for agents On Stage
+  get agentsOnStage(){
+    return this.agents.filter(agent=>agent.onStage);
+  }
+
   // Getter for blockProgress, from 0 to 1
   get blockProgress(){
     return (this.step%BLOCK_SIZE)/BLOCK_SIZE;
@@ -86,6 +91,10 @@ class Orchestra {
   update(){
     this.updatedPart = randomChoice(["A","B","C"])
 
+    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
+    agentsByFatigue.forEach(agent=>agent.onStage = false);
+    agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
+
     this.agents.forEach(agent=>{
       agent.update();
     });
@@ -128,7 +137,7 @@ class Orchestra {
   playStep(time){
 
     // Call playStep for each agent
-    this.agents.forEach(agent=>{
+    this.agentsOnStage.forEach(agent=>{
       agent.playStep(this.step, time)
     });
 

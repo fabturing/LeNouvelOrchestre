@@ -18,6 +18,13 @@ class Anim {
     this.element.src = 'sprites/'+this.fileName+frame+'.png';
   }
 
+  setVisibility(visible){
+    if(visible){
+      this.element.style.display = 'block';
+    } else{
+      this.element.style.display = 'none';
+    }
+  }
   animate(time){
     let frame = (this.currentFrame + 1) % 2
     Tone.Draw.schedule(()=>{this.setImage(frame)},time);

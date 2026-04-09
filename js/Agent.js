@@ -2,6 +2,10 @@
 // An Agent is a musician in the Orchestra.
 
 const MOOD_SPEED = 0.05;
+const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
+const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
+const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
+const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
 
 class Agent {
   constructor(name, description, id, lines) {
@@ -19,8 +23,11 @@ class Agent {
     this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
+    this.onStage = false;
+    this.onStageLastBlock = false;
     this.aura = 1;
     this.density = 1;
+    this.fatigue = Math.random();
     this.mood = 0.5; // mood value;
     this.moods = []; // definition of moods (see addMove)
     this.moodPosition = Math.random()*100; // where does the agent mood is read in the perlin space;
@@ -69,6 +76,18 @@ class Agent {
 
   // Method for updating to be call on each block end
   update(){
+    // fatigue
+    if(this.onStage) this.fatigue += FATIGUE_FROM_PLAYING * Math.random();
+    else this.fatigue += FATIGUE_FROM_RESTING * Math.random();
+    // Coup de mou en quittant la scène ou boost d'energie en montant sur scène
+    if(this.onStageLastBlock && !this.onStage) this.fatigue += FATIGUE_FROM_QUITTING_STAGE * Math.random();
+    else if(!this.onStageLastBlock && this.onStage) this.fatigue += FATIGUE_FROM_ENTERING_STAGE * Math.random();
+    this.onStageLastBlock = this.onStage;
+    // Valeur contrainte entre 0 et 1
+    if(this.fatigue<0) this.fatigue = 0;
+    else if(this.fatigue>1) this.fatigue = 1;
+
+    this.anim.setVisibility(this.onStage)
     this.aura += Math.random()/10;
     if(!this.moodIsLocked){
       this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount*MOOD_SPEED)+1)/2;
@@ -268,5 +287,9 @@ class Agent {
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
+  }
+
+  resetFatigue(){
+    this.fatigue = 0;
   }
 }
