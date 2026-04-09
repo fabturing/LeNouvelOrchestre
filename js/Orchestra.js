@@ -16,6 +16,7 @@ class Orchestra {
     this.step = 0;
     // Other attributes
     this.name = NAME;
+    this.id = "orchestra"
     this.playing = false;
     this.debugBox = new DebugBox('orchestra-debug-box', this)
 
@@ -78,6 +79,7 @@ class Orchestra {
     this.sortAgents();
     this.update();
     this.initDebugBox();
+
   }
 
   // Method for updating to be call on each block end

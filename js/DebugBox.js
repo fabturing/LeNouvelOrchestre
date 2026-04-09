@@ -14,6 +14,8 @@ class DebugBox {
   // Initialize a Debug Box.
   init(){
 
+    // Create button
+    newButton(this.object.id,()=>this.open());
     // Create the DOM element from the template and add it to the pagge
     const template = document.getElementById(this.templateId);
     this.element = template.content.firstElementChild.cloneNode(true);
@@ -70,5 +72,10 @@ class DebugBox {
       let value = this.object[attribute];
       el.checked = value;
     });
+  }
+
+  open(){
+    this.element.classList.remove('closed')
+    this.element.scrollIntoView();
   }
 }

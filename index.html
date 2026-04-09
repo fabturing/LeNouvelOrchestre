@@ -21,15 +21,23 @@
   <body>
 
     <!-- ANIMS -->
-    <div id="anims"></div>
+    <div id="stage">
+      <div id="anims"></div>
+    </div>
 
     <!-- BUTTONS -->
-    <button id="test">test</button>
-    <button id="play">play/stop</button>
+    <div id="buttons">
+    </div>
+
 
     <!-- TEMPLATES -->
+
+    <template id="button-template">
+       <button><img></img><span></span></button>
+    </template>
+
     <template id="orchestra-debug-box">
-      <div class="debug-box">
+      <div class="debug-box closed">
         <table>
           <thead><tr><th colspan="2">Orchestra - <span data-attribute="name"></span></th></tr></thead>
           <tbody>

@@ -28,7 +28,7 @@ VOL_BASSE = VOL_BASSE + maxvol;
 
 class Jief extends Agent {
   constructor(){
-    super("Jiéf", "Petit flutiste debout sur un tabouret");
+    super("Jiéf", "Petit flutiste debout sur un tabouret", "jief");
     this.anim = new Anim('jief', false);
     this.category = 'melodic';
     //FX
@@ -104,7 +104,7 @@ class Jief extends Agent {
 
 class Liza extends Agent {
   constructor(){
-    super("Liza", "Batteuse qui fait que fumer des clopes", ['hihat', 'kick', 'snare']);
+    super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
     this.category = 'perc';
 
@@ -234,7 +234,7 @@ class Liza extends Agent {
 
 class Crocodus extends Agent {
   constructor(){
-    super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
+    super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime", "crocodus");
     this.anim = new Anim('crocodus', true);
     this.category = 'bass';
 //FX
@@ -322,8 +322,8 @@ class Crocodus extends Agent {
 
 class PierreHenry extends Agent {
   constructor(){
-    super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
-    this.anim = new Anim('default', true);
+    super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)", "pierrehenry");
+    this.anim = new Anim('pierrehenry', true);
     this.ignoreLeaderBlockInfluence = true;
     this.ignorePreviousBlockInfluence = true;
     this.category = 'melodic';

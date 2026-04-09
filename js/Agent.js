@@ -4,9 +4,10 @@
 const MOOD_SPEED = 0.05;
 
 class Agent {
-  constructor(name, description, lines) {
+  constructor(name, description, id, lines) {
     // Name of the agent
     this.name = name;
+    this.id = id
     // Description of the agent
     this.descritption = description;
     // Array of identifiants for the lines of the agent

@@ -54,3 +54,14 @@ function debugSequence(array, index){
   })
   return container;
 }
+
+
+// Create a button and add it in the buttons div
+function newButton(name, onClick){
+    const template = document.getElementById('button-template');
+    const element = template.content.firstElementChild.cloneNode(true);
+    element.addEventListener('click', onClick);
+    element.querySelector('img').src = 'sprites/'+name+'-button.png'
+    const conainer = document.getElementById('buttons');
+    conainer.appendChild(element);
+}

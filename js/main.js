@@ -14,8 +14,8 @@ function main(){
   noise.seed(Math.random());
 
   // Init buttons
-  document.getElementById('test').addEventListener("click", test);
-  document.getElementById('play').addEventListener("click", play);
+  newButton('test', test);
+  newButton('play', play, );
 
   // Init Orchestra
   orchestra = new Orchestra();
