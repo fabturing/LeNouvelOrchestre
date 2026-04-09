@@ -4,7 +4,7 @@
 // Settings MIXAGE -----------
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -9; //Volume en dB, max 0
+let VOL_FLUTE = -15; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
@@ -34,7 +34,7 @@ class Jief extends Agent {
     //FX
 
     this.instrument = new Tone.Sampler({
-      urls: {C4: "C3.mp3"},
+      urls: {C3: "C3.mp3"},
       baseUrl: "samples/flute/",
     });
     const pan = new Tone.Panner(PAN_FLUTE).toDestination();
@@ -91,7 +91,11 @@ class Jief extends Agent {
   }
 
   generatePattern(){
-    const pattern = [90, 33, 66, 33, 80, 33, 66, 33]
+    let pattern = [80, 20, 66, 40, 80, 66, 30, 33]
+    if(this.moodIs('long')){pattern = [80, 2, 2, 50, 80, 2, 2, 50]}
+    // de temps en temps laisser un block vide
+    let random = Math.random();
+    if(random < this.fatigue ){pattern = [1, 1, 1, 1, 1, 1, 1, 1];}
     return pattern.map(percent);
   }
 
