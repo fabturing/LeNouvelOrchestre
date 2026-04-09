@@ -16,7 +16,7 @@ let VOL_BASSE = -12;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -5; //Volume en dB, max 0
+let VOL_XYLO = -6; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Normaliser volumes
@@ -318,11 +318,14 @@ class Crocodus extends Agent {
 }
 
 
+
+
 class PierreHenry extends Agent {
   constructor(){
     super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)");
     this.anim = new Anim('default', true);
     this.ignoreLeaderBlockInfluence = true;
+    this.ignorePreviousBlockInfluence = true;
     this.category = 'melodic';
 
 //FX
@@ -333,6 +336,10 @@ class PierreHenry extends Agent {
     const pan = new Tone.Panner(PAN_XYLO).toDestination();
     this.instrument.connect(pan)
     this.instrument.volume.value = VOL_XYLO ;
+
+// moods
+    this.addMood('quinte', 40);
+    this.addMood('quinte_arp', 15);
   }
 
   playNote(note, time){
@@ -345,8 +352,27 @@ class PierreHenry extends Agent {
    note = bassAgent.currentBlock?.getNote(this.orchestra.step);}
    console.log(note);
 
-    this.instrument.triggerAttackRelease(note, "4n", time);
-    this.instrument.triggerAttackRelease( Tonal.Note.transpose(note, "5P") , "4n", time + Math.random()/50 );
+
+    if(this.moodIs('quinte')){
+      this.instrument.triggerAttackRelease(note, "4n", time);
+      this.instrument.triggerAttackRelease( Tonal.Note.transpose(note, "5P") , "4n", time + Math.random()/50 );
+    }
+
+    else if(this.moodIs('quinte_arp')){
+      let random = Math.random();
+      this.instrument.triggerAttackRelease(note, "8n", time + Tone.Time("8n").toSeconds());
+      if(random < 0.2){
+        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 2*Tone.Time("8n").toSeconds());
+        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "5P"), "8n", time + 3*Tone.Time("8n").toSeconds());}
+        else if(random < 0.4){
+        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 2*Tone.Time("8n").toSeconds());
+        this.instrument.triggerAttackRelease(note, "8n", time + 3*Tone.Time("8n").toSeconds());}
+      else{
+        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "5P"), "8n", time + 2*Tone.Time("8n").toSeconds());
+        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 3*Tone.Time("8n").toSeconds());}
+
+
+    }
 
   }
 
@@ -355,8 +381,10 @@ class PierreHenry extends Agent {
   }
 
   generatePattern(){
-      let pattern = [97, 5, 10, 25, 95, 10, 20, 20];
-      return pattern.map(percent);
+    let pattern ;
+    if(this.moodIs('quinte')){ pattern = [90, 5, 10, 25, 80, 10, 20, 20];}
+    else if(this.moodIs('quinte_arp')){ pattern = [90, 0, 0, 0, 90, 0, 0, 0];}
+    return pattern.map(percent);
   }
 
   generateScale(){
