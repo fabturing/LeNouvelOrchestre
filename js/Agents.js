@@ -347,31 +347,42 @@ class PierreHenry extends Agent {
   // Le premier agent de la catégorie bass
   let bassAgent = agents.find(agent=>agent.category=='bass');
   // Si il existe ET qu'il est en train de jouer une note
-  if(bassAgent && bassAgent.currentBlock?.getNote(this.orchestra.step)){
-  // Récupérer sa note
-   note = bassAgent.currentBlock?.getNote(this.orchestra.step);}
-   console.log(note);
+  if(bassAgent && bassAgent.currentNote){
+    // Récupérer sa note
+    note = bassAgent.currentNote;
+   }
 
 
     if(this.moodIs('quinte')){
+
+      let delayedTime = time + Math.random()/50;
+      let quinte = Tonal.Note.transpose(note, "5P");
+
       this.instrument.triggerAttackRelease(note, "4n", time);
-      this.instrument.triggerAttackRelease( Tonal.Note.transpose(note, "5P") , "4n", time + Math.random()/50 );
+      this.instrument.triggerAttackRelease(quinte , "4n", delayedTime);
     }
 
     else if(this.moodIs('quinte_arp')){
       let random = Math.random();
-      this.instrument.triggerAttackRelease(note, "8n", time + Tone.Time("8n").toSeconds());
+      let stepTime1 = time + Tone.Time("8n").toSeconds();
+      let stepTime2 = time + 2*Tone.Time("8n").toSeconds();
+      let stepTime3 = time + 3*Tone.Time("8n").toSeconds();
+      let quinte = Tonal.Note.transpose(note, "5P");
+      let octave = Tonal.Note.transpose(note, "8P")
+
+      this.instrument.triggerAttackRelease(note, "8n", stepTime1);
       if(random < 0.2){
-        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 2*Tone.Time("8n").toSeconds());
-        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "5P"), "8n", time + 3*Tone.Time("8n").toSeconds());}
-        else if(random < 0.4){
-        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 2*Tone.Time("8n").toSeconds());
-        this.instrument.triggerAttackRelease(note, "8n", time + 3*Tone.Time("8n").toSeconds());}
+        this.instrument.triggerAttackRelease(octave, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(quinte, "8n", stepTime3);
+      }
+      else if(random < 0.4){
+        this.instrument.triggerAttackRelease(octave, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(note, "8n", stepTime3);
+      }
       else{
-        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "5P"), "8n", time + 2*Tone.Time("8n").toSeconds());
-        this.instrument.triggerAttackRelease(Tonal.Note.transpose(note, "8P"), "8n", time + 3*Tone.Time("8n").toSeconds());}
-
-
+        this.instrument.triggerAttackRelease(quinte, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(octave, "8n", stepTime3);
+      }
     }
 
   }
