@@ -4,15 +4,15 @@
 // Settings MIXAGE -----------
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -8; //Volume en dB, max 0
-const PAN_FLUTE = -0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+let VOL_FLUTE = -9; //Volume en dB, max 0
+const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
 let VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -15;
+let VOL_BASSE = -12;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
@@ -236,7 +236,7 @@ class Crocodus extends Agent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime");
     this.anim = new Anim('crocodus', true);
-    this.category = 'melodic';
+    this.category = 'bass';
 //FX
 
 
@@ -251,16 +251,17 @@ class Crocodus extends Agent {
     this.instrument.connect(filter);
     this.instrument.volume.value = VOL_BASSE ;
         // moods
+    this.addMood('light', 50);
     this.addMood('normal', 50);
     this.addMood('rebond', 50);
-    this.addMood('dense', 25);
+    this.addMood('dense', 20);
   }
 
 
   playNote(note, time){
     note = Tonal.Note.transpose(note, "-8P");
 
-    if(this.moodIs('normal')){
+    if(this.moodIs('normal') || this.moodIs('light') ){
     this.instrument.triggerAttackRelease(note, "4n", time);
     }
 
@@ -301,7 +302,11 @@ class Crocodus extends Agent {
   }
 
   generatePattern(){
-  let pattern = [97, 5, 10, 25, 95, 10, 20, 20];
+
+     let pattern;
+    if(this.moodIs('light')) {pattern = [95,50,30,2,2,2,2,10]}
+    else {pattern = [90,5,20,30,90,5,20,40];}
+
     return pattern.map(percent);
   }
 
@@ -331,6 +336,14 @@ class PierreHenry extends Agent {
   }
 
   playNote(note, time){
+    let agents = this.orchestra.agents;
+  // Le premier agent de la catégorie bass
+  let bassAgent = agents.find(agent=>agent.category=='bass');
+  // Si il existe ET qu'il est en train de jouer une note
+  if(bassAgent && bassAgent.currentBlock?.getNote(this.orchestra.step)){
+  // Récupérer sa note
+   note = bassAgent.currentBlock?.getNote(this.orchestra.step);}
+   console.log(note);
 
     this.instrument.triggerAttackRelease(note, "4n", time);
     this.instrument.triggerAttackRelease( Tonal.Note.transpose(note, "5P") , "4n", time + Math.random()/50 );
@@ -338,12 +351,12 @@ class PierreHenry extends Agent {
   }
 
   generateStructure(){
-    return ['A','B','A','B'];
+    return ['A','A','B','B'];
   }
 
   generatePattern(){
-    const pattern = [100,0,0,0,95,0,0,0];
-    return pattern.map(percent);
+      let pattern = [97, 5, 10, 25, 95, 10, 20, 20];
+      return pattern.map(percent);
   }
 
   generateScale(){

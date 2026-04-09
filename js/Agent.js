@@ -13,7 +13,7 @@ class Agent {
     // Keep that undefined if there is only one line.
     this.lines = lines;
     // Other attributes
-    this.category; // 'perc' ou 'melodic'
+    this.category; // 'perc' ou 'melodic' ou 'bass'
     this.ignoreLeaderBlockInfluence = false;
     this.ignorePreviousBlockInfluence = false;
     this.orchestra;
