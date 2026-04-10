@@ -2,6 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", function(event) {
     main();
+    document.getElementById('load').addEventListener('click', main)
 });
 
 let orchesta;
