@@ -186,8 +186,16 @@ class Liza extends Agent {
 
   }
   
-  generatePattern(){
+  generateStructure(){
+      if(this.moodIs('straight')) {
+        return ['A','A','A','B'];
+      }
+      else{
+        return ['A','A','A','A'];
+      }
+  }
 
+  generatePattern(){
     let hhPattern, kickPattern, snarePattern;
 
  // Mood : Light

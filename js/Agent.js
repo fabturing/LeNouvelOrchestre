@@ -321,6 +321,8 @@ class Agent {
     }
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
+    let structure = this.generateStructure();
+    this.currentBlock.structure = structure;
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
   }
 
