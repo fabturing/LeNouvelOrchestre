@@ -53,7 +53,7 @@ class Agent {
 
   // Set the pan
   setPan(pan){
-    //TODO: Make this method callable multiple times (actually it might only works for the first call)
+    //TODO: Make this method callable multiple times (for now it might only works for the first call)
     const panner = new Tone.Panner(pan).toDestination();
     this.instrument.connect(panner)
   }
@@ -65,7 +65,7 @@ class Agent {
 
   // Set a filter with a value
   setFilter(value, name){
-    //TODO: Make this method callable multiple times (actually it might only works for the first call)
+    //TODO: Make this method callable multiple times (for now it might only works for the first call)
     const filter = new Tone.Filter(value, name)
     this.instrument.connect(filter);
   }
@@ -145,7 +145,7 @@ class Agent {
   }
   // Default method for generating a scale. Should be overrided.
   generateScale(){
-    return ['C4 minor'];
+    return Tonal.Scale.get('C4 minor').notes;
   }
 
   // getter for debugging block

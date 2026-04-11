@@ -21,21 +21,18 @@ function test(){
   switch (n){
     case 0 :
       sampler.triggerAttackRelease(["C3"], "8n");
-      console.log(n);
       break;
     case 1 :
       sampler.triggerAttackRelease(["D3"], "8n");
-      console.log(n);
       break;
     case 2 :
       sampler.triggerAttackRelease(["A4"], "8n");
-      console.log(n);
       break;
     case 3 :
       sampler.triggerAttackRelease(["B4"], "8n");
-      console.log(n);
       break;
   }
+  console.log('Test case:', n);
   n = (n+1)%4;
 }
 
