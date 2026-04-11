@@ -87,6 +87,12 @@ class Orchestra {
 
   }
 
+  async loadInstruments(){
+    for(let i = 0; i<orchestra.agents.length; i++){
+      await orchestra.agents[i].loadInstrument();
+    }
+  }
+
   // Method for updating to be call on each block end
   update(){
     this.updatedPart = randomChoice(["A","B","C"])

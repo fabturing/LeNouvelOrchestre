@@ -1,14 +1,24 @@
 // Main script file
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    main();
+    document.getElementById('stage').addEventListener('click', main)
 });
 
 let orchesta;
 let jief, liza, crocodus, pierrehenry;
 
 // Main function
-function main(){
+async function main(){
+
+  await Tone.start();
+  logLogo();
+
+  // Setup stage
+  document.getElementById('stage').removeEventListener('click', main);
+  document.getElementById('stage').classList.remove('preload');
+
+  // Init test
+  testSetup();
 
   //Init Perlin noise
   noise.seed(Math.random());
@@ -19,13 +29,14 @@ function main(){
 
   // Init Orchestra
   orchestra = new Orchestra();
-
   jief = orchestra.addAgent(new Jief());
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   pierrehenry = orchestra.addAgent(new PierreHenry());
 
+  await orchestra.loadInstruments();
   orchestra.init();
+  orchestra.start();
 
 
 }
