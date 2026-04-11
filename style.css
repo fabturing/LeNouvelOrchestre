@@ -131,6 +131,17 @@ margin: auto;
   background: url('sprites/stage.png');
 }
 
+#stage.preload{
+   cursor: pointer;
+    background: url('sprites/street0.png');
+
+}
+#stage.preload:hover{
+ 
+    background: url('sprites/street1.png');
+
+}
+
 #stage #anims {
   position: absolute;
   top:220px;

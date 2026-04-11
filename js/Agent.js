@@ -37,6 +37,41 @@ class Agent {
     this.debugBox = new DebugBox('agent-debug-box', this);
   }
 
+  // Instrument methods
+
+  // Return a promise that can be awaited for the sample to be loaded
+  loadSampler(urls, baseUrl){
+    return new Promise((resolve, reject)=>{
+      this.instrument = new Tone.Sampler({
+      urls: urls,
+      baseUrl: baseUrl,
+        onload:()=>resolve(),
+        onerror:()=>reject(),
+      });
+    });
+  }
+
+  // Set the pan
+  setPan(pan){
+    //TODO: Make this method callable multiple times (actually it might only works for the first call)
+    const panner = new Tone.Panner(pan).toDestination();
+    this.instrument.connect(panner)
+  }
+
+  // Set the volume
+  setVolume(volume){
+    this.instrument.volume.value = volume ;
+  }
+
+  // Set a filter with a value
+  setFilter(value, name){
+    //TODO: Make this method callable multiple times (actually it might only works for the first call)
+    const filter = new Tone.Filter(value, name)
+    this.instrument.connect(filter);
+  }
+
+
+
   // Moods methods
 
   // Getter for moodName

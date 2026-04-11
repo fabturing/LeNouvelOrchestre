@@ -33,18 +33,19 @@ class Jief extends Agent {
     this.category = 'melodic';
     //FX
 
-    this.instrument = new Tone.Sampler({
-      urls: {C3: "C3.mp3"},
-      baseUrl: "samples/flute/",
-    });
-    const pan = new Tone.Panner(PAN_FLUTE).toDestination();
-    this.instrument.connect(pan)
-    this.instrument.volume.value = VOL_FLUTE ;
+
 
     // moods
     this.addMood('court', 33);
     this.addMood('long', 33);
     this.addMood('courtlong', 33);
+  }
+
+  async loadInstrument(){
+    const samples = {C3: "C3.mp3"}
+    await this.loadSampler(samples, "samples/flute/");
+    this.setPan(PAN_FLUTE);
+    this.setVolume(VOL_FLUTE);
   }
 
   getNoteDuration(){
@@ -112,17 +113,7 @@ class Liza extends Agent {
     this.anim = new Anim('liza', true);
     this.category = 'perc';
 
-    this.instrument = new Tone.Sampler({
-    urls: {
-        C3: "C3.mp3", //kick
-        C4: "C4.mp3", //snare
-        C5: "C5.mp3", //hihat
-    },
-    baseUrl: "samples/drum/",
-    })
-    const pan = new Tone.Panner(PAN_DRUM).toDestination();
-    this.instrument.connect(pan)
-    this.instrument.volume.value = VOL_DRUM ;
+
 
     this.density = {
       hihat:Math.random(),
@@ -138,6 +129,19 @@ class Liza extends Agent {
     this.addMood('double',20 );
     this.addMood('speed', 30);
   }
+
+
+  async loadInstrument(){
+    const samples = {
+            C3: "C3.mp3", //kick
+            C4: "C4.mp3", //snare
+            C5: "C5.mp3", //hihat
+        };
+    await this.loadSampler(samples, "samples/drum/");
+    this.setPan(PAN_DRUM);
+    this.setVolume(VOL_DRUM);
+  }
+
 
   playNote(note, time){
     if(note.hihat){
@@ -241,24 +245,21 @@ class Crocodus extends Agent {
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime", "crocodus");
     this.anim = new Anim('crocodus', true);
     this.category = 'bass';
-//FX
 
-
-    this.instrument = new Tone.Sampler({
-      urls: {C4: "C2.mp3"},
-      baseUrl: "samples/basse/",
-    });
-
-    const pan = new Tone.Panner (PAN_BASSE).toDestination();
-    this.instrument.connect(pan);
-    const filter = new Tone.Filter( 750, "lowpass")
-    this.instrument.connect(filter);
-    this.instrument.volume.value = VOL_BASSE ;
         // moods
     this.addMood('light', 50);
     this.addMood('normal', 50);
     this.addMood('rebond', 50);
     this.addMood('dense', 20);
+  }
+
+
+  async loadInstrument(){
+    const samples = {C4: "C2.mp3"};
+    await this.loadSampler(samples, "samples/basse/");
+    this.setPan(PAN_BASSE);
+    this.setVolume(VOL_BASSE);
+    this.setFilter(750, "lowpass");
   }
 
 
@@ -332,18 +333,16 @@ class PierreHenry extends Agent {
     this.ignorePreviousBlockInfluence = true;
     this.category = 'melodic';
 
-//FX
-    this.instrument = new Tone.Sampler({
-      urls: {C3: "xylo_long.mp3"},
-      baseUrl: "samples/xylo/",
-    });
-    const pan = new Tone.Panner(PAN_XYLO).toDestination();
-    this.instrument.connect(pan)
-    this.instrument.volume.value = VOL_XYLO ;
-
 // moods
     this.addMood('quinte', 40);
     this.addMood('quinte_arp', 15);
+  }
+
+  async loadInstrument(){
+    const samples = {C3: "xylo_long.mp3"}
+    await this.loadSampler(samples, "samples/xylo/");
+    this.setPan(PAN_XYLO);
+    this.setVolume(VOL_XYLO)
   }
 
   playNote(note, time){

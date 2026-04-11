@@ -65,3 +65,25 @@ function newButton(name, onClick){
     const conainer = document.getElementById('buttons');
     conainer.appendChild(element);
 }
+
+
+function logLogo(){
+console.log(`
+   ,--,
+,---.'|            ,--.    ,----..
+|   | :          ,--.'|   /   /   \\
+:   : |      ,--,:  : |  /   .     :
+|   ' :   ,\`--.'\`|  ' : .   /   ;.  \\
+;   ; '   |   :  :  | |.   ;   /  \` ;
+'   | |__ :   |   \\ | :;   |  ; \\ ; |
+|   | :.'||   : '  '; ||   :  | ; | '
+'   :    ;'   ' ;.    ;.   |  ' ' ' :
+|   |  ./ |   | | \\   |'   ;  \\; /  |
+;   : ;   '   : |  ; .' \\   \\  ',  /
+|   ,/    |   | '\`--'    ;   :    /
+'---'     '   : |         \\   \\ .'
+          ;   |.'          \`---\`
+          '---'
+`);
+
+}
