@@ -36,9 +36,13 @@ class Jief extends Agent {
 
 
     // moods
-    this.addMood('court', 33);
+
+    this.addMood('long_variation', 30);
     this.addMood('long', 33);
     this.addMood('courtlong', 33);
+    this.addMood('court', 40);
+
+
   }
 
   async loadInstrument(){
@@ -60,7 +64,7 @@ class Jief extends Agent {
     }
 
     // Mood : long
-    else if(this.moodIs('long')){
+    else if(this.moodIs('long') || this.moodIs('long_variation')){
       let stepsAfter = 1;
       while(stepsAfter+blockStep<BLOCK_SIZE
         && !this.currentBlock.getNote(blockStep+stepsAfter)
@@ -92,8 +96,8 @@ class Jief extends Agent {
   }
 
   generatePattern(){
-    let pattern = [80, 20, 66, 40, 80, 66, 30, 33]
-    if(this.moodIs('long')){pattern = [80, 2, 2, 50, 80, 2, 2, 50]}
+    let pattern = [90, 33, 66, 33, 80, 33, 66, 33]
+    if(this.moodIs('long_variation')){pattern = [80, 2, 2, 50, 80, 2, 2, 50]}
     // de temps en temps laisser un block vide
     let random = Math.random();
     if(random < this.fatigue ){pattern = [1, 1, 1, 1, 1, 1, 1, 1];}
