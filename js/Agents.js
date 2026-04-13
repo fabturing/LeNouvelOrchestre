@@ -16,7 +16,7 @@ let VOL_BASSE = -18;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -2; //Volume en dB, max 0
+let VOL_XYLO = -3; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Normaliser volumes
@@ -261,7 +261,7 @@ class Crocodus extends Agent {
     this.addMood('light', 50);
     this.addMood('normal', 50);
     this.addMood('rebond', 50);
-    this.addMood('dense', 20);
+    this.addMood('dense', 40);
   }
 
 
@@ -305,7 +305,7 @@ class Crocodus extends Agent {
             && !this.currentBlock.getNote(blockStep+stepsAfter)
             && stepsAfter <= 8){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
-            this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            this.instrument.triggerAttackRelease(note, "16n", time_delayed);
             this.anim.animate(time_delayed);
             stepsAfter ++;
           }

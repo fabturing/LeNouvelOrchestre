@@ -72,7 +72,7 @@ class Orchestra {
   // Method for getting the current leader
   getLeader(){
     this.sortAgents();
-    return this.agents[0];
+    return this.agentsOnStage[0];
   }
 
     // Method for  initializating Orchestra
@@ -106,8 +106,8 @@ class Orchestra {
     });
 
     // Normalise aura
-    let aurasSum = this.agents.reduce((acc, agent)=>acc+agent.aura,0);
-    this.agents.forEach(agent=>{agent.aura /= aurasSum});
+    let aurasSum = this.agentsOnStage.reduce((acc, agent)=>acc+agent.aura,0);
+    this.agentsOnStage.forEach(agent=>{agent.aura /= aurasSum});
 
     this.sortAgents();
     this.agents.forEach(agent=>{
