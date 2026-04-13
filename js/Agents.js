@@ -115,6 +115,8 @@ class Liza extends Agent {
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
     this.category = 'perc';
+    this.leavingTime = 2;
+    this.enteringTime = 2;
 
 
 
@@ -149,39 +151,43 @@ class Liza extends Agent {
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;
-      this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
 
-      if(this.moodIs('double')){
-        let time_delayed = time + Tone.Time("16n").toSeconds();
-        this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-        this.anim.animate(time_delayed);
-      }
-      else if(this.moodIs('speed')){
-        let random = Math.random();
-        if(random < 0.2){
+      if (this.hasEnteredSince(this.enteringTime)) {
+        this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
+        if(this.moodIs('double')){
           let time_delayed = time + Tone.Time("16n").toSeconds();
           this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
           this.anim.animate(time_delayed);
         }
-        else if(random < 0.4){
-          let time_delayed = time + Tone.Time("16t").toSeconds();
-          let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
-          this.anim.animate(time_delayed);
-          this.anim.animate(time_delayed2);
-        }
+        else if(this.moodIs('speed')){
+          let random = Math.random();
+          if(random < 0.2){
+            let time_delayed = time + Tone.Time("16n").toSeconds();
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+            this.anim.animate(time_delayed);
+          }
+          else if(random < 0.4){
+            let time_delayed = time + Tone.Time("16t").toSeconds();
+            let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
+            this.anim.animate(time_delayed);
+            this.anim.animate(time_delayed2);
+            }}
+
       }
 
 
       }
     if(note.kick){
-      this.instrument.triggerAttackRelease('C3', "8n", time);
+    if (this.willLeaveIn(this.leavingTime)) {
+      this.instrument.triggerAttackRelease('C3', "8n", time);}
     }
     if(note.snare){
+      if (this.willLeaveIn(this.leavingTime)) {
       let velocite_snr = 1-Math.random()/2;
       this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
-    }
+    }}
 
   }
   
