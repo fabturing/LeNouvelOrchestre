@@ -35,6 +35,7 @@ class Agent {
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
+    this.scale = Tonal.Scale.get('C4 minor').notes;
   }
 
   // Instrument methods
