@@ -23,8 +23,13 @@ class Agent {
     this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
+
     this.onStage = false;
-    this.onStageLastBlock = false;
+    this.enteringTime = 1;
+    this.entering = -1;
+    this.leavingTime = 1;
+    this.leaving = -1;
+
     this.aura = 1;
     this.density = 1;
     this.fatigue = Math.random();
@@ -109,18 +114,47 @@ class Agent {
     this.aura = Math.random();
   }
 
+  // Method called when agent enter the stage
+  enter(){
+    this.entering = this.enteringTime;
+    console.log(this.name, 'will enter the stage in', this.entering ,'blocks');
+  }
+
+  // Method called when agent leave the stage
+  leave(){
+    this.leaving = this.leavingTime;
+    console.log(this.name, 'will leave the stage in', this.leaving ,'blocks');
+  }
+
+  // Return true if the agent has entered the stage since n or minus blocks
+  hasEnteredSince(n){
+    return this.entering < 0 && Math.abs(this.entering) <= n;
+  }
+
+  // Return true if the agent will leave the stage in n or minus blocks
+  willLeaveIn(n){
+    return this.leaving > 0 && this.leaving <= n;
+  }
+
   // Method for updating to be call on each block end
   update(){
+    // leaving / entering stage
+    if(this.entering == 0){
+      this.onStage = true;
+      this.fatigue += FATIGUE_FROM_ENTERING_STAGE * Math.random();
+    } else if(this.leaving == 0){
+      this.onStage = false;
+      this.fatigue += FATIGUE_FROM_QUITTING_STAGE * Math.random();
+    }
+    this.entering --;
+    this.leaving --;
+
     // fatigue
     if(this.onStage) this.fatigue += FATIGUE_FROM_PLAYING * Math.random();
     else this.fatigue += FATIGUE_FROM_RESTING * Math.random();
-    // Coup de mou en quittant la scène ou boost d'energie en montant sur scène
-    if(this.onStageLastBlock && !this.onStage) this.fatigue += FATIGUE_FROM_QUITTING_STAGE * Math.random();
-    else if(!this.onStageLastBlock && this.onStage) this.fatigue += FATIGUE_FROM_ENTERING_STAGE * Math.random();
-    this.onStageLastBlock = this.onStage;
+
     // Valeur contrainte entre 0 et 1
-    if(this.fatigue<0) this.fatigue = 0;
-    else if(this.fatigue>1) this.fatigue = 1;
+    this.fatigue = Math.min(Math.max(this.fatigue, 0), 1);
 
     this.anim.setVisibility(this.onStage)
     this.aura += Math.random()/10;

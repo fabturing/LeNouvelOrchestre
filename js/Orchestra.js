@@ -3,9 +3,15 @@
 
 // Settings
 const TEMPO = 120; //bpm
+
 const PART_SIZE = 8; //steps
 const PARTS_PER_BLOCK = 4; //parts
+const BLOCKS_PER_CYCLE = 4; //blocks
+
 const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
+const CYCLE_SIZE = BLOCK_SIZE*BLOCKS_PER_CYCLE; //steps
+
+const TURNOVER_PROBABILITY_EACH_CYCLES = 0.75;
 const NAME = "Le Nouvel Orchestre";
 
 class Orchestra {
@@ -78,28 +84,51 @@ class Orchestra {
     // Method for  initializating Orchestra
   init(){
 
+    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
+    agentsByFatigue.forEach(agent=>agent.onStage = false);
+    agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
+
     this.agents.forEach(agent=>{
       agent.init();
     });
+
+
     this.sortAgents();
     this.update();
     this.initDebugBox();
 
   }
 
+  // load all agent instruments
   async loadInstruments(){
     for(let i = 0; i<orchestra.agents.length; i++){
       await orchestra.agents[i].loadInstrument();
     }
   }
 
-  // Method for updating to be call on each block end
-  update(){
-    this.updatedPart = randomChoice(["A","B","C"])
+  // Change onstage agents
+  turnover(){
 
     let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
-    agentsByFatigue.forEach(agent=>agent.onStage = false);
-    agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
+    let leastTiredAgentNotOnStage = this.agents.find(agent=>!agent.onStage);
+    let mostTiredAgentOnStage = this.agents.reverse().find(agent=>agent.onStage);
+
+    leastTiredAgentNotOnStage.enter();
+    mostTiredAgentOnStage.leave();
+
+
+  }
+
+  // Method for updating to be call on each block end
+  update(){
+    // On each cycle
+    if(this.step%CYCLE_SIZE==0){
+      if(Math.random()<TURNOVER_PROBABILITY_EACH_CYCLES){
+        this.turnover();
+      }
+    }
+
+    this.updatedPart = randomChoice(["A","B","C"])
 
     this.agents.forEach(agent=>{
       agent.update();
