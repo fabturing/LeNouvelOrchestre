@@ -1,5 +1,6 @@
-// Main script file
+const DEV_MODE = false;
 
+// Main script file
 document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('stage').addEventListener('click', main)
 });
@@ -24,7 +25,7 @@ async function main(){
   noise.seed(Math.random());
 
   // Init buttons
-  newButton('test', test);
+  if(DEV_MODE) newButton('test', test);
   newButton('play', play, );
 
   // Init Orchestra
