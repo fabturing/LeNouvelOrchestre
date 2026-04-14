@@ -1,39 +1,51 @@
 // Testing script
 
 let n, filter, sampler;
+n=0;
+
 
 function testSetup(){
-  n = 0;
-  filter = new Tone.Filter(1000, "lowpass").toDestination();
-  sampler = new Tone.Sampler({
-      urls: {
-          C3: "C3.mp3", //kick
-          C4: "C4.mp3", //snare
-          C5: "C5.mp3", //hihat
-      },
-      baseUrl: "samples/drum/",
-      }).toDestination();
+
+// Function called by the Test button
+
+
+
 }
 
 
-// Function called by the Test button
 function test(){
+/*
+const sampler = new Tone.Sampler({
+  urls: {C3: "xylo_long.mp3"},
+    baseUrl: "samples/xylo/",
+  }).toDestination(); */
+
+let note="C4";
+let note_oct= Tonal.Note.octave(note);
+let scale = Tonal.Scale.get('C4 minor').notes;
+const isNote = (element) => element == note;
+let index = scale.findIndex(isNote);
+let note_modif1 = scale[(index+2)%scale.length];
+let note_modif2 = scale[(index+4)%scale.length];
+
+
+
+
   switch (n){
     case 0 :
-      sampler.triggerAttackRelease(["C3"], "8n");
+   //   sampler.triggerAttackRelease(note, "8n");
+        console.log(note);
       break;
     case 1 :
-      sampler.triggerAttackRelease(["D3"], "8n");
+   //   sampler.triggerAttackRelease(note_modif1, "8n");
+      console.log(note_modif1);
       break;
     case 2 :
-      sampler.triggerAttackRelease(["A4"], "8n");
-      break;
-    case 3 :
-      sampler.triggerAttackRelease(["B4"], "8n");
+   //   sampler.triggerAttackRelease(note_modif2, "8n");
+      console.log(note_modif2);
       break;
   }
-  console.log('Test case:', n);
-  n = (n+1)%4;
+  n = (n+1)%3;
 }
 
 

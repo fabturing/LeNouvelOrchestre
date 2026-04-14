@@ -4,7 +4,7 @@
 // Settings MIXAGE -----------
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -15; //Volume en dB, max 0
+let VOL_FLUTE = -20; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
@@ -12,11 +12,11 @@ let VOL_DRUM = -13.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -12;
+let VOL_BASSE = -18;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -6; //Volume en dB, max 0
+let VOL_XYLO = -3; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Normaliser volumes
@@ -105,8 +105,7 @@ class Jief extends Agent {
   }
 
   generateScale(){
-    let scale = Tonal.Scale.get('C4 minor');
-    return scale.notes;
+   return this.scale;
   }
 }
 
@@ -116,6 +115,8 @@ class Liza extends Agent {
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
     this.category = 'perc';
+    this.leavingTime = 2;
+    this.enteringTime = 2;
 
 
 
@@ -150,39 +151,43 @@ class Liza extends Agent {
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;
-      this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
 
-      if(this.moodIs('double')){
-        let time_delayed = time + Tone.Time("16n").toSeconds();
-        this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-        this.anim.animate(time_delayed);
-      }
-      else if(this.moodIs('speed')){
-        let random = Math.random();
-        if(random < 0.2){
+      if (this.hasEnteredSince(this.enteringTime)) {
+        this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
+        if(this.moodIs('double')){
           let time_delayed = time + Tone.Time("16n").toSeconds();
           this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
           this.anim.animate(time_delayed);
         }
-        else if(random < 0.4){
-          let time_delayed = time + Tone.Time("16t").toSeconds();
-          let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
-          this.anim.animate(time_delayed);
-          this.anim.animate(time_delayed2);
-        }
+        else if(this.moodIs('speed')){
+          let random = Math.random();
+          if(random < 0.2){
+            let time_delayed = time + Tone.Time("16n").toSeconds();
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+            this.anim.animate(time_delayed);
+          }
+          else if(random < 0.4){
+            let time_delayed = time + Tone.Time("16t").toSeconds();
+            let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
+            this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
+            this.anim.animate(time_delayed);
+            this.anim.animate(time_delayed2);
+            }}
+
       }
 
 
       }
     if(note.kick){
-      this.instrument.triggerAttackRelease('C3', "8n", time);
+    if (this.willLeaveIn(this.leavingTime)) {
+      this.instrument.triggerAttackRelease('C3', "8n", time);}
     }
     if(note.snare){
+      if (this.willLeaveIn(this.leavingTime)) {
       let velocite_snr = 1-Math.random()/2;
       this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
-    }
+    }}
 
   }
   
@@ -227,7 +232,7 @@ class Liza extends Agent {
     else if(this.moodIs('speed')){
       hhPattern = [60,100,60,100,60,100,60,100];
       kickPattern = [98, 2, 20, 2, 98, 2, 20, 2];
-      snarePattern = [0, 2, 98, 10, 0, 5, 98, 30];
+      snarePattern = [0, 2, 98, 10, 0, 5, 98, 20];
     }
 
     /*
@@ -262,7 +267,7 @@ class Crocodus extends Agent {
     this.addMood('light', 50);
     this.addMood('normal', 50);
     this.addMood('rebond', 50);
-    this.addMood('dense', 20);
+    this.addMood('dense', 40);
   }
 
 
@@ -306,7 +311,7 @@ class Crocodus extends Agent {
             && !this.currentBlock.getNote(blockStep+stepsAfter)
             && stepsAfter <= 8){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
-            this.instrument.triggerAttackRelease(note, "8n", time_delayed);
+            this.instrument.triggerAttackRelease(note, "16n", time_delayed);
             this.anim.animate(time_delayed);
             stepsAfter ++;
           }
@@ -328,8 +333,7 @@ class Crocodus extends Agent {
   }
 
   generateScale(){
-    let scale = Tonal.Scale.get('C4 minor');
-    return scale.notes;
+      return this.scale;
   }
 
 }
@@ -346,8 +350,11 @@ class PierreHenry extends Agent {
     this.category = 'melodic';
 
 // moods
-    this.addMood('quinte', 40);
-    this.addMood('quinte_arp', 15);
+    this.addMood('quinte_arp', 30);
+    this.addMood('quinte', 10);
+    this.addMood('quinte/tierce', 15);
+    this.addMood('tierce', 10);
+    this.addMood('tierce_arp', 30);
   }
 
   async loadInstrument(){
@@ -355,6 +362,11 @@ class PierreHenry extends Agent {
     await this.loadSampler(samples, "samples/xylo/");
     this.setPan(PAN_XYLO);
     this.setVolume(VOL_XYLO)
+  }
+
+
+  generateScale(){
+    return this.scale;
   }
 
   playNote(note, time){
@@ -368,13 +380,43 @@ class PierreHenry extends Agent {
    }
 
 
+
+   const isNote = (element) => element == note;
+   let index = this.scale.findIndex(isNote);
+   let quinte, tierce;
+            if (index > -1) {quinte = this.scale[(index+4)%this.scale.length];
+            tierce = this.scale[(index+2)%this.scale.length];
+            }
+            else{quinte = Tonal.Note.transpose(note, "5P");
+             tierce = octave}
+             let octave = Tonal.Note.transpose(note, "8P");
+
+
+
     if(this.moodIs('quinte')){
 
       let delayedTime = time + Math.random()/50;
-      let quinte = Tonal.Note.transpose(note, "5P");
-
       this.instrument.triggerAttackRelease(note, "4n", time);
       this.instrument.triggerAttackRelease(quinte , "4n", delayedTime);
+    }
+
+   else if(this.moodIs('tierce')){
+
+      let delayedTime = time + Math.random()/50;
+      this.instrument.triggerAttackRelease(note, "4n", time);
+      this.instrument.triggerAttackRelease(tierce , "4n", delayedTime);
+    }
+
+    else if(this.moodIs('quinte/tierce')){
+
+      let delayedTime = time + Math.random()/50;
+      this.instrument.triggerAttackRelease(note, "4n", time);
+      let random = Math.random();
+      if(random < 0.5){
+        this.instrument.triggerAttackRelease(tierce , "4n", delayedTime);
+      }
+      else {this.instrument.triggerAttackRelease(quinte, "4n", delayedTime);}
+
     }
 
     else if(this.moodIs('quinte_arp')){
@@ -382,8 +424,6 @@ class PierreHenry extends Agent {
       let stepTime1 = time + Tone.Time("8n").toSeconds();
       let stepTime2 = time + 2*Tone.Time("8n").toSeconds();
       let stepTime3 = time + 3*Tone.Time("8n").toSeconds();
-      let quinte = Tonal.Note.transpose(note, "5P");
-      let octave = Tonal.Note.transpose(note, "8P")
 
       this.instrument.triggerAttackRelease(note, "8n", stepTime1);
       if(random < 0.2){
@@ -403,23 +443,45 @@ class PierreHenry extends Agent {
       this.anim.animate(stepTime3);
     }
 
+    else if(this.moodIs('tierce_arp')){
+      let random = Math.random();
+      let stepTime1 = time + Tone.Time("8n").toSeconds();
+      let stepTime2 = time + 2*Tone.Time("8n").toSeconds();
+      let stepTime3 = time + 3*Tone.Time("8n").toSeconds();
+      this.instrument.triggerAttackRelease(note, "8n", stepTime1);
+      this.anim.animate(stepTime1);
+      if(random < 0.2){
+        this.instrument.triggerAttackRelease(tierce, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(note, "8n", stepTime3);
+      }
+      else if(random < 0.4){
+        this.instrument.triggerAttackRelease(quinte, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(tierce, "8n", stepTime3);
+      }
+      else{
+        this.instrument.triggerAttackRelease(tierce, "8n", stepTime2);
+        this.instrument.triggerAttackRelease(quinte, "8n", stepTime3);
+      }
+
+    this.anim.animate(stepTime2);
+    this.anim.animate(stepTime3);
+}
+
   }
 
   generateStructure(){
-    return ['A','A','B','B'];
+    return ['A','B','A','B'];
   }
 
   generatePattern(){
     let pattern ;
-    if(this.moodIs('quinte')){ pattern = [90, 5, 10, 25, 80, 10, 20, 20];}
-    else if(this.moodIs('quinte_arp')){ pattern = [90, 0, 0, 0, 90, 0, 0, 0];}
+    if(this.moodIs('quinte') || this.moodIs('tierce') || this.moodIs('quinte/tierce')) { pattern = [90, 5, 10, 25, 80, 10, 20, 20];}
+    else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){ pattern = [80, 0, 0, 0, 80, 0, 0, 0];}
     return pattern.map(percent);
   }
 
-  generateScale(){
-    let scale = Tonal.Scale.get('C4 minor');
-    return scale.notes;
-  }
+
 
 }
+
 
