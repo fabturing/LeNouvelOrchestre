@@ -11,7 +11,7 @@ const BLOCKS_PER_CYCLE = 4; //blocks
 const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
 const CYCLE_SIZE = BLOCK_SIZE*BLOCKS_PER_CYCLE; //steps
 
-const TURNOVER_PROBABILITY_EACH_CYCLES = 0.75;
+const TURNOVER_PROBABILITY_EACH_CYCLES = 0.10;
 const NAME = "Le Nouvel Orchestre";
 
 class Orchestra {
