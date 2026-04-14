@@ -67,9 +67,9 @@ function newButton(name, onClick){
 }
 
 
-function logLogo(){
-console.log(`
-   ,--,
+function logLogo(version){
+let style = "color: #f9ef8a ; background-color: #25272f; padding : 10px 20px; display:block; font-weight:bold"
+console.log(`%c   ,--,
 ,---.'|            ,--.    ,----..
 |   | :          ,--.'|   /   /   \\
 :   : |      ,--,:  : |  /   .     :
@@ -84,6 +84,7 @@ console.log(`
 '---'     '   : |         \\   \\ .'
           ;   |.'          \`---\`
           '---'
-`);
 
+Le Nouvel Orchestre
+Version ${version}`, style);
 }

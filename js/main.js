@@ -1,4 +1,5 @@
 const DEV_MODE = false;
+const VERSION = 0;
 
 // Main script file
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -12,7 +13,7 @@ let jief, liza, crocodus, pierrehenry;
 async function main(){
 
   await Tone.start();
-  logLogo();
+  logLogo(VERSION);
 
   // Setup stage
   document.getElementById('stage').removeEventListener('click', main);
