@@ -116,7 +116,6 @@ class Liza extends Agent {
     this.anim = new Anim('liza', true);
     this.category = 'perc';
     this.leavingTime = 2;
-    this.enteringTime = 4;
 
     this.density = {
       hihat:Math.random(),
@@ -149,7 +148,7 @@ class Liza extends Agent {
   playNote(note, time){
     if(note.hihat){
       let velocite_hh = 1-Math.random()/2;
-      if (!(this.hasEnteredSince(this.enteringTime))) {
+      if (!(this.hasEnteredSince(4))) {
         this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
         if(this.moodIs('double')){
           let time_delayed = time + Tone.Time("16n").toSeconds();
@@ -177,13 +176,13 @@ class Liza extends Agent {
 
       }
     if(note.kick){
-      if (!(this.willLeaveIn(this.leavingTime+1))) {
+      if (!(this.willLeaveIn(this.leavingTime))) {
         this.instrument.triggerAttackRelease('C3', "8n", time);
       }
     }
 
     if(note.snare){
-      if (!(this.willLeaveIn(this.leavingTime+1))) {
+      if (!(this.willLeaveIn(this.leavingTime))) {
         let velocite_snr = 1-Math.random()/2;
         this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
       }
