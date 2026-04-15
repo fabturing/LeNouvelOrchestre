@@ -99,7 +99,7 @@ class Jief extends Agent {
     let pattern = [90, 33, 66, 33, 80, 33, 66, 33]
     if(this.moodIs('long_variation')){pattern = [80, 2, 2, 50, 80, 2, 2, 50]}
     // de temps en temps laisser un block vide
-    let random = Math.random();
+    let random = Math.random()*2;
     if(random < this.fatigue ){pattern = [1, 1, 1, 1, 1, 1, 1, 1];}
     return pattern.map(percent);
   }
@@ -115,7 +115,7 @@ class Liza extends Agent {
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
     this.category = 'perc';
-    this.leavingTime = 2;
+    this.leavingTime = 4;
 
     this.density = {
       hihat:Math.random(),
