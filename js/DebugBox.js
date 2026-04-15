@@ -14,10 +14,17 @@ class DebugBox {
   // Initialize a Debug Box.
   init(){
 
+    // Create button
+    newButton(this.object.id,()=>this.open());
     // Create the DOM element from the template and add it to the pagge
     const template = document.getElementById(this.templateId);
     this.element = template.content.firstElementChild.cloneNode(true);
     document.body.appendChild(this.element);
+
+    // toggleOpen
+    this.element.querySelector('thead').addEventListener('click', ()=>{
+      this.element.classList.toggle('closed')
+    });
 
     // Init [data-method] elements
     this.element.querySelectorAll('[data-method]').forEach(el=>{
@@ -46,6 +53,7 @@ class DebugBox {
     this.element.querySelectorAll('[data-attribute]').forEach(el=>{
       let attribute = el.dataset.attribute;
       let value = this.object[attribute];
+      value = roundIfNumber(value);
       el.innerHTML = '';
       if(value && typeof value == 'object') el.appendChild(debugMultiLines(value));
       else el.innerHTML = value;
@@ -57,11 +65,17 @@ class DebugBox {
       let value = this.object[attribute];
       el.value = value;
     });
+
     // Update [data-check] elements
     this.element.querySelectorAll('[data-check]').forEach(el=>{
       let attribute = el.dataset.check;
       let value = this.object[attribute];
       el.checked = value;
     });
+  }
+
+  open(){
+    this.element.classList.remove('closed')
+    this.element.scrollIntoView();
   }
 }

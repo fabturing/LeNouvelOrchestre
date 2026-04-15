@@ -1,25 +1,45 @@
-// Main script file
+const DEV_MODE = false;
+const VERSION = 0;
 
+// Main script file
 document.addEventListener("DOMContentLoaded", function(event) {
-    main();
+    document.getElementById('stage').addEventListener('click', main)
 });
 
 let orchesta;
-let jief, liza, crocodus;
+let jief, liza, crocodus, pierrehenry;
 
 // Main function
-function main(){
+async function main(){
+
+  await Tone.start();
+  logLogo(VERSION);
+
+  // Setup stage
+  document.getElementById('stage').removeEventListener('click', main);
+  document.getElementById('stage').classList.remove('preload');
+
+  // Init test
+  testSetup();
+
+  //Init Perlin noise
+  noise.seed(Math.random());
+
   // Init buttons
-  document.getElementById('test').addEventListener("click", test);
-  document.getElementById('play').addEventListener("click", play);
+  if(DEV_MODE) newButton('test', test);
+  newButton('play', play, );
 
   // Init Orchestra
   orchestra = new Orchestra();
   jief = orchestra.addAgent(new Jief());
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
-  jief.aura = 0.9;
+  pierrehenry = orchestra.addAgent(new PierreHenry());
+
+  await orchestra.loadInstruments();
   orchestra.init();
+  orchestra.start();
+
 
 }
 

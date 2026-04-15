@@ -1,7 +1,9 @@
 body {
-  background: LightSteelBlue;
+  background: black;
   font-family: monospace;
   font-size: 10pt;
+  padding-bottom:20px;
+
 }
 
 
@@ -14,13 +16,27 @@ th{
 
 }
 
+.debug-box.closed>table tbody{
+  display: none;
+}
+
+.debug-box>table>thead{
+  text-align:left;
+  background:#eee;
+  color:#333;
+  cursor:pointer;
+}
+.debug-box>table thead:hover {
+  background: white;
+}
+
 .debug-box>table {
   background: white;
   margin: 1em;
   min-width:600px
 }
-.debug-box>table>tbody>tr>th,
-.debug-box>table>thead>tr>th{
+
+.debug-box>table>tbody>tr>th{
   width:120px;
     background:#eee;
   color:#333;
@@ -74,4 +90,63 @@ th{
 
 .debug-multi-lines th {
   width:2em;
+}
+
+#buttons {
+  background: #25272f;
+  border-top:3px solid black;
+  width:100%;
+  position: fixed;
+  bottom: -120px;
+  left:0;
+  padding: 1em;
+  display: flex;
+
+}
+
+#buttons:hover {
+  bottom:0;
+}
+
+
+#buttons button {
+  background: transparent;
+  border: none;
+}
+
+#buttons button:hover{
+  cursor: pointer;
+  filter: brightness(1.5);
+}
+
+#buttons button:active{
+  filter: brightness(2);
+}
+
+#stage {
+margin: auto;
+  position: relative;
+  width:1280px;
+  height: 960px;
+  background: url('sprites/stage.png');
+}
+
+#stage.preload{
+   cursor: pointer;
+    background: url('sprites/street0.png');
+
+}
+#stage.preload:hover{
+ 
+    background: url('sprites/street1.png');
+
+}
+
+#stage #anims {
+  position: absolute;
+  top:220px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

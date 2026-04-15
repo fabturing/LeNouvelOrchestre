@@ -4,7 +4,16 @@ function randomChoice (arr){
   return arr[Math.floor(arr.length * Math.random())];
 }
 
+// Return percent value
+function percent(n){
+  return n/100;
+}
 
+// Return the value passed. But if its a number, round to second decimal.
+function roundIfNumber(n){
+  if(!isNaN(n)) return Math.round(n*100)/100;
+  return n;
+}
 
 // Return a DOM object for representing a multilines information
 // `object` is the multinine object
@@ -18,7 +27,7 @@ function debugMultiLines(object, func){
     let row = document.createElement('tr');
     let lineElement = document.createElement('td');
     if(func) lineElement.appendChild(func(object[line]));
-    else lineElement.innerHTML = object[line]
+    else lineElement.innerHTML = roundIfNumber(object[line]);
     let headerElement = document.createElement('th');
     headerElement.innerHTML = line
 
@@ -39,8 +48,43 @@ function debugSequence(array, index){
     stepElement.classList.add('step');
     if(index === i) stepElement.classList.add('current');
     if(!step) stepElement.classList.add('empty');
+    step = roundIfNumber(step);
     stepElement.innerHTML = step;
     container.appendChild(stepElement);
   })
   return container;
+}
+
+
+// Create a button and add it in the buttons div
+function newButton(name, onClick){
+    const template = document.getElementById('button-template');
+    const element = template.content.firstElementChild.cloneNode(true);
+    element.addEventListener('click', onClick);
+    element.querySelector('img').src = 'sprites/'+name+'-button.png'
+    const conainer = document.getElementById('buttons');
+    conainer.appendChild(element);
+}
+
+
+function logLogo(version){
+let style = "color: #f9ef8a ; background-color: #25272f; padding : 10px 20px; display:block; font-weight:bold"
+console.log(`%c   ,--,
+,---.'|            ,--.    ,----..
+|   | :          ,--.'|   /   /   \\
+:   : |      ,--,:  : |  /   .     :
+|   ' :   ,\`--.'\`|  ' : .   /   ;.  \\
+;   ; '   |   :  :  | |.   ;   /  \` ;
+'   | |__ :   |   \\ | :;   |  ; \\ ; |
+|   | :.'||   : '  '; ||   :  | ; | '
+'   :    ;'   ' ;.    ;.   |  ' ' ' :
+|   |  ./ |   | | \\   |'   ;  \\; /  |
+;   : ;   '   : |  ; .' \\   \\  ',  /
+|   ,/    |   | '\`--'    ;   :    /
+'---'     '   : |         \\   \\ .'
+          ;   |.'          \`---\`
+          '---'
+
+Le Nouvel Orchestre
+Version ${version}`, style);
 }

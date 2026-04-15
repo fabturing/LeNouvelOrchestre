@@ -1,38 +1,51 @@
 // Testing script
 
-let n = 0;
+let n, filter, sampler;
+n=0;
 
-let filter = new Tone.Filter(1000, "lowpass").toDestination();
 
-
-let flutio = new Tone.Sampler({
-    urls: {
-        C3: "C3.mp3",
-    },
-    baseUrl: "samples/flute/",
-}).connect(filter);
+function testSetup(){
 
 // Function called by the Test button
+
+
+
+}
+
+
 function test(){
+/*
+const sampler = new Tone.Sampler({
+  urls: {C3: "xylo_long.mp3"},
+    baseUrl: "samples/xylo/",
+  }).toDestination(); */
+
+let note="C4";
+let note_oct= Tonal.Note.octave(note);
+let scale = Tonal.Scale.get('C4 minor').notes;
+const isNote = (element) => element == note;
+let index = scale.findIndex(isNote);
+let note_modif1 = scale[(index+2)%scale.length];
+let note_modif2 = scale[(index+4)%scale.length];
+
+
+
+
   switch (n){
     case 0 :
-      flutio.triggerAttackRelease(["C4"], "2n");
-      console.log(n);
+   //   sampler.triggerAttackRelease(note, "8n");
+        console.log(note);
       break;
     case 1 :
-      flutio.triggerAttackRelease(["C4"], "8n");
-      console.log(n);
+   //   sampler.triggerAttackRelease(note_modif1, "8n");
+      console.log(note_modif1);
       break;
     case 2 :
-      flutio.triggerAttackRelease(["C4"], "16n");
-      console.log(n);
-      break;
-    case 3 :
-      flutio.triggerAttackRelease(["C4"], "8n");
-      console.log(n);
+   //   sampler.triggerAttackRelease(note_modif2, "8n");
+      console.log(note_modif2);
       break;
   }
-  n = (n+1)%4;
+  n = (n+1)%3;
 }
 
 

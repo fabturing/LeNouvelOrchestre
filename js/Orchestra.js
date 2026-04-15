@@ -3,9 +3,15 @@
 
 // Settings
 const TEMPO = 120; //bpm
+
 const PART_SIZE = 8; //steps
 const PARTS_PER_BLOCK = 4; //parts
+const BLOCKS_PER_CYCLE = 4; //blocks
+
 const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
+const CYCLE_SIZE = BLOCK_SIZE*BLOCKS_PER_CYCLE; //steps
+
+const TURNOVER_PROBABILITY_EACH_CYCLES = 0.10;
 const NAME = "Le Nouvel Orchestre";
 
 class Orchestra {
@@ -16,12 +22,18 @@ class Orchestra {
     this.step = 0;
     // Other attributes
     this.name = NAME;
+    this.id = "orchestra"
     this.playing = false;
     this.debugBox = new DebugBox('orchestra-debug-box', this)
 
     // init transport
     Tone.Transport.bpm.value = TEMPO;
     Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
+  }
+
+  // Getter for agents On Stage
+  get agentsOnStage(){
+    return this.agents.filter(agent=>agent.onStage);
   }
 
   // Getter for blockProgress, from 0 to 1
@@ -33,6 +45,12 @@ class Orchestra {
   get blockStep(){
     return (this.step%BLOCK_SIZE);
   }
+
+  // Getter for blockCount
+  get blockCount(){
+    return Math.floor(this.step/BLOCK_SIZE);
+  }
+
   // Getter for partStep, from 0 to part size
   get partStep(){
     return (this.step%PART_SIZE);
@@ -47,6 +65,7 @@ class Orchestra {
   addAgent(agent){
     this.agents.push(agent);
     agent.setOrchestra(this);
+
     return agent;
   }
 
@@ -59,26 +78,70 @@ class Orchestra {
   // Method for getting the current leader
   getLeader(){
     this.sortAgents();
-    return this.agents[0];
-  }
-
-  // Method for  updating agents Blocks
-  updateBlocks(){
-    this.sortAgents();
-    let part = randomChoice(["A","B","C"])
-    this.agents.forEach(agent=>{
-      agent.updatePart(part);
-    });
+    return this.agentsOnStage[0];
   }
 
     // Method for  initializating Orchestra
   init(){
+
+    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
+    agentsByFatigue.forEach(agent=>agent.onStage = false);
+    agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
+
+    this.agents.forEach(agent=>{
+      agent.init();
+    });
+
+
+    this.sortAgents();
+    this.update();
+    this.initDebugBox();
+
+  }
+
+  // load all agent instruments
+  async loadInstruments(){
+    for(let i = 0; i<orchestra.agents.length; i++){
+      await orchestra.agents[i].loadInstrument();
+    }
+  }
+
+  // Change onstage agents
+  turnover(){
+
+    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
+    let leastTiredAgentNotOnStage = this.agents.find(agent=>!agent.onStage);
+    let mostTiredAgentOnStage = this.agents.find(agent=>agent.onStage);
+
+    leastTiredAgentNotOnStage.enter();
+    mostTiredAgentOnStage.leave();
+
+
+  }
+
+  // Method for updating to be call on each block end
+  update(){
+    // On each cycle
+    if(this.step%CYCLE_SIZE==0){
+      if(Math.random()<TURNOVER_PROBABILITY_EACH_CYCLES){
+        this.turnover();
+      }
+    }
+
+    this.updatedPart = randomChoice(["A","B","C"])
+
+    this.agents.forEach(agent=>{
+      agent.update();
+    });
+
+    // Normalise aura
+    let aurasSum = this.agentsOnStage.reduce((acc, agent)=>acc+agent.aura,0);
+    this.agentsOnStage.forEach(agent=>{agent.aura /= aurasSum});
+
     this.sortAgents();
     this.agents.forEach(agent=>{
-      agent.updateBlock();
-      agent.anim.init();
+      agent.updatePart(this.updatedPart);
     });
-    this.initDebugBox();
   }
 
   // Start the music
@@ -95,31 +158,33 @@ class Orchestra {
 
     // Debug
     this.updateDebugBox();
+  }
 
-    //Animate the dancer
-    document.getElementById('dancer').src = 'sprites/iddle.png';
+  // Method for going to next Block
+  nextBlock(){
+    let remainingSteps = BLOCK_SIZE - this.blockStep;
+    this.step += remainingSteps;
+    this.update();
+    this.updateDebugBox();
   }
 
   // Method for playing a step
   playStep(time){
 
     // Call playStep for each agent
-    this.agents.forEach(agent=>{
+    this.agentsOnStage.forEach(agent=>{
       agent.playStep(this.step, time)
     });
 
     // Debug
     this.updateDebugBox();
 
-    //Animate the dancer
-    Tone.Draw.schedule(()=>{document.getElementById('dancer').src = 'sprites/dancing'+this.step%2+'.png',time});
-
     // Increment step count
     this.step ++;
 
-    // At the  end of the block, update Blocks.
+    // At the  end of the block, update.
     if(this.step % BLOCK_SIZE == 0){
-      this.updateBlocks();
+      this.update();
     }
 
   }
@@ -127,10 +192,10 @@ class Orchestra {
   // Debug Methods
   initDebugBox(){
    this.debugBox.init();
-   this.agents.forEach(agent=>{agent.initDebugBox()});
+   this.agents.forEach(agent=>{agent.debugBox.init()});
   }
   updateDebugBox(){
     this.debugBox.update();
-    this.agents.forEach(agent=>{agent.updateDebugBox()});
+    this.agents.forEach(agent=>{agent.debugBox.update()});
   }
 }

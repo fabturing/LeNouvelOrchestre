@@ -4,8 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link href="style.css" rel="stylesheet" />
-    <script src="http://unpkg.com/tone"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
+    <script src="lib/tone.js"></script>
+    <script src="lib/tonal.min.js"></script>
+    <script src="lib/perlin.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
     <script src="js/DebugBox.js"></script>
@@ -20,43 +21,59 @@
   <body>
 
     <!-- ANIMS -->
-    <div id="anims"></div>
+    <div id="stage" class="preload">
+      <div id="anims"></div>
+    </div>
 
     <!-- BUTTONS -->
-    <button id="test">test</button>
-    <button id="play">play/stop</button>
+    <div id="buttons">
+    </div>
+
 
     <!-- TEMPLATES -->
+
+    <template id="button-template">
+       <button><img></img><span></span></button>
+    </template>
+
     <template id="orchestra-debug-box">
-      <div class="debug-box">
+      <div class="debug-box closed">
         <table>
-          <thead><tr><th colspan="2">Orchestra</th></tr></thead>
+          <thead><tr><th colspan="2">Orchestra - <span data-attribute="name"></span></th></tr></thead>
           <tbody>
-            <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
-            <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
             <tr><th scope="row">Step</th><td><span data-attribute="step"></span></td></tr>
-            <tr><th scope="row">Block progress</th><td><progress value="0" max="1" data-progress="blockProgress"></progress></td></tr>
-            <tr><th scope="row">Playing</th><td><span data-attribute="playing"></span></td></tr>
-            <tr><th scope="row">Controls</th><td><button data-method="start">Start</button><button data-method="pause">Pause</button></td></tr>
+            <tr><th scope="row">Block</th><td><progress value="0" max="1" data-progress="blockProgress"></progress> <span data-attribute="blockCount"></span></td></tr>
+            <tr><th scope="row">Updated part</th><td><span data-attribute="updatedPart"></span></td></tr>
+            <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
+            <tr><th scope="row">Controls</th><td>
+               <button data-method="start">Start</button>
+               <button data-method="pause">Pause</button>
+              <button data-method="nextBlock">Next Block</button>
+               <button data-method="turnover">Turnover</button>
+             </td></tr>
           </tbody>
         </table>
       </div>
     </template>
 
     <template id="agent-debug-box">
-      <div class="debug-box">
+      <div class="debug-box closed">
         <table>
-          <thead><tr><th colspan="2">Agent</th></tr></thead>
+          <thead><tr><th colspan="2">Agent - <span data-attribute="name"></span></th></tr></thead>
           <tbody>
-            <tr><th scope="row">Name</th><td><span data-attribute="name"></span></td></tr>
             <tr><th scope="row">Description</th><td><span data-attribute="descritption"></span></td></tr>
+            <tr><th scope="row">On stage</th><td><span data-attribute="onStage"></span></td></tr>
+          <tr><th scope="row">Entering</th><td><span data-attribute="entering"></span>/<span data-attribute="enteringTime"></span></td></tr>
+            <tr><th scope="row">Leaving</th><td><span data-attribute="leaving"></span>/<span data-attribute="leavingTime"></span></td></tr>
+            <tr><th scope="row">Fatigue</th><td><progress value="0" max="1" data-progress="fatigue"></progress> (<span data-attribute="fatigue"></span>) <button data-method="resetFatigue">reset</button></td></tr>
             <tr><th scope="row">Aura</th><td><progress value="0" max="1" data-progress="aura"></progress> (<span data-attribute="aura"></span>)</td></tr>
+            <tr><th scope="row">Mood</th><td><progress value="0" max="1" data-progress="mood"></progress> <span data-attribute="moodName"></span> (<span data-attribute="mood"></span>) (lock: <input type="checkbox" data-check="moodIsLocked"/>)</td></tr>
             <tr><th scope="row">Is playing ?</th><td><span data-attribute="isPlaying"></span></td></tr>
             <tr><th scope="row">Note</th><td><span data-attribute="currentNote"></span></td></tr>
             <tr><th scope="row">Density</th><td><span data-attribute="density"></span></td></tr>
             <tr><th scope="row">Part</th><td><span data-attribute="currentPart"></span></td></tr>
 
-            <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>"
+            <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>
             <tr><th scope="row">Block</th><td><span data-attribute="currentBlockRepr"></span></td></tr>
             <tr><th scope="row">Ignore Previous Block Influence</th><td><input type="checkbox" data-check="ignorePreviousBlockInfluence"/></td></tr>
             <tr><th scope="row">Ignore Leader Block Influence</th><td><input type="checkbox" data-check="ignoreLeaderBlockInfluence"/></td></tr>

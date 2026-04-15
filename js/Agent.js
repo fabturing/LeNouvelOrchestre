@@ -1,31 +1,172 @@
 // This file define the Agent class.
 // An Agent is a musician in the Orchestra.
 
+const MOOD_SPEED = 0.05;
+const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
+const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
+const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
+const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
+
 class Agent {
-  constructor(name, description, lines) {
+  constructor(name, description, id, lines) {
     // Name of the agent
     this.name = name;
+    this.id = id
     // Description of the agent
     this.descritption = description;
     // Array of identifiants for the lines of the agent
     // Keep that undefined if there is only one line.
     this.lines = lines;
     // Other attributes
-    this.category; // 'perc' ou 'melodic'
+    this.category; // 'perc' ou 'melodic' ou 'bass'
     this.ignoreLeaderBlockInfluence = false;
     this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
-    this.aura = 0;
+
+    this.onStage = false;
+    this.enteringTime = 1;
+    this.entering = -1;
+    this.leavingTime = 1;
+    this.leaving = -1;
+
+    this.aura = 1;
     this.density = 1;
+    this.fatigue = Math.random();
+    this.mood = 0.5; // mood value;
+    this.moods = []; // definition of moods (see addMove)
+    this.moodPosition = Math.random()*100; // where does the agent mood is read in the perlin space;
+    this.moodIsLocked = false;
     this.currentBlock;
-    this.debugSynth = new Tone.Synth().toDestination();
+    this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
+    this.scale = Tonal.Scale.get('C4 minor').notes;
+  }
+
+  // Instrument methods
+
+  // Return a promise that can be awaited for the sample to be loaded
+  loadSampler(urls, baseUrl){
+    return new Promise((resolve, reject)=>{
+      this.instrument = new Tone.Sampler({
+      urls: urls,
+      baseUrl: baseUrl,
+        onload:()=>resolve(),
+        onerror:()=>reject(),
+      });
+    });
+  }
+
+  // Set the pan
+  setPan(pan){
+    //TODO: Make this method callable multiple times (for now it might only works for the first call)
+    const panner = new Tone.Panner(pan).toDestination();
+    this.instrument.connect(panner)
+  }
+
+  // Set the volume
+  setVolume(volume){
+    this.instrument.volume.value = volume ;
+  }
+
+  // Set a filter with a value
+  setFilter(value, name){
+    //TODO: Make this method callable multiple times (for now it might only works for the first call)
+    const filter = new Tone.Filter(value, name)
+    this.instrument.connect(filter);
+  }
+
+
+
+  // Moods methods
+
+  // Getter for moodName
+  get moodName(){
+    return this.moods[this.moodIndex]?.name;
+  }
+
+
+  // Getter for moodIndex
+  get moodIndex(){
+    let totalPortions = this.moods.reduce((a,mood)=>a+mood.portion,0);
+    let currentPortion = 0;
+    let portionToReach = this.mood * totalPortions;
+    for(let i = 0; i < this.moods.length; i++){
+      currentPortion += this.moods[i].portion;
+      if(currentPortion>portionToReach){
+       return i;
+      }
+    }
+  }
+
+  // Add a new pôssible mood to the agent
+  addMood(name, portion){
+    this.moods.push({name:name, portion:portion});
+  }
+
+  // Returns true if mood
+  moodIs(name){
+    return this.moodName == name
+  }
+  // Method for  initializating Agent
+  init(){
+    this.anim.init();
+    //this.updateBlock();
+    this.aura = Math.random();
+  }
+
+  // Method called when agent enter the stage
+  enter(){
+    this.entering = this.enteringTime;
+    console.log(this.name, 'will enter the stage in', this.entering ,'blocks');
+  }
+
+  // Method called when agent leave the stage
+  leave(){
+    this.leaving = this.leavingTime;
+    console.log(this.name, 'will leave the stage in', this.leaving ,'blocks');
+  }
+
+  // Return true if the agent has entered the stage since n or minus blocks
+  hasEnteredSince(n){
+    return this.entering < 0 && Math.abs(this.entering) <= n;
+  }
+
+  // Return true if the agent will leave the stage in n or minus blocks
+  willLeaveIn(n){
+    return this.leaving > 0 && this.leaving <= n;
+  }
+
+  // Method for updating to be call on each block end
+  update(){
+    // leaving / entering stage
+    if(this.entering == 0){
+      this.onStage = true;
+      this.fatigue += FATIGUE_FROM_ENTERING_STAGE * Math.random();
+    } else if(this.leaving == 0){
+      this.onStage = false;
+      this.fatigue += FATIGUE_FROM_QUITTING_STAGE * Math.random();
+    }
+    this.entering --;
+    this.leaving --;
+
+    // fatigue
+    if(this.onStage) this.fatigue += FATIGUE_FROM_PLAYING * Math.random();
+    else this.fatigue += FATIGUE_FROM_RESTING * Math.random();
+
+    // Valeur contrainte entre 0 et 1
+    this.fatigue = Math.min(Math.max(this.fatigue, 0), 1);
+
+    this.anim.setVisibility(this.onStage)
+    this.aura += Math.random()/10;
+    if(!this.moodIsLocked){
+      this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount*MOOD_SPEED)+1)/2;
+    }
   }
 
   // Default method for playing a note. Should be overrided.
   playNote(note, time){
-    this.debugSynth.triggerAttackRelease(note, "1n", time);
+    this.instrument.triggerAttackRelease(note, "1n", time);
   }
 
   // Default method for generating a structure. Should be overrided.
@@ -39,9 +180,8 @@ class Agent {
   }
   // Default method for generating a scale. Should be overrided.
   generateScale(){
-    return ['A1'];
+    return Tonal.Scale.get('C4 minor').notes;
   }
-
 
   // getter for debugging block
   get currentBlockRepr(){
@@ -56,6 +196,8 @@ class Agent {
 
   // getter for if the agent is playing this step
   get isPlaying(){
+    //agent is muted ?
+    if(this.muted) return false;
     // Orchestra not playing means not playing
     if(!this.orchestra.playing) return false;
     // no current block means not playing
@@ -98,6 +240,8 @@ class Agent {
     }
   }
 
+
+
   // Method for generating a melody from a pattern, a scale and models (models are optionals)
   generateMelo(pattern, scale, meloModel1, meloModel2){
 
@@ -127,49 +271,56 @@ class Agent {
 
   // Method for generating a part. (part should be "A", "B" or "C")
   generatePart(part, pattern, scale){
-
-
-
     // Get a first model from previous block
-    let meloModel1;
-    if(this.ignorePreviousBlockInfluence) meloModel1 = undefined;
-    else if(this.previousBlock) meloModel1 = this.previousBlock.getPartAsModel(part);
-    else meloModel1 = undefined;
+    let previousModel;
+    if(this.ignorePreviousBlockInfluence) previousModel = undefined;
+    else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(part);
+    else previousModel = undefined;
 
     // Get a second model from leader block
-    let meloModel2;
-    if(this.ignoreLeaderBlockInfluence) meloModel2 = undefined;
-    else if(this.orchestra.getLeader() == this) meloModel2 = undefined;
-    else if(!this.orchestra.getLeader().currentBlock) meloModel2 = undefined;
-    else meloModel2 = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
+    let leaderModel;
+    if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
+    else if(this.orchestra.getLeader() == this) leaderModel = undefined;
+    else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
+    else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
 
     //  melody generation
     let melo = [];
 
     // If there is lines, generate melody for each lines
     if(this.lines){
-      let meloByLines = Object.fromEntries(this.lines.map(line => {
+      this.lines.forEach(line=>{
         let linePattern = pattern[line] || pattern;
         let lineScale = scale[line] || scale;
-        let lineMelo = this.generateMelo(linePattern, lineScale, meloModel1, meloModel2);
-        return [line, lineMelo];
-      }));
-
-      // Convert object of array to array of objects
-      let meloLength = meloByLines[this.lines[0]].length;
-      for(let i = 0; i < meloLength;  i++){
-        melo[i] = Object.fromEntries(this.lines.map((line)=>[line,meloByLines[line][i]]));
-      }
-
-      //TEST
-      melo = meloByLines
+        melo[line] = this.generateMelo(linePattern, lineScale, previousModel, leaderModel);
+      });
     }
     // Else generate a single melody
     else {
-      melo = this.generateMelo(pattern, scale, meloModel1, meloModel2);
+      melo = this.generateMelo(pattern, scale, previousModel, leaderModel);
     }
 
     return melo;
+  }
+
+  // generate an array of chords from a pattern and a melody
+  generateChords(pattern, melo){
+    return pattern.map((step, i)=>{
+      if (step && melody[i]){
+        let chord = [
+          this.scale[melody[i]],
+          this.scale[melody[i]+2],
+          this.scale[melody[i]+4]
+        ];
+        if (Tonal.Note.octave(chord[2]) > 4) {
+          chord = chord.map(Tonal.Note.transposeBy("-8P"));
+        }
+        return chord;
+      }
+      else {
+        return null;
+      }
+    });
   }
 
   // Method for generating a block
@@ -191,25 +342,26 @@ class Agent {
   // Method for updating agent's block
   updateBlock(){
     this.previousBlock = this.currentBlock;
-    this.currentBlock = this.generateBlock()
+    this.currentBlock = this.generateBlock();
   }
 
   // Method for updating one part of agent's block
   updatePart(part){
     this.previousBlock = this.currentBlock;
-    this.currentBlock = this.copyBlock(this.currentBlock);
+    if(!this.currentBlock) {
+      this.currentBlock = this.generateBlock();
+    }
+    else{
+      this.currentBlock = this.copyBlock(this.currentBlock);
+    }
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
+    let structure = this.generateStructure();
+    this.currentBlock.structure = structure;
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
   }
 
-  // Debug methods
-  initDebugBox(){
-   this.debugBox.init();
+  resetFatigue(){
+    this.fatigue = 0;
   }
-  updateDebugBox(){
-    this.debugBox.update();
-  }
-
 }
-
