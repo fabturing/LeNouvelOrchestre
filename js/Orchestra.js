@@ -1,19 +1,6 @@
 // This file define Orchestra.
 // The role of the Orchestra is Agents coordination.
 
-// Settings
-const TEMPO = 120; //bpm
-
-const PART_SIZE = 8; //steps
-const PARTS_PER_BLOCK = 4; //parts
-const BLOCKS_PER_CYCLE = 4; //blocks
-
-const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
-const CYCLE_SIZE = BLOCK_SIZE*BLOCKS_PER_CYCLE; //steps
-
-const TURNOVER_PROBABILITY_EACH_CYCLES = 0.10;
-const NAME = "Le Nouvel Orchestre";
-
 class Orchestra {
   constructor(){
     // Array of agents
@@ -21,7 +8,7 @@ class Orchestra {
     // Current step goes from 0 to infinity
     this.step = 0;
     // Other attributes
-    this.name = NAME;
+    this.name = "Le Nouvel Orchestre";
     this.id = "orchestra"
     this.playing = false;
     this.debugBox = new DebugBox('orchestra-debug-box', this)

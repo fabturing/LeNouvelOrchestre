@@ -1,12 +1,6 @@
 // This file define the Agent class.
 // An Agent is a musician in the Orchestra.
 
-const MOOD_SPEED = 0.05;
-const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
-const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
-const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
-const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
-
 class Agent {
   constructor(name, description, id, lines) {
     // Name of the agent

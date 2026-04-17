@@ -1,13 +1,15 @@
-const DEV_MODE = false;
-const VERSION = 0;
-
 // Main script file
 document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('stage').addEventListener('click', main)
 });
 
 let orchesta;
-let jief, liza, crocodus, pierrehenry;
+
+// Agents global variables
+let jief;
+let liza;
+let crocodus;
+let pierrehenry;
 
 // Main function
 async function main(){
@@ -31,6 +33,8 @@ async function main(){
 
   // Init Orchestra
   orchestra = new Orchestra();
+
+  // Agents declarations
   jief = orchestra.addAgent(new Jief());
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
