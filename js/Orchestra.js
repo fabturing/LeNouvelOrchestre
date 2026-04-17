@@ -124,11 +124,38 @@ class Orchestra {
     // Normalise aura
     let aurasSum = this.agentsOnStage.reduce((acc, agent)=>acc+agent.aura,0);
     this.agentsOnStage.forEach(agent=>{agent.aura /= aurasSum});
-
     this.sortAgents();
-    this.agents.forEach(agent=>{
-      agent.updatePart(this.updatedPart);
-    });
+
+    const newBlock = ()=>{
+      this.agents.forEach(agent=>agent.updateBlock());
+      this.lastEvent = `Update whole block for all agents`;
+    }
+
+    const newLeaderBlock = ()=>{
+      this.getLeader().updateBlock();
+      this.lastEvent = `Update whole block for the leader`;
+    }
+
+    const newPart = ()=>{
+      let part = randomChoice(["A","B","C"]);
+      this.agents.forEach(agent=>agent.updatePart(part));
+      this.lastEvent = `Update part ${part} for all agents`;
+    }
+
+    const keepBlock = ()=>{
+      this.lastEvent = `Keep Same block for all agents`;
+    }
+
+    const events = [
+      {fun:newBlock, weight:NEW_BLOCK_PROBABILITY_EACH_BLOCK},
+      {fun:newLeaderBlock, weight:NEW_LEADER_BLOCK_PROBABILITY_EACH_BLOCK},
+      {fun:newPart, weight:NEW_PART_PROBABILITY_EACH_BLOCK},
+      {fun:keepBlock, weight:KEEP_BLOCK_PROBABILITY_EACH_BLOCK},
+    ];
+
+    let event = selectFromWeightedArray(events, Math.random());
+    event.fun();
+
   }
 
   // Start the music

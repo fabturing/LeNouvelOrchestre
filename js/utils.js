@@ -88,3 +88,16 @@ console.log(`%c   ,--,
 Le Nouvel Orchestre
 Version ${version}`, style);
 }
+
+
+
+// array is an array of object which has a weight attribute. Index is between 0 and 1
+function selectFromWeightedArray(array, index){
+  let totalWeight = array.reduce((a,el)=>a+el.weight,0);
+  let weightToReach = index * totalWeight;
+  let count = 0;
+  for(let i = 0; i < array.length; i++){
+    count += array[i].weight;
+    if(count>weightToReach) return array[i];
+  }
+}

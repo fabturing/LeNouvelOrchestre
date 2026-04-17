@@ -76,26 +76,13 @@ class Agent {
 
   // Getter for moodName
   get moodName(){
-    return this.moods[this.moodIndex]?.name;
-  }
-
-
-  // Getter for moodIndex
-  get moodIndex(){
-    let totalPortions = this.moods.reduce((a,mood)=>a+mood.portion,0);
-    let currentPortion = 0;
-    let portionToReach = this.mood * totalPortions;
-    for(let i = 0; i < this.moods.length; i++){
-      currentPortion += this.moods[i].portion;
-      if(currentPortion>portionToReach){
-       return i;
-      }
-    }
+    let mood = selectFromWeightedArray(this.moods, this.mood);
+    if(mood) return mood.name;
   }
 
   // Add a new pôssible mood to the agent
-  addMood(name, portion){
-    this.moods.push({name:name, portion:portion});
+  addMood(name, weight){
+    this.moods.push({name:name, weight:weight});
   }
 
   // Returns true if mood
