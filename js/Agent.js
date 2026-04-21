@@ -1,12 +1,6 @@
 // This file define the Agent class.
 // An Agent is a musician in the Orchestra.
 
-const MOOD_SPEED = 0.05;
-const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
-const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
-const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
-const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
-
 class Agent {
   constructor(name, description, id, lines) {
     // Name of the agent
@@ -82,26 +76,13 @@ class Agent {
 
   // Getter for moodName
   get moodName(){
-    return this.moods[this.moodIndex]?.name;
-  }
-
-
-  // Getter for moodIndex
-  get moodIndex(){
-    let totalPortions = this.moods.reduce((a,mood)=>a+mood.portion,0);
-    let currentPortion = 0;
-    let portionToReach = this.mood * totalPortions;
-    for(let i = 0; i < this.moods.length; i++){
-      currentPortion += this.moods[i].portion;
-      if(currentPortion>portionToReach){
-       return i;
-      }
-    }
+    let mood = selectFromWeightedArray(this.moods, this.mood);
+    if(mood) return mood.name;
   }
 
   // Add a new pôssible mood to the agent
-  addMood(name, portion){
-    this.moods.push({name:name, portion:portion});
+  addMood(name, weight){
+    this.moods.push({name:name, weight:weight});
   }
 
   // Returns true if mood
@@ -110,9 +91,14 @@ class Agent {
   }
   // Method for  initializating Agent
   init(){
+  console.log('init',this.name)
+
     this.anim.init();
-    //this.updateBlock();
+
+
+
     this.aura = Math.random();
+
   }
 
   // Method called when agent enter the stage
@@ -139,6 +125,7 @@ class Agent {
 
   // Method for updating to be call on each block end
   update(){
+  console.log('updating',this.name)
     // leaving / entering stage
     if(this.entering == 0){
       this.onStage = true;
@@ -276,14 +263,12 @@ class Agent {
     if(this.ignorePreviousBlockInfluence) previousModel = undefined;
     else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(part);
     else previousModel = undefined;
-
     // Get a second model from leader block
     let leaderModel;
     if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
     else if(this.orchestra.getLeader() == this) leaderModel = undefined;
     else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
     else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
-
     //  melody generation
     let melo = [];
 
@@ -325,12 +310,15 @@ class Agent {
 
   // Method for generating a block
   generateBlock(){
+
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
     let structure = this.generateStructure();
+
     let A = this.generatePart('A', pattern, scale);
     let B = this.generatePart('B', pattern, scale);
     let C = this.generatePart('C', pattern, scale);
+
     return new Block(A, B, C, structure, this.lines);
   }
   
@@ -341,7 +329,9 @@ class Agent {
 
   // Method for updating agent's block
   updateBlock(){
+
     this.previousBlock = this.currentBlock;
+
     this.currentBlock = this.generateBlock();
   }
 
