@@ -75,12 +75,18 @@ class Orchestra {
     agentsByFatigue.forEach(agent=>agent.onStage = false);
     agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
 
+
     this.agents.forEach(agent=>{
       agent.init();
     });
 
-
     this.sortAgents();
+
+    this.agents.forEach(agent=>{
+      agent.updateBlock();
+    });
+
+
     this.update();
     this.initDebugBox();
 
