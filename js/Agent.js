@@ -125,7 +125,6 @@ class Agent {
 
   // Method for updating to be call on each block end
   update(){
-  console.log('updating',this.name)
     // leaving / entering stage
     if(this.entering == 0){
       this.onStage = true;
