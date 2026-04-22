@@ -120,7 +120,7 @@ class Agent {
 
   // Return true if the agent will leave the stage in n or minus blocks
   willLeaveIn(n){
-    return this.leaving > 0 && this.leaving <= n;
+    return this.leaving >= 0 && this.leaving <= n;
   }
 
   // Method for updating to be call on each block end
