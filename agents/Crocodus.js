@@ -37,7 +37,7 @@ class Crocodus extends Agent {
     this.instrument.triggerAttackRelease(note, "8n", time_delayed);
       let stepsAfter = 1;
           while(stepsAfter+blockStep<BLOCK_SIZE
-            && !this.currentBlock.getNote(blockStep+stepsAfter)
+            && !this.playingBlock.getNote(blockStep+stepsAfter)
             && stepsAfter <= 1){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
             this.instrument.triggerAttackRelease(note, "8n", time_delayed);
@@ -52,7 +52,7 @@ class Crocodus extends Agent {
     this.instrument.triggerAttackRelease(note, "8n", time_delayed);
       let stepsAfter = 1;
           while(stepsAfter+blockStep<BLOCK_SIZE
-            && !this.currentBlock.getNote(blockStep+stepsAfter)
+            && !this.playingBlock.getNote(blockStep+stepsAfter)
             && stepsAfter <= 8){
             time_delayed = time_delayed + Tone.Time("8n").toSeconds();
             this.instrument.triggerAttackRelease(note, "16n", time_delayed);

@@ -34,9 +34,9 @@ class PierreHenry extends Agent {
   // Le premier agent de la catégorie bass
   let bassAgent = agents.find(agent=>agent.category=='bass');
   // Si il existe ET qu'il est en train de jouer une note
-  if(bassAgent && bassAgent.currentNote){
+  if(bassAgent && bassAgent.playingNote){
     // Récupérer sa note
-    note = bassAgent.currentNote;
+    note = bassAgent.playingNote;
    }
 
 
@@ -44,12 +44,14 @@ class PierreHenry extends Agent {
    const isNote = (element) => element == note;
    let index = this.scale.findIndex(isNote);
    let quinte, tierce;
-            if (index > -1) {quinte = this.scale[(index+4)%this.scale.length];
-            tierce = this.scale[(index+2)%this.scale.length];
-            }
-            else{quinte = Tonal.Note.transpose(note, "5P");
-             tierce = octave}
-             let octave = Tonal.Note.transpose(note, "8P");
+   let octave = Tonal.Note.transpose(note, "8P");
+    if (index > -1) {quinte = this.scale[(index+4)%this.scale.length];
+     tierce = this.scale[(index+2)%this.scale.length];
+    }
+    else{
+      quinte = Tonal.Note.transpose(note, "5P");
+     tierce = octave;
+     }
 
 
 
@@ -143,5 +145,6 @@ class PierreHenry extends Agent {
 
 
 }
+
 
 

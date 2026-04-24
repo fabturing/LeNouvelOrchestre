@@ -35,6 +35,7 @@ class Agent {
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
     this.scale;
+
   }
 
   // Instrument methods
@@ -94,19 +95,18 @@ class Agent {
 
     this.anim.init();
     this.scale = Tonal.Scale.get(this.orchestra.getScaleName()).notes;
+        this.scale = this.scale.map(Tonal.Note.simplify);
     this.aura = Math.random();
   }
 
   // Method called when agent enter the stage
   enter(){
     this.entering = this.enteringTime;
-    console.log(this.name, 'will enter the stage in', this.entering ,'blocks');
   }
 
   // Method called when agent leave the stage
   leave(){
     this.leaving = this.leavingTime;
-    console.log(this.name, 'will leave the stage in', this.leaving ,'blocks');
   }
 
   // Return true if the agent has entered the stage since n or minus blocks
@@ -162,18 +162,24 @@ class Agent {
   }
   // Default method for generating a scale. Should be overrided.
   generateScale(){
-    return Tonal.Scale.get('C4 minor').notes;
+    return this.scale;
+  }
+
+
+  get playingBlock(){
+    if(orchestra.playingChorus) return this.chorusBlock;
+    return this.currentBlock;
   }
 
   // getter for debugging block
-  get currentBlockRepr(){
-    return this.currentBlock.repr();
+  get playingBlockRepr(){
+    return this.playingBlock.repr();
   }
 
   // getter for current part
-  get currentPart(){
-    if(!this.currentBlock) return null;
-    return this.currentBlock.getPart(this.orchestra.step);
+  get playingPart(){
+    if(!this.playingBlock) return null;
+    return this.playingBlock.getPart(this.orchestra.step);
   }
 
   // getter for if the agent is playing this step
@@ -183,8 +189,8 @@ class Agent {
     // Orchestra not playing means not playing
     if(!this.orchestra.playing) return false;
     // no current block means not playing
-    if(!this.currentBlock) return false;
-    let note = this.currentNote;
+    if(!this.playingBlock) return false;
+    let note = this.playingNote;
     // no note means not playing
     if(!note) return false;
     // note defined as non-empty string means playing
@@ -199,8 +205,8 @@ class Agent {
   }
 
   // Getter for current played note
-  get currentNote(){
-    return this.currentBlock?.getNote(this.orchestra.step)
+  get playingNote(){
+    return this.playingBlock?.getNote(this.orchestra.step)
   }
 
   // Method to be called after agent creation to attach an orchestra
@@ -215,7 +221,7 @@ class Agent {
 
   // Method to be called on each step
   playStep(step, time){
-    let note = this.currentBlock.getNote(step);
+    let note = this.playingBlock.getNote(step);
     if(this.isPlaying){
       this.playNote(note, time);
       this.anim.animate(time);
@@ -352,7 +358,13 @@ class Agent {
 
   modulateFromTo(origin, destination){
     this.scale = Tonal.Scale.get(destination).notes;
+    this.scale = this.scale.map(Tonal.Note.simplify);
     this.currentBlock.modulateFromTo(origin, destination);
-    this.previousBlock.modulateFromTo(origin, destination);
+    this.previousBlock?.modulateFromTo(origin, destination);
+    this.chorusBlock?.modulateFromTo(origin, destination);
+  }
+
+  storeChorus(){
+    this.chorusBlock = this.currentBlock;
   }
 }

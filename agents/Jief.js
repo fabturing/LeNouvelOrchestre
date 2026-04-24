@@ -41,7 +41,7 @@ class Jief extends Agent {
     else if(this.moodIs('long') || this.moodIs('long_variation')){
       let stepsAfter = 1;
       while(stepsAfter+blockStep<BLOCK_SIZE
-        && !this.currentBlock.getNote(blockStep+stepsAfter)
+        && !this.playingBlock.getNote(blockStep+stepsAfter)
         && stepsAfter <= 2){
         stepsAfter ++;
       }
@@ -49,7 +49,7 @@ class Jief extends Agent {
     }
     // Mood : longcourt
     else if(this.moodIs('courtlong')) {
-      let nextNote = this.currentBlock.getNote(blockStep+1);
+      let nextNote = this.playingBlock.getNote(blockStep+1);
       // For even steps, if the next note is silent, double the duration.
       if(!nextNote && blockStep%2==0){
         return duration * 2;

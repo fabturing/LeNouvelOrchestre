@@ -102,14 +102,18 @@ class Block {
 
   modulateFromTo(origin, destination){
 
+    const simpl = Tonal.Note.simplify
     const originDegrees = Tonal.Scale.degrees(origin);
-    const destinationDegrees = Tonal.Scale.degrees(origin);
+    const destinationDegrees = Tonal.Scale.degrees(destination);
     const modulate = (note) => {
+      if(!note) return note;
       // Looking for the note degree in origin scale from -24° degree to 24° degree
       for(let i = -24; i <= 24; i++){
-        if(originDegrees(i) == note) return destinationDegrees(i);
+        if(simpl(originDegrees(i)) == simpl(note)) return simpl(destinationDegrees(i));
       }
       // If nothing found, return tonic by default
+       // TODO: this should never be fired, what's happening ?'
+      // console.warn(`${note} not found in ${origin}`)
       return destinationDegrees(1)
     };
 

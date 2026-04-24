@@ -50,14 +50,16 @@
           <tbody>
             <tr><th scope="row">Step</th><td><span data-attribute="step"></span></td></tr>
             <tr><th scope="row">Block</th><td><progress value="0" max="1" data-progress="blockProgress"></progress> <span data-attribute="blockCount"></span></td></tr>
-            <tr><th scope="row">Last Event</th><td><span data-attribute="lastEvent"></span></td></tr>
+            <tr><th scope="row">Last Block Event</th><td><span data-attribute="lastBlockEvent"></span></td></tr>
+            <tr><th scope="row">Cycle</th><td><progress value="0" max="1" data-progress="cycleProgress"></progress> <span data-attribute="cycleCount"></span></td></tr>
+            <tr><th scope="row">Last Cycle Event</th><td><span data-attribute="lastCycleEvent"></span></td></tr>
             <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
             <tr><th scope="row">Scale</th><td><span data-attribute="scaleTonic"></span> <span data-attribute="scaleMode"></span></td></tr>
             <tr><th scope="row">Controls</th><td>
                <button data-method="start">Start</button>
                <button data-method="pause">Pause</button>
               <button data-method="nextBlock">Next Block</button>
-               <button data-method="turnover">Turnover</button>
+               <button data-method="next1000Blocks">Next 1000 Blocks</button>
              </td></tr>
           </tbody>
         </table>
@@ -77,12 +79,12 @@
             <tr><th scope="row">Aura</th><td><progress value="0" max="1" data-progress="aura"></progress> (<span data-attribute="aura"></span>)</td></tr>
             <tr><th scope="row">Mood</th><td><progress value="0" max="1" data-progress="mood"></progress> <span data-attribute="moodName"></span> (<span data-attribute="mood"></span>) (lock: <input type="checkbox" data-check="moodIsLocked"/>)</td></tr>
             <tr><th scope="row">Is playing ?</th><td><span data-attribute="isPlaying"></span></td></tr>
-            <tr><th scope="row">Note</th><td><span data-attribute="currentNote"></span></td></tr>
+            <tr><th scope="row">Note</th><td><span data-attribute="playingNote"></span></td></tr>
             <tr><th scope="row">Density</th><td><span data-attribute="density"></span></td></tr>
-            <tr><th scope="row">Part</th><td><span data-attribute="currentPart"></span></td></tr>
+            <tr><th scope="row">Part</th><td><span data-attribute="playingPart"></span></td></tr>
 
             <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>
-            <tr><th scope="row">Block</th><td><span data-attribute="currentBlockRepr"></span></td></tr>
+            <tr><th scope="row">Block</th><td><span data-attribute="playingBlockRepr"></span></td></tr>
             <tr><th scope="row">Ignore Previous Block Influence</th><td><input type="checkbox" data-check="ignorePreviousBlockInfluence"/></td></tr>
             <tr><th scope="row">Ignore Leader Block Influence</th><td><input type="checkbox" data-check="ignoreLeaderBlockInfluence"/></td></tr>
           </tbody>
