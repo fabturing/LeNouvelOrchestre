@@ -91,6 +91,7 @@ class Agent {
   }
   // Method for  initializating Agent
   init(){
+
     this.anim.init();
     this.scale = Tonal.Scale.get(this.orchestra.getScaleName()).notes;
     this.aura = Math.random();
@@ -115,7 +116,7 @@ class Agent {
 
   // Return true if the agent will leave the stage in n or minus blocks
   willLeaveIn(n){
-    return this.leaving > 0 && this.leaving <= n;
+    return this.leaving >= 0 && this.leaving <= n;
   }
 
   // Method for updating to be call on each block end
@@ -257,14 +258,12 @@ class Agent {
     if(this.ignorePreviousBlockInfluence) previousModel = undefined;
     else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(part);
     else previousModel = undefined;
-
     // Get a second model from leader block
     let leaderModel;
     if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
     else if(this.orchestra.getLeader() == this) leaderModel = undefined;
     else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
     else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
-
     //  melody generation
     let melo = [];
 
@@ -306,12 +305,15 @@ class Agent {
 
   // Method for generating a block
   generateBlock(){
+
     let pattern = this.generatePattern();
     let scale =  this.generateScale();
     let structure = this.generateStructure();
+
     let A = this.generatePart('A', pattern, scale);
     let B = this.generatePart('B', pattern, scale);
     let C = this.generatePart('C', pattern, scale);
+
     return new Block(A, B, C, structure, this.lines);
   }
   
@@ -322,7 +324,9 @@ class Agent {
 
   // Method for updating agent's block
   updateBlock(){
+
     this.previousBlock = this.currentBlock;
+
     this.currentBlock = this.generateBlock();
   }
 
