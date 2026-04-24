@@ -13,6 +13,9 @@ class Orchestra {
     this.playing = false;
     this.debugBox = new DebugBox('orchestra-debug-box', this)
 
+    this.scaleTonic = undefined;
+    this.scaleMode = undefined;
+
     // init transport
     Tone.Transport.bpm.value = TEMPO;
     Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
@@ -48,6 +51,32 @@ class Orchestra {
     return this.getLeader().name;
   }
 
+  setScale(tonic, mode){
+    this.scaleTonic = tonic || this.scaleTonic;
+    this.scaleMode = mode || this.scaleMode;
+  }
+
+  setRandomScale(){
+    let tonic = randomChoice(Tonal.Scale.get('A3 chromatic').notes);
+    let mode = randomChoice(['major', 'minor']);
+    this.setScale(tonic, mode);
+  }
+
+  getScaleName(tonic, mode){
+    return (tonic || this.scaleTonic) + ' ' + (mode || this.scaleMode);
+  }
+
+  modulate(){
+    let degreeOfset = 3;
+    const degrees = Scale.degrees(this.getScaleName());
+    let newTonic = degrees(degreeOfset);
+    let newMode = this.scaleMode;
+    let newScaleName = this.getScaleName(newTonic, newMode);
+    this.agents.forEach(agent=>agent.modulateFromTo(this.getScaleName(), newScaleName));
+    this.setScale(newTonic, newMode);
+  }
+
+
   // Method for adding an agent to the orchestra
   addAgent(agent){
     this.agents.push(agent);
@@ -70,6 +99,8 @@ class Orchestra {
 
     // Method for  initializating Orchestra
   init(){
+
+    this.setRandomScale();
 
     let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
     agentsByFatigue.forEach(agent=>agent.onStage = false);

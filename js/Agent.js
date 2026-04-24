@@ -34,7 +34,7 @@ class Agent {
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
-    this.scale = Tonal.Scale.get('C4 minor').notes;
+    this.scale;
   }
 
   // Instrument methods
@@ -92,7 +92,7 @@ class Agent {
   // Method for  initializating Agent
   init(){
     this.anim.init();
-    //this.updateBlock();
+    this.scale = Tonal.Scale.get(this.orchestra.getScaleName()).notes;
     this.aura = Math.random();
   }
 
@@ -344,5 +344,11 @@ class Agent {
 
   resetFatigue(){
     this.fatigue = 0;
+  }
+
+  modulateFromTo(origin, destination){
+    this.scale = Tonal.Scale.get(destination).notes;
+    this.currentBlock.modulateFromTo(origin, destination);
+    this.previousBlock.modulateFromTo(origin, destination);
   }
 }

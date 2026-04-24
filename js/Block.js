@@ -100,6 +100,32 @@ class Block {
     }
   }
 
+  modulateFromTo(origin, destination){
+
+    const originDegrees = Tonal.Scale.degrees(origin);
+    const destinationDegrees = Tonal.Scale.degrees(origin);
+    const modulate = (note) => {
+      // Looking for the note degree in origin scale from -24° degree to 24° degree
+      for(let i = -24; i <= 24; i++){
+        if(originDegrees(i) == note) return destinationDegrees(i);
+      }
+      // If nothing found, return tonic by default
+      return destinationDegrees(1)
+    };
+
+    if(!this.lines){
+      this.A = this.A.map(modulate);
+      this.B = this.B.map(modulate);
+      this.C = this.C.map(modulate);
+    } else {
+      this.lines.forEach(line=>{
+        this.A[line] = this.A[line].map(modulate);
+        this.B[line] = this.B[line].map(modulate);
+        this.C[line] = this.C[line].map(modulate);
+      })
+    }
+
+  }
   // Return a human-readable HTML block representation
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
