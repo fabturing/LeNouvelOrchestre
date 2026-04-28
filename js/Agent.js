@@ -77,6 +77,7 @@ class Agent {
 
   // Getter for moodName
   get moodName(){
+    // TODO: Use the new WeightedArray Object for moods
     let mood = selectFromWeightedArray(this.moods, this.mood);
     if(mood) return mood.name;
   }
@@ -165,7 +166,7 @@ class Agent {
     return this.scale;
   }
 
-
+  // Getter for playing block
   get playingBlock(){
     if(orchestra.playingChorus) return this.chorusBlock;
     return this.currentBlock;
@@ -176,7 +177,7 @@ class Agent {
     return this.playingBlock.repr();
   }
 
-  // getter for current part
+  // getter for playing part
   get playingPart(){
     if(!this.playingBlock) return null;
     return this.playingBlock.getPart(this.orchestra.step);
@@ -330,9 +331,7 @@ class Agent {
 
   // Method for updating agent's block
   updateBlock(){
-
     this.previousBlock = this.currentBlock;
-
     this.currentBlock = this.generateBlock();
   }
 
@@ -352,10 +351,12 @@ class Agent {
     this.currentBlock[part] = this.generatePart('A', pattern, scale);
   }
 
+  // Method for reseting fatigue to 0
   resetFatigue(){
     this.fatigue = 0;
   }
 
+  // Method for modulate from a scale to another
   modulateFromTo(origin, destination){
     this.scale = Tonal.Scale.get(destination).notes;
     this.scale = this.scale.map(Tonal.Note.simplify);
@@ -364,6 +365,7 @@ class Agent {
     this.chorusBlock?.modulateFromTo(origin, destination);
   }
 
+  // Method for storing current block as chorus block
   storeChorus(){
     this.chorusBlock = this.currentBlock;
   }
