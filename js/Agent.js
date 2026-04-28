@@ -9,8 +9,7 @@ class Agent {
     // Description of the agent
     this.descritption = description;
     // Array of identifiants for the lines of the agent
-    // Keep that undefined if there is only one line.
-    this.lines = lines;
+    this.lines = lines || ['main'];
     // Other attributes
     this.category; // 'perc' ou 'melodic' ou 'bass'
     this.ignoreLeaderBlockInfluence = false;
@@ -162,8 +161,8 @@ class Agent {
     return [1,1,1,1];
   }
   // Default method for generating a scale. Should be overrided.
-  generateScale(){
-    return this.scale;
+  generateNotesPattern(){
+    return Pattern.newFromRepeatedUniform(this.scale);
   }
 
   // Getter for playing block
@@ -194,20 +193,17 @@ class Agent {
     let note = this.playingNote;
     // no note means not playing
     if(!note) return false;
-    // note defined as non-empty string means playing
-    if(typeof note === 'string' && note.length) return true;
-    // for note defined as object, check for non-empty line
-    if(typeof note === 'object'){
-      for(let line in note){
-        if(note[line]) return true;
-      }
-      return false
+
+    for(let line in note){
+      if(note[line]) return true;
     }
+    return false;
+
   }
 
   // Getter for current played note
   get playingNote(){
-    return this.playingBlock?.getNote(this.orchestra.step)
+    return this.playingBlock?.getNote(this.orchestra.step);
   }
 
   // Method to be called after agent creation to attach an orchestra
@@ -222,65 +218,53 @@ class Agent {
 
   // Method to be called on each step
   playStep(step, time){
-    let note = this.playingBlock.getNote(step);
+    let stepAttributes = this.playingBlock.getStep(step);
     if(this.isPlaying){
-      this.playNote(note, time);
+      for(let line in stepAttributes){
+        this.playNote(stepAttributes[line], time, line)
+      }
       this.anim.animate(time);
     }
   }
 
-
-
-
-
-  // Method for generating a part. (partName should be "A", "B" or "C")
-  generatePart(partName, line){
-
-    let pattern = this.generatePattern();
-    let scale =  this.generateScale();
-
-    // Get a first model from previous block
-    let previousModel;
-    if(this.ignorePreviousBlockInfluence) previousModel = undefined;
-    else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(partName);
-    else previousModel = undefined;
-    // Get a second model from leader block
-    let leaderModel;
-    if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
-    else if(this.orchestra.getLeader() == this) leaderModel = undefined;
-    else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
-    else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(partName);
-    //  melody generation
-    let melo = [];
-
-
-    if(line){
-      pattern = pattern[line] || pattern;
-      scale = scale[line] || scale;
+  generateInfluencePatterns(partName){
+    return {
+      notes:this.currentBlock?.extractPattern('notes', partName),
+      plays:this.currentBlock?.extractPattern('plays', partName),
     }
+  }
 
+  generatePart (partName, line){
+    let part = new Part();
 
+    let leader = this.orchestra.getLeader();
+    let leaderPatterns = leader.generateInfluencePatterns(partName);
 
-    // Merge the given scale with notes in each models
-    let mergedScale = scale;
-    if(previousModel) mergedScale = mergedScale.concat(previousModel.filter(note=>note));
-    if(leaderModel) mergedScale = mergedScale.concat(leaderModel.filter(note=>note));
+    // Plays
+    let playsWeightedPatterns = new WeightedArray();
+    playsWeightedPatterns.add(50, Pattern.newFromPercents(this.generatePattern(line)));
+    if(leader != this && leaderPatterns.plays){
+      playsWeightedPatterns.add(50, leaderPatterns.plays);
+    }
+    if(this.previousBlock){
+      playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName));
+    }
+    let playsPattern = Pattern.mergePatternsWeightedArray(playsWeightedPatterns);
+    part.setAttributeFromPattern('plays', playsPattern);
 
-    // Extract pattern from models
-    const meloToPattern = (pattern)=>pattern.map(step=>step?1:0);
-    let patternModel1 = previousModel ? meloToPattern(previousModel) : pattern;
-    let patternModel2 = leaderModel ? meloToPattern(leaderModel) : pattern;
+    // Notes
+    let notesWeightedPatterns = new WeightedArray();
+    notesWeightedPatterns.add(50, this.generateNotesPattern());
+    if(leader != this && leaderPatterns.notes){
+      notesWeightedPatterns.add(50, leaderPatterns.notes);
+    }
+    if(this.previousBlock){
+      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName));
+    }
+    let notesPattern = Pattern.mergePatternsWeightedArray(notesWeightedPatterns);
+    part.setAttributeFromPattern('notes', notesPattern);
 
-    // Merge pattern with models' patterns
-    let mergedPattern = pattern.map((step, i)=>{
-      return (step + patternModel1[i] + patternModel2[i])/3
-    });
-
-    // Generate a rythm from merged pattern
-    let rythm = mergedPattern.map((prob)=> Math.random() < prob);
-
-    // Generate and return the new melo  from rythm and merged scales
-    return rythm.map((play) => play? randomChoice(mergedScale) : null);
+    return part;
   }
 
   // generate an array of chords from a pattern and a melody
@@ -312,11 +296,10 @@ class Agent {
 
     let blockParts = {};
     ['A','B','C'].forEach(partName=>{
-        if (this.lines){
-          blockParts[partName] = Object.fromEntries(this.lines.map(line=>[line, this.generatePart(partName,line)]));
-        } else{
-          blockParts[partName] = this.generatePart(partName);
-        }
+        blockParts[partName] = {};
+        this.lines.forEach(line=>{
+          blockParts[partName][line] = this.generatePart(partName, line);
+        });
     });
     return new Block(blockParts.A, blockParts.B, blockParts.C, structure, this.lines);
   }
@@ -339,13 +322,9 @@ class Agent {
 
     this.currentBlock.structure = this.generateStructure();
 
-    if (this.lines){
-      let linesParts = Object.fromEntries(this.lines.map(line=>[line, this.generatePart(partName,line)]));
-      this.currentBlock[partName] = linesParts;
-    }
-    else {
-      this.currentBlock[partName] = this.generatePart(partName);
-    }
+    this.lines.forEach(line=>{
+      this.currentBlock[partName][line] = this.generatePart(partName, line);
+    });
   }
 
   // Method for reseting fatigue to 0

@@ -37,6 +37,11 @@ class WeightedArray extends Array{
     return result.simplify();
   }
 
+  // Method add a new item with given weight and value.
+  add(weight,value){
+    this.push({weight:weight,value:value});
+  }
+
   // Method that takes an index between 0 and 1 and returns the corresponding value.
   select(index){
     let normalized = this.normalizeWeights();

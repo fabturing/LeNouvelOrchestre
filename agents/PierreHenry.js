@@ -25,18 +25,14 @@ class PierreHenry extends Agent {
   }
 
 
-  generateScale(){
-    return this.scale;
-  }
-
   playNote(note, time){
     let agents = this.orchestra.agentsOnStage;
   // Le premier agent de la catégorie bass
   let bassAgent = agents.find(agent=>agent.category=='bass');
   // Si il existe ET qu'il est en train de jouer une note
-  if(bassAgent && bassAgent.playingNote){
+  if(bassAgent && bassAgent.playingNote.main){
     // Récupérer sa note
-    note = bassAgent.playingNote;
+    note = bassAgent.playingNote.main;
    }
 
 
@@ -139,7 +135,7 @@ class PierreHenry extends Agent {
     let pattern ;
     if(this.moodIs('quinte') || this.moodIs('tierce') || this.moodIs('quinte/tierce')) { pattern = [90, 5, 10, 25, 80, 10, 20, 20];}
     else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){ pattern = [80, 0, 0, 0, 80, 0, 0, 0];}
-    return pattern.map(percent);
+    return pattern;
   }
 
 

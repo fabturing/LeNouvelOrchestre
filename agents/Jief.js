@@ -75,11 +75,8 @@ class Jief extends Agent {
     // de temps en temps laisser un block vide
     let random = Math.random()*2;
     if(random < this.fatigue ){pattern = [1, 1, 1, 1, 1, 1, 1, 1];}
-    return pattern.map(percent);
+    return pattern;
   }
 
-  generateScale(){
-   return this.scale;
-  }
 }
 

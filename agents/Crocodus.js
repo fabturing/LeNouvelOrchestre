@@ -73,11 +73,7 @@ class Crocodus extends Agent {
     if(this.moodIs('light')) {pattern = [95,50,30,2,2,2,2,10]}
     else {pattern = [90,5,20,30,90,5,20,40];}
 
-    return pattern.map(percent);
-  }
-
-  generateScale(){
-      return this.scale;
+    return pattern;
   }
 
 }

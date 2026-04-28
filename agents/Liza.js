@@ -36,8 +36,8 @@ class Liza extends Agent {
   }
 
 
-  playNote(note, time){
-    if(note.hihat){
+  playNote(note, time, line){
+    if(note && line == 'hihat'){
       let velocite_hh = 1-Math.random()/2;
       if (!(this.hasEnteredSince(4))) {
         this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
@@ -66,13 +66,13 @@ class Liza extends Agent {
 
 
       }
-    if(note.kick){
+    if(note && line == 'kick'){
       if (!(this.willLeaveIn(this.leavingTime))) {
         this.instrument.triggerAttackRelease('C3', "8n", time);
       }
     }
 
-    if(note.snare){
+    if(note && line == 'snare'){
       if (!(this.willLeaveIn(this.leavingTime))) {
         let velocite_snr = 1-Math.random()/2;
         this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
@@ -90,7 +90,7 @@ class Liza extends Agent {
       }
   }
 
-  generatePattern(){
+  generatePattern(line){
     let hhPattern, kickPattern, snarePattern;
 
  // Mood : Light
@@ -125,23 +125,15 @@ class Liza extends Agent {
       snarePattern = [0, 2, 98, 10, 0, 5, 98, 20];
     }
 
-    /*
-    // Change the hihat density by a small amount (between -0.05 and 0.5) within a min and a max
-    this.density.hihat = this.density.hihat + ((Math.random()-0.5)*0.4); //Faire intervenir aura ici
-    this.density.hihat = Math.min(1, this.density.hihat);
-    this.density.hihat = Math.max(0.6, this.density.hihat);
-
-    // Apply density to pattern
-    for (let i = 0; i < hhPattern.length; i++) {
-      hhPattern[i] = hhPattern[i]*this.density.hihat;
-      if(this.density.hihat < 0.5 ) hhPattern[i] = 0;
+    let patterns = {
+       hihat : hhPattern,
+       kick : kickPattern,
+       snare : snarePattern
+     }
+    if(line){
+      return patterns[line];
     }
-*/
-    return {
-     hihat : hhPattern.map(percent),
-     kick : kickPattern.map(percent),
-     snare : snarePattern.map(percent)
-   }
+    return patterns;
   }
 
 }

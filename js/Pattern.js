@@ -23,6 +23,15 @@ class Pattern {
     return new Pattern(steps);
   }
 
+  // Static Method that create a new Pattern from a single array.
+  // The array will be converted to an uniform weightedArray and repeated across each step of the Pattern
+  static newFromRepeatedUniform(array){
+    return this.newFromRepeatedStep(WeightedArray.newUniformFromArray(array));
+  }
+
+
+
+
   // Static Method that create a new Pattern from a single value.
   // The value will be wrapped in a WeightedArray and will be repeated across each step of the Pattern
   static newFromRepeatedValue(value){
