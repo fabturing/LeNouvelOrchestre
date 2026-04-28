@@ -10,7 +10,7 @@ class Part {
 
     this.plays = defaultArray(0); // Array of booleans (should it plays at step i)
     this.notes = defaultArray(undefined); // Array of strings (what note should be played at step i)
-    this.choords = defaultArray([1]); // Array of arrays of int (which degrees from the note should be played at step i)
+    this.choords = defaultArray([0]); // Array of arrays of int (which degrees from the note should be played at step i)
     this.accents = defaultArray(0); // Array of booleans (should it be an accent at step i)
     this.durations = defaultArray(1); // Array of float (for which fraction of a step should the note been played)
     this.rythms = defaultArray([1]); // Array of array of boolean (what rythm shoud be played at step i)

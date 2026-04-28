@@ -40,7 +40,8 @@ class PierreHenry extends MelodicAgent {
    let index = this.scale.findIndex(isNote);
    let quinte, tierce;
    let octave = Tonal.Note.transpose(note, "8P");
-    if (index > -1) {quinte = this.scale[(index+4)%this.scale.length];
+    if (index > -1) {
+    quinte = this.scale[(index+4)%this.scale.length];
      tierce = this.scale[(index+2)%this.scale.length];
     }
     else{

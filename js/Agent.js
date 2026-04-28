@@ -95,7 +95,7 @@ class Agent {
 
     this.anim.init();
     this.scale = Tonal.Scale.get(this.orchestra.getScaleName()).notes;
-        this.scale = this.scale.map(Tonal.Note.simplify);
+    this.scale = this.scale.map(Tonal.Note.simplify);
     this.aura = Math.random();
   }
 
@@ -217,13 +217,33 @@ class Agent {
   }
 
   // Method to be called on each step
-  playStep(step, time){
-    let stepAttributes = this.playingBlock.getStep(step);
+  onStep(step, time){
+    let stepAttributes = this.playingBlock.getNote(step);
+    //let stepAttributes = this.playingBlock.getStep(step);
     if(this.isPlaying){
       for(let line in stepAttributes){
         this.playNote(stepAttributes[line], time, line)
+        //this.playStep(stepAttributes[line], time, line)
       }
       this.anim.animate(time);
+    }
+  }
+
+  playStep(step, time, line){
+    if(step.play){
+      let duration = Tone.Time("8n") * step.duration;
+      let note = step.note;
+      let noteIndex = Math.max(0, this.scale.findIndex(n=>n==note));
+      let velocite = step.accent ? 1 : 0.5;
+
+      step.choord.forEach(degree=>{
+        let choordNote = this.scale[(noteIndex+degree)%this.scale.length];
+        step.rythm.forEach((subStep, i)=>{
+          let rythmLength = Tone.Time("8n") * step.rythmLength;
+          let subStepTime = time + i * (rythmLength / step.rythm.length);
+          this.instrument.triggerAttackRelease(choordNote, duration, subStepTime, velocite);
+        });
+      });
     }
   }
 

@@ -18,7 +18,7 @@ class Orchestra {
 
     // init transport
     Tone.Transport.bpm.value = TEMPO;
-    Tone.Transport.scheduleRepeat((time)=>this.playStep(time), "8n")
+    Tone.Transport.scheduleRepeat((time)=>this.onStep(time), "8n")
   }
 
   // Getter for agents On Stage
@@ -152,12 +152,18 @@ class Orchestra {
   // Change onstage agents
   turnover(){
 
-    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
-    let leastTiredAgentNotOnStage = this.agents.find(agent=>!agent.onStage);
-    let mostTiredAgentOnStage = this.agents.find(agent=>agent.onStage);
+    let leastTiredAgentNotOnStage, mostTiredAgentOnStage;
 
+    let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
+
+    leastTiredAgentNotOnStage = this.agents.find(agent=>!agent.onStage);
     leastTiredAgentNotOnStage?.enter();
-    mostTiredAgentOnStage?.leave();
+
+    if(this.agents.filter(agent=>agent.onStage).length > 1){
+      mostTiredAgentOnStage = this.agents.find(agent=>agent.onStage);
+      mostTiredAgentOnStage?.leave();
+
+    }
 
     return {
       leaving:mostTiredAgentOnStage?[mostTiredAgentOnStage]:[],
@@ -295,11 +301,11 @@ class Orchestra {
     for(let i=0; i<1000; i++) this.nextBlock();
   }
   // Method for playing a step
-  playStep(time){
+  onStep(time){
 
     // Call playStep for each agent
     this.agentsOnStage.forEach(agent=>{
-      agent.playStep(this.step, time)
+      agent.onStep(this.step, time)
     });
 
     // Debug

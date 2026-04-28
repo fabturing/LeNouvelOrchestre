@@ -5,7 +5,6 @@
 class Block {
   constructor(A, B, C, structure, lines){
     // Three parts of the block.
-    // Parts can also be objects for multi-lines agents
     this.A = A;
     this.B = B;
     this.C = C;
@@ -51,13 +50,10 @@ class Block {
 
   getStep(step){
     let index = step % PART_SIZE;
-
     let part = this.getPart(step);
-
     let stepAttributes = {};
     this.lines.forEach((line)=>{
-      let partStep = part[line].getStep(index);
-      stepAttributes[line] = partStep.play ? partStep.note : null;
+      stepAttributes[line] = part[line].getStep(index)
     });
     return stepAttributes;
   }
@@ -70,7 +66,7 @@ class Block {
     let stepAttributes = {};
     this.lines.forEach((line)=>{
       let partStep = part[line].getStep(index);
-      stepAttributes[line] = partStep.play ? partStep.note : null;
+      stepAttributes[line] = partStep.play ? partStep.note : undefined;
     });
     return stepAttributes;
   }
