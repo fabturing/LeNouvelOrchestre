@@ -75,22 +75,6 @@ class Block {
     return stepAttributes;
   }
 
-  // Return the note at given step
-  old_getNote(step){
-    let fullBlock = this.getFullBlock()
-    let index = step % BLOCK_SIZE;
-    if(this.lines){
-      let note = {};
-      this.lines.forEach((line)=>{
-        note[line] = fullBlock[line][index];
-      });
-      return note;
-    }
-    else {
-      return fullBlock[index];
-    }
-  }
-
   // Return the part index at a given step
   getPartIndex(step){
     return Math.floor(step/PART_SIZE)%PARTS_PER_BLOCK;
