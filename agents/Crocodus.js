@@ -1,11 +1,11 @@
 // This file define Crocodus class
 
 
-class Crocodus extends Agent {
+class Crocodus extends BassAgent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime", "crocodus");
     this.anim = new Anim('crocodus', true);
-    this.category = 'bass';
+
 
         // moods
     this.addMood('light', 50);

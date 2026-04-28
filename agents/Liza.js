@@ -1,11 +1,11 @@
 // This file define Liza class
 
 
-class Liza extends Agent {
+class Liza extends PercAgent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
-    this.category = 'perc';
+
     this.leavingTime = 4;
 
     this.density = {

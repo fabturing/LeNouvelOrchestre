@@ -1,10 +1,10 @@
 // This file define Jief class
 
-class Jief extends Agent {
+class Jief extends MelodicAgent {
   constructor(){
     super("Jiéf", "Petit flutiste debout sur un tabouret", "jief");
     this.anim = new Anim('jief', false);
-    this.category = 'melodic';
+
     //FX
 
 

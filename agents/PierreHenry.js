@@ -1,13 +1,12 @@
 // This file define PierreHenry class
 
 
-class PierreHenry extends Agent {
+class PierreHenry extends MelodicAgent {
   constructor(){
     super("Pierre-Henry", "Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)", "pierrehenry");
     this.anim = new Anim('pierrehenry', true);
     this.ignoreLeaderBlockInfluence = true;
     this.ignorePreviousBlockInfluence = true;
-    this.category = 'melodic';
 
 // moods
     this.addMood('quinte_arp', 30);
