@@ -177,9 +177,9 @@ class Orchestra {
     }
 
     const newPart = ()=>{
-      let part = randomChoice(["A","B","C"]);
-      this.agents.forEach(agent=>agent.updatePart(part));
-      return `Update part ${part} for all agents`;
+      let partName = randomChoice(["A","B","C"]);
+      this.agents.forEach(agent=>agent.updatePart(partName));
+      return `Update part ${partName} for all agents`;
     }
 
     const tonicModulation = ()=>{

@@ -3,8 +3,8 @@
 
 
 class Block {
-  constructor(A, B, C, structure,lines){
-    // Three parts of the block. Each part is an array of notes
+  constructor(A, B, C, structure, lines){
+    // Three parts of the block.
     // Parts can also be objects for multi-lines agents
     this.A = A;
     this.B = B;
@@ -17,7 +17,7 @@ class Block {
 
   // Return the full block in the form of a concatenatd array of notes
   getFullBlock(){
-    let parts = this.structure.map(part=>this[part]);
+    let parts = this.structure.map(partName=>this[partName]);
 
     if(this.lines){
       let fullBlock = {};
@@ -56,7 +56,7 @@ class Block {
   };
 
   // Return the part identifier (e.g. "A") at a given step
-  getPart(step){
+  getPartName(step){
     return this.structure[this.getPartIndex(step)];
   }
 
@@ -130,6 +130,15 @@ class Block {
     }
 
   }
+
+
+
+    // Method for copying the block
+    copy(){
+        return new Block(this.A, this.B, this.C, this.structure, this.lines);
+    }
+
+
   // Return a human-readable HTML block representation
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
@@ -139,13 +148,13 @@ class Block {
             STRUCTURE: ${structureRepr.outerHTML}`;
     }
 
-  partRepr(part){
-    let index = (this.getPart(orchestra.step)==part) ? orchestra.partStep : undefined;
+  partRepr(partName){
+    let index = (this.getPartName(orchestra.step)==partName) ? orchestra.partStep : undefined;
     if(this.lines){
-      return debugMultiLines(this[part], (line)=>{return debugSequence(line, index)})
+      return debugMultiLines(this[partName], (line)=>{return debugSequence(line, index)})
     }
     else {
-      return debugSequence(this[part], index);
+      return debugSequence(this[partName], index);
     }
   }
 }

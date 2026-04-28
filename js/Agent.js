@@ -177,10 +177,10 @@ class Agent {
     return this.playingBlock.repr();
   }
 
-  // getter for playing part
-  get playingPart(){
+  // getter for playing part name
+  get playingPartName(){
     if(!this.playingBlock) return null;
-    return this.playingBlock.getPart(this.orchestra.step);
+    return this.playingBlock.getPartName(this.orchestra.step);
   }
 
   // getter for if the agent is playing this step
@@ -231,18 +231,45 @@ class Agent {
 
 
 
-  // Method for generating a melody from a pattern, a scale and models (models are optionals)
-  generateMelo(pattern, scale, meloModel1, meloModel2){
+
+
+  // Method for generating a part. (partName should be "A", "B" or "C")
+  generatePart(partName, line){
+
+    let pattern = this.generatePattern();
+    let scale =  this.generateScale();
+
+    // Get a first model from previous block
+    let previousModel;
+    if(this.ignorePreviousBlockInfluence) previousModel = undefined;
+    else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(partName);
+    else previousModel = undefined;
+    // Get a second model from leader block
+    let leaderModel;
+    if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
+    else if(this.orchestra.getLeader() == this) leaderModel = undefined;
+    else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
+    else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(partName);
+    //  melody generation
+    let melo = [];
+
+
+    if(line){
+      pattern = pattern[line] || pattern;
+      scale = scale[line] || scale;
+    }
+
+
 
     // Merge the given scale with notes in each models
     let mergedScale = scale;
-    if(meloModel1) mergedScale = mergedScale.concat(meloModel1.filter(note=>note));
-    if(meloModel2) mergedScale = mergedScale.concat(meloModel2.filter(note=>note));
+    if(previousModel) mergedScale = mergedScale.concat(previousModel.filter(note=>note));
+    if(leaderModel) mergedScale = mergedScale.concat(leaderModel.filter(note=>note));
 
     // Extract pattern from models
     const meloToPattern = (pattern)=>pattern.map(step=>step?1:0);
-    let patternModel1 = meloModel1 ? meloToPattern(meloModel1) : pattern;
-    let patternModel2 = meloModel2 ? meloToPattern(meloModel2) : pattern;
+    let patternModel1 = previousModel ? meloToPattern(previousModel) : pattern;
+    let patternModel2 = leaderModel ? meloToPattern(leaderModel) : pattern;
 
     // Merge pattern with models' patterns
     let mergedPattern = pattern.map((step, i)=>{
@@ -253,44 +280,11 @@ class Agent {
     let rythm = mergedPattern.map((prob)=> Math.random() < prob);
 
     // Generate and return the new melo  from rythm and merged scales
-    let melo = rythm.map((play) => play? randomChoice(mergedScale) : null);
-
-    return melo;
-  }
-
-  // Method for generating a part. (part should be "A", "B" or "C")
-  generatePart(part, pattern, scale){
-    // Get a first model from previous block
-    let previousModel;
-    if(this.ignorePreviousBlockInfluence) previousModel = undefined;
-    else if(this.previousBlock) previousModel = this.previousBlock.getPartAsModel(part);
-    else previousModel = undefined;
-    // Get a second model from leader block
-    let leaderModel;
-    if(this.ignoreLeaderBlockInfluence) leaderModel = undefined;
-    else if(this.orchestra.getLeader() == this) leaderModel = undefined;
-    else if(!this.orchestra.getLeader().currentBlock) leaderModel = undefined;
-    else leaderModel = this.orchestra.getLeader().currentBlock.getPartAsModel(part);
-    //  melody generation
-    let melo = [];
-
-    // If there is lines, generate melody for each lines
-    if(this.lines){
-      this.lines.forEach(line=>{
-        let linePattern = pattern[line] || pattern;
-        let lineScale = scale[line] || scale;
-        melo[line] = this.generateMelo(linePattern, lineScale, previousModel, leaderModel);
-      });
-    }
-    // Else generate a single melody
-    else {
-      melo = this.generateMelo(pattern, scale, previousModel, leaderModel);
-    }
-
-    return melo;
+    return rythm.map((play) => play? randomChoice(mergedScale) : null);
   }
 
   // generate an array of chords from a pattern and a melody
+  // TODO: Vérifier si cette méthode est utilisée sinon la suppr ?
   generateChords(pattern, melo){
     return pattern.map((step, i)=>{
       if (step && melody[i]){
@@ -313,20 +307,18 @@ class Agent {
   // Method for generating a block
   generateBlock(){
 
-    let pattern = this.generatePattern();
-    let scale =  this.generateScale();
+
     let structure = this.generateStructure();
 
-    let A = this.generatePart('A', pattern, scale);
-    let B = this.generatePart('B', pattern, scale);
-    let C = this.generatePart('C', pattern, scale);
-
-    return new Block(A, B, C, structure, this.lines);
-  }
-  
-  // Method for copying a block
-  copyBlock(block){
-      return new Block(block.A, block.B, block.C, block.structure, block.lines);
+    let blockParts = {};
+    ['A','B','C'].forEach(partName=>{
+        if (this.lines){
+          blockParts[partName] = Object.fromEntries(this.lines.map(line=>[line, this.generatePart(partName,line)]));
+        } else{
+          blockParts[partName] = this.generatePart(partName);
+        }
+    });
+    return new Block(blockParts.A, blockParts.B, blockParts.C, structure, this.lines);
   }
 
   // Method for updating agent's block
@@ -336,19 +328,24 @@ class Agent {
   }
 
   // Method for updating one part of agent's block
-  updatePart(part){
+  updatePart(partName){
     this.previousBlock = this.currentBlock;
-    if(!this.currentBlock) {
-      this.currentBlock = this.generateBlock();
+    if(this.currentBlock) {
+      this.currentBlock = this.currentBlock.copy();
     }
     else{
-      this.currentBlock = this.copyBlock(this.currentBlock);
+      this.currentBlock = this.generateBlock();
     }
-    let pattern = this.generatePattern();
-    let scale =  this.generateScale();
-    let structure = this.generateStructure();
-    this.currentBlock.structure = structure;
-    this.currentBlock[part] = this.generatePart('A', pattern, scale);
+
+    this.currentBlock.structure = this.generateStructure();
+
+    if (this.lines){
+      let linesParts = Object.fromEntries(this.lines.map(line=>[line, this.generatePart(partName,line)]));
+      this.currentBlock[partName] = linesParts;
+    }
+    else {
+      this.currentBlock[partName] = this.generatePart(partName);
+    }
   }
 
   // Method for reseting fatigue to 0
