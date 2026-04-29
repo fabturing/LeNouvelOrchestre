@@ -5,7 +5,14 @@ class Liza extends PercAgent {
   constructor(){
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
-
+    this.anim.setFrameChooser(()=>{
+      let step = this.playingBlock.getStep(this.orchestra.step);
+      let lines = []
+      if(step.snare.play) lines.push('snare');
+      if(step.hihat.play) lines.push('hihat');
+      if(step.kick.play) lines.push('kick');
+      return lines.join('-');
+    })
     this.leavingTime = 4;
 
     this.density = {
