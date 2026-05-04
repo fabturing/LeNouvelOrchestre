@@ -59,6 +59,14 @@ class DebugBox {
       else el.innerHTML = value;
     });
 
+    // Update [data-attribute-boolean] elements
+    this.element.querySelectorAll('[data-attribute-boolean]').forEach(el=>{
+      let attribute = el.dataset.attributeBoolean;
+      let value = this.object[attribute];
+      el.innerHTML = '';
+      el.appendChild(debugBoolean(value));
+    });
+
     // Update [data-progress] elements
     this.element.querySelectorAll('[data-progress]').forEach(el=>{
       let attribute = el.dataset.progress;

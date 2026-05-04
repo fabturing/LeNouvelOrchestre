@@ -35,10 +35,12 @@ class Anim {
     }
   }
   animate(time){
-    let frame = this.frameChooser();
-    Tone.Draw.schedule(()=>{this.setImage(frame)},time);
+    Tone.Draw.schedule(()=>{
+		let frame = this.frameChooser();
+		this.setImage(frame)
+		},time);
     if(this.isRythmic){
-      let delay = Tone.Time('16n');
+      let delay = Tone.Time(RYTHMIC_ANIM_FRAME_DURATION);
       Tone.Draw.schedule(()=>{this.setImage('idle')},time+delay);
     }
   }

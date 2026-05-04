@@ -7,16 +7,17 @@ class PierreHenry extends MelodicAgent {
     this.anim = new Anim('pierrehenry', true);
     this.handAnimaitonCount = 0;
     this.anim.setFrameChooser(()=>{
+		/*
       if(this.moodIs('quinte') || this.moodIs('tierce') || this.moodIs('quinte/tierce')) {
         return 'gauche-droite'
-      }
+      }*/
+      if(this.playingLinesNotes.main.size>1){
+		 return 'gauche-droite';
+	  }
       this.handAnimaitonCount ++;
       let hands = ['gauche','droite'];
       return hands[this.handAnimaitonCount%2];
     })
-
-    this.ignoreLeaderBlockInfluence = true;
-    this.ignorePreviousBlockInfluence = true;
 
 // moods
     this.addMood('quinte_arp', 30);
@@ -34,122 +35,85 @@ class PierreHenry extends MelodicAgent {
   }
 
 
-  playNote(note, time){
-    let agents = this.orchestra.agentsOnStage;
-  // Le premier agent de la catégorie bass
-  let bassAgent = agents.find(agent=>agent.category=='bass');
-  // Si il existe ET qu'il est en train de jouer une note
-  if(bassAgent && bassAgent.playingNote.main){
-    // Récupérer sa note
-    note = bassAgent.playingNote.main;
-   }
-
-
-
-   const isNote = (element) => element == note;
-   let index = this.scale.findIndex(isNote);
-   let quinte, tierce;
-   let octave = Tonal.Note.transpose(note, "8P");
-    if (index > -1) {
-    quinte = this.scale[(index+4)%this.scale.length];
-     tierce = this.scale[(index+2)%this.scale.length];
-    }
-    else{
-      quinte = Tonal.Note.transpose(note, "5P");
-     tierce = octave;
-     }
-
-
-
-    if(this.moodIs('quinte')){
-
-      let delayedTime = time + Math.random()/50;
-      this.instrument.triggerAttackRelease(note, "4n", time);
-      this.instrument.triggerAttackRelease(quinte , "4n", delayedTime);
-    }
-
-   else if(this.moodIs('tierce')){
-
-      let delayedTime = time + Math.random()/50;
-      this.instrument.triggerAttackRelease(note, "4n", time);
-      this.instrument.triggerAttackRelease(tierce , "4n", delayedTime);
-    }
-
-    else if(this.moodIs('quinte/tierce')){
-
-      let delayedTime = time + Math.random()/50;
-      this.instrument.triggerAttackRelease(note, "4n", time);
-      let random = Math.random();
-      if(random < 0.5){
-        this.instrument.triggerAttackRelease(tierce , "4n", delayedTime);
-      }
-      else {this.instrument.triggerAttackRelease(quinte, "4n", delayedTime);}
-
-    }
-
-    else if(this.moodIs('quinte_arp')){
-      let random = Math.random();
-      let stepTime1 = time + Tone.Time("8n").toSeconds();
-      let stepTime2 = time + 2*Tone.Time("8n").toSeconds();
-      let stepTime3 = time + 3*Tone.Time("8n").toSeconds();
-
-      this.instrument.triggerAttackRelease(note, "8n", stepTime1);
-      if(random < 0.2){
-        this.instrument.triggerAttackRelease(octave, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(quinte, "8n", stepTime3);
-      }
-      else if(random < 0.4){
-        this.instrument.triggerAttackRelease(octave, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(note, "8n", stepTime3);
-      }
-      else{
-        this.instrument.triggerAttackRelease(quinte, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(octave, "8n", stepTime3);
-      }
-      this.anim.animate(stepTime1);
-      this.anim.animate(stepTime2);
-      this.anim.animate(stepTime3);
-    }
-
-    else if(this.moodIs('tierce_arp')){
-      let random = Math.random();
-      let stepTime1 = time + Tone.Time("8n").toSeconds();
-      let stepTime2 = time + 2*Tone.Time("8n").toSeconds();
-      let stepTime3 = time + 3*Tone.Time("8n").toSeconds();
-      this.instrument.triggerAttackRelease(note, "8n", stepTime1);
-      this.anim.animate(stepTime1);
-      if(random < 0.2){
-        this.instrument.triggerAttackRelease(tierce, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(note, "8n", stepTime3);
-      }
-      else if(random < 0.4){
-        this.instrument.triggerAttackRelease(quinte, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(tierce, "8n", stepTime3);
-      }
-      else{
-        this.instrument.triggerAttackRelease(tierce, "8n", stepTime2);
-        this.instrument.triggerAttackRelease(quinte, "8n", stepTime3);
-      }
-
-    this.anim.animate(stepTime2);
-    this.anim.animate(stepTime3);
-}
-
-  }
 
   generateStructure(){
     return ['A','B','A','B'];
   }
 
-  generatePattern(){
-    let pattern ;
-    if(this.moodIs('quinte') || this.moodIs('tierce') || this.moodIs('quinte/tierce')) { pattern = [90, 5, 10, 25, 80, 10, 20, 20];}
-    else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){ pattern = [80, 0, 0, 0, 80, 0, 0, 0];}
-    return pattern;
+  generateNotesPattern(){
+	  return Pattern.newFromRepeatedUniform(this.scale);
   }
 
+  generatePlaysPattern(){
+    let pattern ;
+    if(this.moodIs('quinte') || this.moodIs('tierce') || this.moodIs('quinte/tierce')) {
+	  pattern = [90, 5, 10, 25, 80, 10, 20, 20];
+	}
+    else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){
+	  pattern = [80, 0, 0, 0, 80, 0, 0, 0];
+	}
+	return Pattern.newFromPercents(pattern);
+  }
+  
+  generatePart(partName, line){
+	let part = super.generatePart(partName, line);
+	
+	  // Le premier agent de la catégorie bass dont l'aura est plus grande
+	  let bassAgent = this.orchestra.agentsOnStage.find(agent=>agent.category=='bass' && agent.aura > this.aura);
+	  let bassAgentPattern = bassAgent?.generateInfluencePatterns(partName);
+	  // S'il existe et qu'il a des notes à proposer 
+	  if(bassAgentPattern?.notes){
+		// Récupérer ses notes
+		part.setAttributeFromPattern('notes', bassAgentPattern.notes)
+	  }
+
+	
+	if(this.moodIs('quinte')){
+	  part.setAttributeFromSingleValue('choords', [1, 5]);
+    }
+	else if(this.moodIs('tierce')){
+	  part.setAttributeFromSingleValue('choords', [1, 3]);
+	}
+    else if(this.moodIs('quinte/tierce')){
+	  let choordsPattern = Pattern.newFromRepeatedStep([
+		{weight:50, value:[1,3]},
+		{weight:50, value:[1,5]}
+	  ]);
+	  part.setAttributeFromPattern('choords', choordsPattern);
+    }
+    else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){
+	  let arpeggios = new WeightedArray();
+	  if(this.moodIs('quinte_arp')){
+		arpeggios.push(
+		  {weight:20, value:[[1],[1],[8],[5]]},
+		  {weight:20, value:[[1],[1],[8],[1]]},
+		  {weight:60, value:[[1],[1],[5],[8]]},
+		);
+	  }
+	  else if(this.moodIs('tierce_arp')){
+		arpeggios.push(
+		  {weight:20, value:[[1],[1],[3],[1]]},
+		  {weight:20, value:[[1],[1],[5],[3]]},
+		  {weight:60, value:[[1],[1],[3],[5]]},
+	    );
+	  }
+	  part.setAttribute('choords', arpeggios.pick().concat(arpeggios.pick()));
+	  part.setAttribute('plays', [0,1,1,1,0,1,1,1]);
+	  let note1 = part.getStep(0).note;
+	  let note2 = part.getStep(4).note;
+	  part.setAttribute('notes', [note1, note1, note1, note1, note2, note2, note2, note2]);
+    }
 
 
+	return part;
+  }
+  
+  
+  playInstrument(note, duration, time, velocite, line){
+	velocite = velocite - Math.random()/3
+	time = time + Math.random()/50;
+	super.playInstrument(note, duration, time, velocite, line)
+  }
 }
 
 

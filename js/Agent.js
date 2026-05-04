@@ -12,24 +12,23 @@ class Agent {
     this.lines = lines || ['main'];
     // Other attributes
     this.category; // 'perc' ou 'melodic' ou 'bass'
-    this.ignoreLeaderBlockInfluence = false;
-    this.ignorePreviousBlockInfluence = false;
     this.orchestra;
     this.muted = false;
-
     this.onStage = false;
     this.enteringTime = 1;
     this.entering = -1;
     this.leavingTime = 1;
     this.leaving = -1;
-
+	this.playingLinesNotes = Object.fromEntries(this.lines.map(line=>[line, new Set()]));
     this.aura = 1;
     this.density = 1;
     this.fatigue = Math.random();
+    
     this.mood = 0.5; // mood value;
-    this.moods = []; // definition of moods (see addMove)
+    this.moods = []; // definition of moods (see addMood)
     this.moodPosition = Math.random()*100; // where does the agent mood is read in the perlin space;
     this.moodIsLocked = false;
+    
     this.currentBlock;
     this.instrument = new Tone.Synth().toDestination();
     this.debugBox = new DebugBox('agent-debug-box', this);
@@ -70,7 +69,10 @@ class Agent {
     this.instrument.connect(filter);
   }
 
-
+  setScale(notesArray){
+	  this.scale = notesArray;
+	  this.scale = this.scale.map(Tonal.Note.simplify);
+  };
 
   // Moods methods
 
@@ -94,8 +96,7 @@ class Agent {
   init(){
 
     this.anim.init();
-    this.scale = Tonal.Scale.get(this.orchestra.getScaleName()).notes;
-    this.scale = this.scale.map(Tonal.Note.simplify);
+    this.setScale(Tonal.Scale.get(this.orchestra.getScaleName()).notes);
     this.aura = Math.random();
   }
 
@@ -218,17 +219,27 @@ class Agent {
 
   // Method to be called on each step
   onStep(step, time){
-    let stepAttributes = this.playingBlock.getNote(step);
-    //let stepAttributes = this.playingBlock.getStep(step);
+    //let stepAttributes = this.playingBlock.getNote(step);
+    let stepAttributes = this.playingBlock.getStep(step);
     if(this.isPlaying){
       for(let line in stepAttributes){
-        this.playNote(stepAttributes[line], time, line)
-        //this.playStep(stepAttributes[line], time, line)
+        this.playStep(stepAttributes[line], time, line)
       }
-      this.anim.animate(time);
     }
   }
 
+  playInstrument(note, duration, time, velocite, line){
+	this.instrument.triggerAttackRelease(note, duration, time, velocite);
+    
+    let delay = Tone.Time(RYTHMIC_ANIM_FRAME_DURATION);
+	Tone.Draw.schedule(()=>{this.playingLinesNotes[line].add(note)}, time);
+	this.anim.animate(time);
+	Tone.Draw.schedule(()=>{this.playingLinesNotes[line].delete(note)},time + delay);
+  }
+  
+  animateStep(stepAttributes, time){
+  };
+  
   playStep(step, time, line){
     if(step.play){
       let duration = Tone.Time("8n") * step.duration;
@@ -237,11 +248,11 @@ class Agent {
       let velocite = step.accent ? 1 : 0.5;
 
       step.choord.forEach(degree=>{
-        let choordNote = this.scale[(noteIndex+degree)%this.scale.length];
+        let choordNote = this.scale[(noteIndex+degree-1)%this.scale.length];
         step.rythm.forEach((subStep, i)=>{
           let rythmLength = Tone.Time("8n") * step.rythmLength;
           let subStepTime = time + i * (rythmLength / step.rythm.length);
-          this.instrument.triggerAttackRelease(choordNote, duration, subStepTime, velocite);
+          this.playInstrument(choordNote, duration, subStepTime, velocite, line);
         });
       });
     }
@@ -262,7 +273,7 @@ class Agent {
 
     // Plays
     let playsWeightedPatterns = new WeightedArray();
-    playsWeightedPatterns.add(50, Pattern.newFromPercents(this.generatePattern(line)));
+    playsWeightedPatterns.add(50, this.generatePlaysPattern(line));
     if(leader != this && leaderPatterns.plays){
       playsWeightedPatterns.add(50, leaderPatterns.plays);
     }
@@ -354,8 +365,7 @@ class Agent {
 
   // Method for modulate from a scale to another
   modulateFromTo(origin, destination){
-    this.scale = Tonal.Scale.get(destination).notes;
-    this.scale = this.scale.map(Tonal.Note.simplify);
+    this.setScale(Tonal.Scale.get(destination).notes);
     this.currentBlock.modulateFromTo(origin, destination);
     this.previousBlock?.modulateFromTo(origin, destination);
     this.chorusBlock?.modulateFromTo(origin, destination);

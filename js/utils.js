@@ -38,6 +38,16 @@ function debugMultiLines(object, func){
   return container;
 }
 
+function debugBoolean(value){
+  let container = document.createElement('div');
+  container.classList.add('debug-boolean');
+  if(value) container.classList.add('true');
+  else container.classList.add('false');
+  container.innerHTML = value;
+  return container;
+}
+
+
 // Return a DOM object that represent a sequence
 // index is for marking the  current element in the sequence. Keep undefined if no current element.
 function debugSequence(array, index){
@@ -47,8 +57,14 @@ function debugSequence(array, index){
     let stepElement = document.createElement('div');
     stepElement.classList.add('step');
     if(index === i) stepElement.classList.add('current');
-    if(!step) stepElement.classList.add('empty');
-    step = roundIfNumber(step);
+    if(!step){
+	  stepElement.classList.add('empty');
+	  step = ' ';
+	}
+	else{
+		step = roundIfNumber(step);
+
+	}
     stepElement.innerHTML = step;
     container.appendChild(stepElement);
   })

@@ -168,21 +168,13 @@ class Block {
   // Return a human-readable HTML block representation
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
-    return `A: ${this.partRepr('A').outerHTML}<br/>
-            B: ${this.partRepr('B').outerHTML}<br/>
-            C: ${this.partRepr('C').outerHTML}<br/>
+    let partsRepr = (partName)=>debugMultiLines(this[partName], (line)=>line.repr(this.getPartName(orchestra.step)==partName?orchestra.step%PART_SIZE:null));
+    
+    return `A: ${partsRepr('A').outerHTML}<br/>
+            B: ${partsRepr('B').outerHTML}<br/>
+            C: ${partsRepr('C').outerHTML}<br/>
             STRUCTURE: ${structureRepr.outerHTML}`;
     }
 
-  partRepr(partName){
-    const partToSimplifiedArray = part => part.getAttribute('notes').map((note,i)=>part.getAttribute('plays')[i]?note:null);
-    let index = (this.getPartName(orchestra.step)==partName) ? orchestra.partStep : undefined;
-    if(this.lines){
-      return debugMultiLines(this[partName], (line)=>{return debugSequence(partToSimplifiedArray(line), index)})
-    }
-    else {
-      return debugSequence(partToSimplifiedArray(this[partName]), index);
-    }
-  }
 }
 

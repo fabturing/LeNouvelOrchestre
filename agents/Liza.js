@@ -6,11 +6,12 @@ class Liza extends PercAgent {
     super("Liza", "Batteuse qui fait que fumer des clopes", "liza", ['hihat', 'kick', 'snare']);
     this.anim = new Anim('liza', true);
     this.anim.setFrameChooser(()=>{
-      let step = this.playingBlock.getStep(this.orchestra.step);
+     
       let lines = []
-      if(step.snare.play) lines.push('snare');
-      if(step.hihat.play) lines.push('hihat');
-      if(step.kick.play) lines.push('kick');
+      if(this.playingLinesNotes.snare.size) lines.push('snare');
+      if(this.playingLinesNotes.hihat.size) lines.push('hihat');
+      if(this.playingLinesNotes.kick.size) lines.push('kick');
+  	  if(lines.length==0) return 'idle';
       return lines.join('-');
     })
     this.leavingTime = 4;
@@ -21,9 +22,7 @@ class Liza extends PercAgent {
       snare:1,
     }
 
-    this.ignoreLeaderBlockInfluence = true;
-
-        // moods
+    // moods
     this.addMood('light', 40);
     this.addMood('straight', 30);
     this.addMood('double',20 );
@@ -43,50 +42,6 @@ class Liza extends PercAgent {
   }
 
 
-  playNote(note, time, line){
-    if(note && line == 'hihat'){
-      let velocite_hh = 1-Math.random()/2;
-      if (!(this.hasEnteredSince(4))) {
-        this.instrument.triggerAttackRelease('C5', "8n", time, velocite_hh);
-        if(this.moodIs('double')){
-          let time_delayed = time + Tone.Time("16n").toSeconds();
-          this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-          this.anim.animate(time_delayed);
-        }
-        else if(this.moodIs('speed')){
-          let random = Math.random();
-          if(random < 0.2){
-            let time_delayed = time + Tone.Time("16n").toSeconds();
-            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-            this.anim.animate(time_delayed);
-          }
-          else if(random < 0.4){
-            let time_delayed = time + Tone.Time("16t").toSeconds();
-            let time_delayed2 = time_delayed + Tone.Time("16t").toSeconds();
-            this.instrument.triggerAttackRelease('C5', "8n", time_delayed, velocite_hh-Math.random()/3);
-            this.instrument.triggerAttackRelease('C5', "8n", time_delayed2, velocite_hh-Math.random()/3);
-            this.anim.animate(time_delayed);
-            this.anim.animate(time_delayed2);
-          }
-        }
-      }
-
-
-      }
-    if(note && line == 'kick'){
-      if (!(this.willLeaveIn(this.leavingTime))) {
-        this.instrument.triggerAttackRelease('C3', "8n", time);
-      }
-    }
-
-    if(note && line == 'snare'){
-      if (!(this.willLeaveIn(this.leavingTime))) {
-        let velocite_snr = 1-Math.random()/2;
-        this.instrument.triggerAttackRelease('C4', "8n", time, velocite_snr);
-      }
-    }
-
-  }
 
   generateStructure(){
       if(this.moodIs('straight')) {
@@ -96,52 +51,73 @@ class Liza extends PercAgent {
         return ['A','A','A','A'];
       }
   }
-
-  generatePattern(line){
-    let hhPattern, kickPattern, snarePattern;
-
- // Mood : Light
+  
+  generatePlaysPattern(line){
+    let pattern;
     if(this.moodIs('light')){
-      hhPattern = [30,70,30,70,30,70,30,70];
-      kickPattern = [97, 10, 5, 5, 50, 5, 10, 5];
-      snarePattern = [0, 2, 3, 2, 10, 2, 2, 2];
+	  if(line=='hihat')      pattern = [30, 70, 30, 70, 30, 70, 30, 70];  
+      else if(line=='kick')  pattern = [97, 10,  5,  5, 50,  5, 10,  5];
+      else if(line=='snare') pattern = [ 0,  2,  3,  2, 10,  2,  2,  2];
     }
-
-    // Mood : Straight
     else if(this.moodIs('straight')){
-
-      hhPattern = [95,99,99,99,95,99,99,99];
-      kickPattern = [100, 5, 10, 5, 20, 5, 10, 5];
-      snarePattern = [0, 0, 5, 0, 100, 5, 10, 0];
+	  if(line=='hihat')      pattern = [95,99,99,99,95,99,99,99];  
+      else if(line=='kick')  pattern = [100, 5, 10, 5, 20, 5, 10, 5];
+      else if(line=='snare') pattern = [0, 0, 5, 0, 100, 5, 10, 0];
     }
-
-
-
-    // Mood : double
     else if(this.moodIs('double')){
-      hhPattern = [95,99,99,99,95,99,99,99];
-      kickPattern = [100, 5, 10, 5, 20, 5, 10, 5];
-      snarePattern = [0, 0, 5, 0, 100, 5, 10, 0];
-
+	  if(line=='hihat')      pattern = [95,99,99,99,95,99,99,99];  
+      else if(line=='kick')  pattern = [100, 5, 10, 5, 20, 5, 10, 5];
+      else if(line=='snare') pattern = [0, 0, 5, 0, 100, 5, 10, 0];
     }
-
-    // Mood : Speed
     else if(this.moodIs('speed')){
-      hhPattern = [60,100,60,100,60,100,60,100];
-      kickPattern = [98, 2, 20, 2, 98, 2, 20, 2];
-      snarePattern = [0, 2, 98, 10, 0, 5, 98, 20];
+	  if(line=='hihat')      pattern = [60,100,60,100,60,100,60,100];  
+      else if(line=='kick')  pattern = [98, 2, 20, 2, 98, 2, 20, 2];
+      else if(line=='snare') pattern = [0, 2, 98, 10, 0, 5, 98, 20];
     }
-
-    let patterns = {
-       hihat : hhPattern,
-       kick : kickPattern,
-       snare : snarePattern
-     }
-    if(line){
-      return patterns[line];
-    }
-    return patterns;
+    return Pattern.newFromPercents(pattern);
   }
-
+  
+  generatePart(partName, line){
+	let part = super.generatePart(partName, line);
+	
+    if(line == 'hihat'){
+	  if (this.hasEnteredSince(4)){
+		  part.setAttributeFromSingleValue('plays', 0);
+	  }
+	  else if(this.moodIs('double')){
+		  part.setAttributeFromSingleValue('rythms', [1,1]);
+	  }
+	  else if(this.moodIs('speed')){
+		  let rythmPattern = Pattern.newFromRepeatedStep([
+			{weight:60, value:[1]},
+			{weight:20, value:[1,1]},
+			{weight:20, value:[1,1,1]},
+		  ]);
+		  part.setAttributeFromPattern('rythms', rythmPattern);
+	  }
+     }
+     
+    if (this.willLeaveIn(this.leavingTime)) {
+		if(line == 'kick' || line == 'snare'){
+		  part.setAttributeFromSingleValue('plays', 0);
+		}
+	}
+	return part;
+  }
+  
+  playInstrument(note, duration, time, velocite, line){
+	if(line=='hihat'){
+	  velocite = velocite - Math.random()/3
+	  note = 'C5';
+	}
+	else if (line=='kick') {
+	  note = 'C3';
+	}
+	else if (line=='snare') {
+	  velocite = velocite - Math.random()/2;
+	  note = 'C4';
+	}
+	super.playInstrument(note, duration, time, velocite, line);
+  }
 }
 

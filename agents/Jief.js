@@ -5,18 +5,11 @@ class Jief extends MelodicAgent {
     super("Jiéf", "Petit flutiste debout sur un tabouret", "jief");
     this.anim = new Anim('jief', false);
 
-    //FX
-
-
-
     // moods
-
     this.addMood('long_variation', 30);
     this.addMood('long', 33);
     this.addMood('courtlong', 33);
     this.addMood('court', 40);
-
-
   }
 
   async loadInstrument(){
@@ -25,58 +18,47 @@ class Jief extends MelodicAgent {
     this.setPan(PAN_FLUTE);
     this.setVolume(VOL_FLUTE);
   }
-
-  getNoteDuration(){
-
-    let duration = Tone.Time("8n");
-    let blockStep = this.orchestra.blockStep;
-
-    // Mood : court
-    if(this.moodIs('court')){
-
-      return duration;
-    }
-
-    // Mood : long
-    else if(this.moodIs('long') || this.moodIs('long_variation')){
-      let stepsAfter = 1;
-      while(stepsAfter+blockStep<BLOCK_SIZE
-        && !this.playingBlock.getNote(blockStep+stepsAfter).main
-        && stepsAfter <= 2){
-        stepsAfter ++;
-      }
-      return duration * stepsAfter;
-    }
-    // Mood : longcourt
-    else if(this.moodIs('courtlong')) {
-      let nextNote = this.playingBlock.getNote(blockStep+1).main;
-      // For even steps, if the next note is silent, double the duration.
-      if(!nextNote && blockStep%2==0){
-        return duration * 2;
-      }
-      return duration;
-    }
-
-  }
-
-  playNote(note, time){
-    let velocite = 1-Math.random()/3;
-    let duration = this.getNoteDuration()
-    this.instrument.triggerAttackRelease(note, duration, time, velocite);
-  }
-
+  
   generateStructure(){
     return ['A','B','C','B'];
   }
 
-  generatePattern(){
-    let pattern = [90, 33, 66, 33, 80, 33, 66, 33]
-    if(this.moodIs('long_variation')){pattern = [80, 2, 2, 50, 80, 2, 2, 50]}
-    // de temps en temps laisser un block vide
-    let random = Math.random()*2;
-    if(random < this.fatigue ){pattern = [1, 1, 1, 1, 1, 1, 1, 1];}
-    return pattern;
+  generateNotesPattern(){
+	  return Pattern.newFromRepeatedUniform(this.scale);
   }
 
+  generatePlaysPattern(){
+	let pattern = [90, 33, 66, 33, 80, 33, 66, 33];
+    if(this.moodIs('long_variation')){
+		pattern = [80, 2, 2, 50, 80, 2, 2, 50];
+	}
+    // de temps en temps laisser une part quasivide
+    if(Math.random()*2 < this.fatigue ){
+		pattern = [1, 1, 1, 1, 1, 1, 1, 1];
+	}
+	return Pattern.newFromPercents(pattern);
+  }
+  
+  generatePart(partName, line){
+	let part = super.generatePart(partName, line);
+	
+	if(this.moodIs('court')){
+	  part.setAttributeFromSingleValue('durations', 1);
+	}
+	else if(this.moodIs('long') || this.moodIs('long_variation')){
+	  part.setAttributeFromSingleValue('durations', PART_SIZE);
+	}
+    else if(this.moodIs('courtlong')){
+	  part.setAttributeFromFunction('durations', (i)=>i%2==0?2:1);
+	}
+	part.removeDurationsOverlap();
+
+	return part;
+  }
+  
+  playInstrument(note, duration, time, velocite, line){
+	velocite = velocite - Math.random()/3
+	super.playInstrument(note, duration, time, velocite, line);
+  }
 }
 

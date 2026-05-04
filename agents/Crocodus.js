@@ -23,58 +23,53 @@ class Crocodus extends BassAgent {
     this.setFilter(750, "lowpass");
   }
 
-
-  playNote(note, time){
-    note = Tonal.Note.transpose(note, "-8P");
-
-    if(this.moodIs('normal') || this.moodIs('light') ){
-    this.instrument.triggerAttackRelease(note, "4n", time);
-    }
-
-    else if(this.moodIs('rebond')){
-    let blockStep = this.orchestra.blockStep;
-    let time_delayed = time;
-    this.instrument.triggerAttackRelease(note, "8n", time_delayed);
-      let stepsAfter = 1;
-          while(stepsAfter+blockStep<BLOCK_SIZE
-            && !this.playingBlock.getNote(blockStep+stepsAfter)
-            && stepsAfter <= 1){
-            time_delayed = time_delayed + Tone.Time("8n").toSeconds();
-            this.instrument.triggerAttackRelease(note, "8n", time_delayed);
-            this.anim.animate(time_delayed);
-            stepsAfter ++;
-          }
-    }
-
-    else if(this.moodIs('dense')){
-    let blockStep = this.orchestra.blockStep;
-    let time_delayed = time;
-    this.instrument.triggerAttackRelease(note, "8n", time_delayed);
-      let stepsAfter = 1;
-          while(stepsAfter+blockStep<BLOCK_SIZE
-            && !this.playingBlock.getNote(blockStep+stepsAfter)
-            && stepsAfter <= 8){
-            time_delayed = time_delayed + Tone.Time("8n").toSeconds();
-            this.instrument.triggerAttackRelease(note, "16n", time_delayed);
-            this.anim.animate(time_delayed);
-            stepsAfter ++;
-          }
-    }
-  }
-
-
   generateStructure(){
     return ['A','B','A','B'];
   }
 
-  generatePattern(){
-
-     let pattern;
+  generatePlaysPattern(){
+    let pattern;
     if(this.moodIs('light')) {pattern = [95,50,30,2,2,2,2,10]}
     else {pattern = [90,5,20,30,90,5,20,40];}
-
-    return pattern;
+    return Pattern.newFromPercents(pattern);
+  }
+  
+  generateNotesPattern(){
+	  return Pattern.newFromRepeatedUniform(this.scale);
   }
 
+  playInstrument(note, duration, time, velocite, line){
+	note = Tonal.Note.transpose(note, "-8P");
+    super.playInstrument(note, duration, time, velocite, line);
+
+  }
+  
+  
+  
+   generatePart(partName, line){
+	let part = super.generatePart(partName, line);
+	
+	if(this.moodIs('rebond')){
+	 part.setAttributeFromSingleValue('rythmsLengths', 2);
+	 part.setAttributeFromFunction('rythms', (i)=>{
+	  if(i+1>=PART_SIZE) return [1];
+      if(part.getStep(i+1).play) return [1];
+	  else return [1,1];
+	 });
+    }
+    else if(this.moodIs('dense')){
+      let lastNote;
+	  part.setAttributeFromFunction('notes', (i, step)=>{
+		if(step.play) lastNote = step.note;
+		return lastNote;
+	  });
+	  let play = 0;
+	  part.setAttributeFromFunction('plays', (i, step)=>{
+		if(step.play) play = 1;
+		return play;
+	  });
+	}
+    return part;
+  }
 }
 
