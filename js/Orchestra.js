@@ -80,6 +80,7 @@ class Orchestra {
   modulate(degree, changeMode){
     const originScaleDegrees = Tonal.Scale.degrees(this.getScaleName());
     let newTonic = originScaleDegrees(degree);
+    
     // If newTonic too high or too low, go in the other direction
     if(Tonal.Interval.distance(LOWEST_TONIC, newTonic).startsWith('-')
     || Tonal.Interval.distance(newTonic, HIGHEST_TONIC).startsWith('-')){
@@ -90,6 +91,7 @@ class Orchestra {
     while(changeMode && newMode == this.scaleMode){
       newMode = randomChoice(POSSIBLE_MODES);
     }
+    
     let newScaleName = this.getScaleName(newTonic, newMode);
     this.agents.forEach(agent=>agent.modulateFromTo(this.getScaleName(), newScaleName));
     this.setScale(newTonic, newMode);
@@ -188,13 +190,8 @@ class Orchestra {
       return `Update part ${partName} for all agents`;
     }
 
-    const tonicModulation = ()=>{
-      let originScale = this.getScaleName();
-      let degree = randomChoice([-3, +3, -5, +5]);
-      this.modulate(degree, false);
-      return `Modulate from ${originScale} to ${this.getScaleName()} (${(degree<0?"":"+") + degree})`;
-    }
-    const modeModulation = ()=>{
+
+    const modulation = ()=>{
       let originScale = this.getScaleName();
       this.modulate(0, true);
       return `Modulate from ${originScale} to ${this.getScaleName()}`;
@@ -205,8 +202,7 @@ class Orchestra {
     }
 
     const events = [
-      {fun:modeModulation, weight:MODE_MODULATION_PROBABILITY_EACH_BLOCK},
-      {fun:tonicModulation, weight:TONIC_MODULATION_PROBABILITY_EACH_BLOCK},
+      {fun:modulation, weight:MODULATION_PROBABILITY_EACH_BLOCK},
       {fun:newBlock, weight:NEW_BLOCK_PROBABILITY_EACH_BLOCK},
       {fun:newLeaderBlock, weight:NEW_LEADER_BLOCK_PROBABILITY_EACH_BLOCK},
       {fun:newPart, weight:NEW_PART_PROBABILITY_EACH_BLOCK},
