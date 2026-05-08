@@ -10,7 +10,7 @@ class Part {
 
     this.plays = defaultArray(0); // Array of booleans (should it plays at step i)
     this.notes = defaultArray(undefined); // Array of strings (what note should be played at step i)
-    this.choords = defaultArray([1]); // Array of arrays of int (which degrees from the note should be played at step i)
+    this.chords = defaultArray([1]); // Array of arrays of int (which degrees from the note should be played at step i)
     this.accents = defaultArray(0); // Array of booleans (should it be an accent at step i)
     this.durations = defaultArray(1); // Array of float (for which fraction of a step should the note been played)
     this.rythms = defaultArray([1]); // Array of array of boolean (what rythm shoud be played at step i)
@@ -22,7 +22,7 @@ class Part {
     return {
       play:this.plays[i],
       note:this.notes[i],
-      choord:this.choords[i],
+      chord:this.chords[i],
       accent:this.accents[i],
       duration:this.durations[i],
       rythm:this.rythms[i],
@@ -84,7 +84,7 @@ class Part {
 		container.innerHTML = `
 		  play: ${debugBoolean(step.play).outerHTML}
 		  note: ${step.note} <br/>
-		  choord: ${debugSequence(step.choord).outerHTML}
+		  chord: ${debugSequence(step.chord).outerHTML}
 		  accent: ${debugBoolean(step.accent).outerHTML}
 		  duration: ${step.duration} <br/>
 		  rythm: ${debugSequence(step.rythm).outerHTML}

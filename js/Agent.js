@@ -248,12 +248,12 @@ class Agent {
       let noteIndex = Math.max(0, this.scale.findIndex(n=>n==note));
       let velocite = step.accent ? 1 : 0.5;
 
-      step.choord.forEach(degree=>{
-        let choordNote = this.scale[(noteIndex+degree-1)%this.scale.length];
+      step.chord.forEach(degree=>{
+        let chordNote = this.scale[(noteIndex+degree-1)%this.scale.length];
         step.rythm.forEach((subStep, i)=>{
           let rythmLength = Tone.Time("8n") * step.rythmLength;
           let subStepTime = time + i * (rythmLength / step.rythm.length);
-          this.playInstrument(choordNote, duration, subStepTime, velocite, line);
+          this.playInstrument(chordNote, duration, subStepTime, velocite, line);
         });
       });
     }
@@ -279,7 +279,7 @@ class Agent {
       playsWeightedPatterns.add(50, leaderPatterns.plays);
     }
     if(this.previousBlock){
-      playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName));
+      playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName, line));
     }
     let playsPattern = Pattern.mergePatternsWeightedArray(playsWeightedPatterns);
     part.setAttributeFromPattern('plays', playsPattern);
@@ -291,7 +291,7 @@ class Agent {
       notesWeightedPatterns.add(50, leaderPatterns.notes);
     }
     if(this.previousBlock){
-      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName));
+      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName, line));
     }
     let notesPattern = Pattern.mergePatternsWeightedArray(notesWeightedPatterns);
     part.setAttributeFromPattern('notes', notesPattern);
