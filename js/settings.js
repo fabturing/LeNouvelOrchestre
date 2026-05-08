@@ -14,7 +14,7 @@ const VERSION = "0.1";
 // TODO: choisir le pan dynamiquement en fonction des agents qui sont sur scène pour éviter les situations où tout le monde est pané du meme côté.
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -20; //Volume en dB, max 0
+let VOL_FLUTE = -15; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
@@ -32,6 +32,11 @@ const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 // Tonton Flop joue comme il peut
 let VOL_TONTON = -5; //Volume en dB, max 0
 const PAN_TONTON= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
+// Josephine joue de l'orgue
+let VOL_JOSEPHINE = -25; //Volume en dB, max 0
+const PAN_JOSEPHINE= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
 
 //Normaliser volumes
 let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));

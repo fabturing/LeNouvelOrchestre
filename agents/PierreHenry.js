@@ -69,17 +69,17 @@ class PierreHenry extends MelodicAgent {
 
 	
 	if(this.moodIs('quinte')){
-	  part.setAttributeFromSingleValue('choords', [1, 5]);
+	  part.setAttributeFromSingleValue('chords', [1, 5]);
     }
 	else if(this.moodIs('tierce')){
-	  part.setAttributeFromSingleValue('choords', [1, 3]);
+	  part.setAttributeFromSingleValue('chords', [1, 3]);
 	}
     else if(this.moodIs('quinte/tierce')){
-	  let choordsPattern = Pattern.newFromRepeatedStep([
+	  let chordsPattern = Pattern.newFromRepeatedStep([
 		{weight:50, value:[1,3]},
 		{weight:50, value:[1,5]}
 	  ]);
-	  part.setAttributeFromPattern('choords', choordsPattern);
+	  part.setAttributeFromPattern('chords', chordsPattern);
     }
     else if(this.moodIs('quinte_arp') || this.moodIs('tierce_arp')){
 	  let arpeggios = new WeightedArray();
@@ -97,7 +97,7 @@ class PierreHenry extends MelodicAgent {
 		  {weight:60, value:[[1],[1],[3],[5]]},
 	    );
 	  }
-	  part.setAttribute('choords', arpeggios.pick().concat(arpeggios.pick()));
+	  part.setAttribute('chords', arpeggios.pick().concat(arpeggios.pick()));
 	  part.setAttribute('plays', [0,1,1,1,0,1,1,1]);
 	  let note1 = part.getStep(0).note;
 	  let note2 = part.getStep(4).note;
