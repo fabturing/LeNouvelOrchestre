@@ -133,7 +133,7 @@ class Liza extends PercAgent {
 	  note = 'C3';
 	}
 	else if (line=='snare') {
-	  velocite = velocite - Math.random()/2;
+	  velocite = velocite - Math.random()/3;
 	  note = 'C4';
 	}
 	super.playInstrument(note, duration, time, velocite, line);

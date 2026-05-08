@@ -58,6 +58,7 @@ class Jief extends MelodicAgent {
   
   playInstrument(note, duration, time, velocite, line){
 	velocite = velocite - Math.random()/3
+	note = Tonal.Note.transpose(note, '8P');
 	super.playInstrument(note, duration, time, velocite, line);
   }
 }

@@ -54,7 +54,7 @@ const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
 const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
 const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
 const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
-const RYTHMIC_ANIM_FRAME_DURATION = '16n';
+const RYTHMIC_ANIM_FRAME_DURATION = '24n';
 
 /*****************************************************************************/
 /*********************** ORCHESTRA SETTINGS **********************************/

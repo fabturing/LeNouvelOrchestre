@@ -153,7 +153,7 @@ class Orchestra {
 
     let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
 
-    leastTiredAgentNotOnStage = this.agents.find(agent=>!agent.onStage);
+    leastTiredAgentNotOnStage = this.agents.reverse().find(agent=>!agent.onStage);
     leastTiredAgentNotOnStage?.enter();
 
     if(this.agents.filter(agent=>agent.onStage).length > 1){
