@@ -6,6 +6,8 @@ LeNouvelOrchestre est un groupe virtuel de musique improvisée composé de :
 * Liza :  Batteuse rock qui fait que fumer des clopes
 * Crocodus : Crocodile qui joue de la basse (personne ne l'aime)
 * Pierre-Henry : Squelette qui joue du xylophone (parce que c'est ce que les squelettes font)
+* Tonton Flop : Tape dans ses mains et tape du pied par terre. Musicalement c'est pas un génie mais il a un don pour mettre l'ambiance
+* Joséphine : Organiste très sérieuse
 
 ## Répets
 
@@ -15,11 +17,13 @@ Le groupe est actuellement en train de répeter à cette adresse : [lenouvelorch
 
 Les membres du groupes qui sont sur scène improvisent de la musique en continu.
 
-Chacun·e a sa propre manière de choisir quelles notes jouer à quelle moment. Mais au moment de choisir quoi jouer, les musicien·nes sont aussi influencé·es par ce que joue leur collègues.
+Chacun·e a sa propre manière de choisir quelles notes jouer à quel moment. Mais au moment de choisir quoi jouer,
+les musicien·nes sont aussi influencé·es par ce que jouent leur collègues.
 
-L'orchestre prend collectivement des décision sur la manière de continuer l'improvisation : est-ce qu'on continue de jouer la même chose en boucle ? est-ce qu'on change un peu ? beaucoup ? est-ce qu'on module ? etc.
+L'orchestre prend collectivement des décision sur la manière de continuer l'improvisation : est-ce qu'on continue de jouer la même chose en boucle ?
+est-ce qu'on change un peu ? beaucoup ? est-ce qu'on module ? etc.
 
-À force de jouer, les membres de l'orchestre se fatiguent. De temps en temps, les personnes les plus fatiguées quitte la scène et se font remplacer.
+À force de jouer, les membres de l'orchestre se fatiguent. De temps en temps, les personnes les plus fatiguées quittent la scène et se font remplacer.
 
 ## Technologie et License
 
