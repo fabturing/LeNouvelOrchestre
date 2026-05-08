@@ -39,28 +39,28 @@ class TontonFlop extends PercAgent {
   }
 
 
- generatePlaysPattern(line){
-    let pattern = [100, 100, 100, 100, 100, 100, 100, 100];
+
+generatePlaysPattern(line){
+   let pattern;
+    if(this.moodIs('mix1')){
+	  if(line=='clap')      pattern = [0,80,80,0,80,80,0,80];
+      else if(line=='kick')  pattern = [95,0,0,90,0,0,90,0];
+    }
+    else if(this.moodIs('clap1')){
+	  if(line=='clap')      pattern = [0,80,80,0,80,80,0,80];
+      else if(line=='kick')  pattern = [0,0,0,0,0,0,0,0];
+    }
+    else if(this.moodIs('kick1')){
+	  if(line=='clap')      pattern = [0,0,0,0,0,0,0,0];
+      else if(line=='kick')  pattern = [95,0,0,90,0,0,90,0];
+    }
 
     return Pattern.newFromPercents(pattern);
   }
 
+
   generatePart(partName, line){
 	let part = super.generatePart(partName, line);
-	let pattern;
-    if(this.moodIs('mix1')){
-	  if(line=='clap')      pattern =[[0,1], [1,0], [1,1], [0,1], [1,1], [0,1], [1,0], [1,1]];
-      else if(line=='kick')  pattern = [[1,0], [0,1], [0,0], [1,0], [0,0], [1,0], [0,1], [0,0]];
-    }
-    else if(this.moodIs('clap1')){
-	  if(line=='clap')      pattern =[[0,1], [1,0], [1,1], [0,1], [1,1], [0,1], [1,0], [1,1]];
-      else if(line=='kick')  pattern = [[0],[0],[0],[0],[0],[0],[0],[0]];
-    }
-    else if(this.moodIs('kick1')){
-	  if(line=='clap')      pattern = [[0],[0],[0],[0],[0],[0],[0],[0]];
-      else if(line=='kick')  pattern = [[1,0], [0,1], [0,0], [1,0], [0,0], [1,0], [0,1], [0,0]];
-    }
-	part.setAttribute('rythms', pattern)
 	return part;
   }
   
