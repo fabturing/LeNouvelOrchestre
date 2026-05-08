@@ -2,28 +2,35 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
+    <title>Le Nouvel Orchestre</title>
     <meta name="viewport" content="width=device-width" />
     <link href="style.css" rel="stylesheet" />
+    <!-- Libraries -->
     <script src="lib/tone.js"></script>
     <script src="lib/tonal.min.js"></script>
     <script src="lib/perlin.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Classes -->
     <script src="js/DebugBox.js"></script>
     <script src="js/Anim.js"></script>
     <script src="js/Block.js"></script>
+    <script src="js/WeightedArray.js"></script>
+    <script src="js/Part.js"></script>
+    <script src="js/Pattern.js"></script>
     <script src="js/Agent.js"></script>
     <script src="js/Orchestra.js"></script>
-    <script src="js/testSon.js"></script>
+    <script src="js/AgentClasses.js"></script>
     <!-- Agents classes -->
     <script src="agents/Crocodus.js"></script>
     <script src="agents/Jief.js"></script>
     <script src="agents/PierreHenry.js"></script>
     <script src="agents/Liza.js"></script>
-
-
-    <title>Le Nouvel Orchestre</title>
+    <script src="agents/TontonFlop.js"></script>
+    <script src="agents/Josephine.js"></script>
+    <!-- Other scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/testSon.js"></script>
   </head>
   <body>
 
@@ -50,13 +57,16 @@
           <tbody>
             <tr><th scope="row">Step</th><td><span data-attribute="step"></span></td></tr>
             <tr><th scope="row">Block</th><td><progress value="0" max="1" data-progress="blockProgress"></progress> <span data-attribute="blockCount"></span></td></tr>
-            <tr><th scope="row">Last Event</th><td><span data-attribute="lastEvent"></span></td></tr>
+            <tr><th scope="row">Last Block Event</th><td><span data-attribute="lastBlockEvent"></span></td></tr>
+            <tr><th scope="row">Cycle</th><td><progress value="0" max="1" data-progress="cycleProgress"></progress> <span data-attribute="cycleCount"></span></td></tr>
+            <tr><th scope="row">Last Cycle Event</th><td><span data-attribute="lastCycleEvent"></span></td></tr>
             <tr><th scope="row">Leader</th><td><span data-attribute="leaderName"></span></td></tr>
+            <tr><th scope="row">Scale</th><td><span data-attribute="scaleTonic"></span> <span data-attribute="scaleMode"></span></td></tr>
             <tr><th scope="row">Controls</th><td>
                <button data-method="start">Start</button>
                <button data-method="pause">Pause</button>
               <button data-method="nextBlock">Next Block</button>
-               <button data-method="turnover">Turnover</button>
+               <button data-method="next1000Blocks">Next 1000 Blocks</button>
              </td></tr>
           </tbody>
         </table>
@@ -69,28 +79,23 @@
           <thead><tr><th colspan="2">Agent - <span data-attribute="name"></span></th></tr></thead>
           <tbody>
             <tr><th scope="row">Description</th><td><span data-attribute="descritption"></span></td></tr>
-            <tr><th scope="row">On stage</th><td><span data-attribute="onStage"></span></td></tr>
-          <tr><th scope="row">Entering</th><td><span data-attribute="entering"></span>/<span data-attribute="enteringTime"></span></td></tr>
+            <tr><th scope="row">On stage</th><td><span data-attribute-boolean="onStage"></span></td></tr>
+            <tr><th scope="row">Entering</th><td><span data-attribute="entering"></span>/<span data-attribute="enteringTime"></span></td></tr>
             <tr><th scope="row">Leaving</th><td><span data-attribute="leaving"></span>/<span data-attribute="leavingTime"></span></td></tr>
             <tr><th scope="row">Fatigue</th><td><progress value="0" max="1" data-progress="fatigue"></progress> (<span data-attribute="fatigue"></span>) <button data-method="resetFatigue">reset</button></td></tr>
             <tr><th scope="row">Aura</th><td><progress value="0" max="1" data-progress="aura"></progress> (<span data-attribute="aura"></span>)</td></tr>
             <tr><th scope="row">Mood</th><td><progress value="0" max="1" data-progress="mood"></progress> <span data-attribute="moodName"></span> (<span data-attribute="mood"></span>) (lock: <input type="checkbox" data-check="moodIsLocked"/>)</td></tr>
-            <tr><th scope="row">Is playing ?</th><td><span data-attribute="isPlaying"></span></td></tr>
-            <tr><th scope="row">Note</th><td><span data-attribute="currentNote"></span></td></tr>
+            <tr><th scope="row">Is playing ?</th><td><span data-attribute-boolean="isPlaying"></span></td></tr>
+            <tr><th scope="row">Note</th><td><span data-attribute="playingNote"></span></td></tr>
             <tr><th scope="row">Density</th><td><span data-attribute="density"></span></td></tr>
-            <tr><th scope="row">Part</th><td><span data-attribute="currentPart"></span></td></tr>
+            <tr><th scope="row">Part</th><td><span data-attribute="playingPartName"></span></td></tr>
 
             <tr><th scope="row">Muted</th><td><input type="checkbox" data-check="muted"/></td></tr>
-            <tr><th scope="row">Block</th><td><span data-attribute="currentBlockRepr"></span></td></tr>
-            <tr><th scope="row">Ignore Previous Block Influence</th><td><input type="checkbox" data-check="ignorePreviousBlockInfluence"/></td></tr>
-            <tr><th scope="row">Ignore Leader Block Influence</th><td><input type="checkbox" data-check="ignoreLeaderBlockInfluence"/></td></tr>
+            <tr><th scope="row">Block</th><td><span data-attribute="playingBlockRepr"></span></td></tr>
           </tbody>
         </table>
       </div>
     </template>
-
-    <!-- DANCER -->
-    <div><img src="sprites/iddle.png" id="dancer"/></div>
 
   </body>
 </html>

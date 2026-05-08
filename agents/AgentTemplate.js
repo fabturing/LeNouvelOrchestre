@@ -12,12 +12,12 @@ POUR CRÉER UN NOUVEL AGENT C'EST TRÈS SIMPLE:
 
 
 class NomAgent extends Agent { //✏️ Le nom de la classe doit être le nom de l'agent en en PascalCase
+				//✏️ Remplacer `extends Agent` par `extends MelodicAgent` ou PercAgent ou BassAgent
   constructor(){
     super("Nom de l'Agent", //✏️ Le nom qui s'affiche
     "Description agent", //✏️ Description de l'agent qui s'affiche'
     "nomagent"); //✏️ L'identifiant de l'agent (nom de l'agent en lowercase)
     this.anim = new Anim('default', true);
-    this.category = 'melodic'; //✏️
 
   // moods
     this.addMood('moodA', 50);
@@ -31,18 +31,23 @@ class NomAgent extends Agent { //✏️ Le nom de la classe doit être le nom de
     this.setPan(PAN_AGENT); //✏️ Définir une constante spécifique dans js/settings.js
     this.setVolume(VOL_AGENT); //✏️ Définir une constante spécifique dans js/settings.js
   }
-
-  playNote(note, time){
-    this.instrument.triggerAttackRelease(note, "4n", time);
-  }
-
+  
   generateStructure(){
-    return ['A','B','A','B'];
+    return ['A','B','C','B'];
   }
 
-  generatePattern(){
+  generateNotesPattern(){
+	  return Pattern.newFromRepeatedUniform(this.scale);
+  }
+
+  generatePlaysPattern(){
     let pattern = [100, 0, 100, 0, 100, 0, 100, 0];
-    return pattern.map(percent);
+	return Pattern.newFromPercents(pattern);
+  }
+  
+  generatePart(partName, line){
+	let part = super.generatePart(partName, line);
+	return part;
   }
 }
 

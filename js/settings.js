@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 const DEV_MODE = false;
-const VERSION = "0.1";
+const VERSION = "0.2";
 
 
 /*****************************************************************************/
@@ -14,7 +14,7 @@ const VERSION = "0.1";
 // TODO: choisir le pan dynamiquement en fonction des agents qui sont sur scène pour éviter les situations où tout le monde est pané du meme côté.
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -20; //Volume en dB, max 0
+let VOL_FLUTE = -15; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
@@ -28,6 +28,15 @@ const PAN_BASSE = 0;
 // Pierre-Henry joue du XYLO
 let VOL_XYLO = -3; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
+// Tonton Flop joue comme il peut
+let VOL_TONTON = -10; //Volume en dB, max 0
+const PAN_TONTON= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
+// Josephine joue de l'orgue
+let VOL_JOSEPHINE = -25; //Volume en dB, max 0
+const PAN_JOSEPHINE= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
 
 //Normaliser volumes
 let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
@@ -45,7 +54,7 @@ const FATIGUE_FROM_PLAYING = 0.01; // By block (randomised)
 const FATIGUE_FROM_RESTING = -0.01; // By block (randomised)
 const FATIGUE_FROM_QUITTING_STAGE = 0.5; // By block (randomised)
 const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
-
+const RYTHMIC_ANIM_FRAME_DURATION = '24n';
 
 /*****************************************************************************/
 /*********************** ORCHESTRA SETTINGS **********************************/
@@ -53,18 +62,26 @@ const FATIGUE_FROM_ENTERING_STAGE = -0.5; // By block (randomised)
 
 const TEMPO = 120; //bpm
 
+const LOWEST_TONIC = "G3";
+const HIGHEST_TONIC = "G4";
+const POSSIBLE_MODES = ["major", "minor"]
+
 const PART_SIZE = 8; //steps
 const PARTS_PER_BLOCK = 4; //parts
 const BLOCKS_PER_CYCLE = 4; //blocks
 const BLOCK_SIZE = PART_SIZE*PARTS_PER_BLOCK; //steps
 const CYCLE_SIZE = BLOCK_SIZE*BLOCKS_PER_CYCLE; //steps
 
+// Cycle event probabilities
+const TURNOVER_PROBABILITY_EACH_CYCLES = 20;
+const STORE_CHORUS_PROBABILITY_EACH_CYCLES = 5;
+const PLAY_CHORUS_PROBABILITY_EACH_CYCLE = 40;
+const DO_NOTHING_PROBABILITY_EACH_CYCLE = 35;
 
-const TURNOVER_PROBABILITY_EACH_CYCLES = 0.10;
-
-// Event chances
-const NEW_BLOCK_PROBABILITY_EACH_BLOCK = 0.1
-const NEW_LEADER_BLOCK_PROBABILITY_EACH_BLOCK = 0.1
-const NEW_PART_PROBABILITY_EACH_BLOCK = 0.4
-const KEEP_BLOCK_PROBABILITY_EACH_BLOCK = 0.4
+// Block event probabilities
+const MODULATION_PROBABILITY_EACH_BLOCK = 10;
+const NEW_BLOCK_PROBABILITY_EACH_BLOCK = 10;
+const NEW_LEADER_BLOCK_PROBABILITY_EACH_BLOCK = 10;
+const NEW_PART_PROBABILITY_EACH_BLOCK = 35;
+const DO_NOTHING_PROBABILITY_EACH_BLOCK = 35;
 

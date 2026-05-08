@@ -3,21 +3,36 @@
 
 
 class Block {
-  constructor(A, B, C, structure,lines){
-    // Three parts of the block. Each part is an array of notes
-    // Parts can also be objects for multi-lines agents
+  constructor(A, B, C, structure, lines){
+    // Three parts of the block.
     this.A = A;
     this.B = B;
     this.C = C;
     // The structure is an array of part identifier (e.g. ["A", "B", "A", "B"])
     this.structure = structure;
     // Array of lines for multilines blocks
-    this.lines = lines
+    this.lines = lines || ['main'];
   }
+
+
+  extractPattern(attribute, partName, line){
+    let patterns = [];
+    let partsNames = partName ? [partName] : ['A', 'B', 'C'];
+    let lines = line ? [line] : this.lines;
+    partsNames.forEach(partName=>{
+      lines.forEach(line=>{
+        let steps = this[partName][line].getAttribute(attribute);
+        let pattern = Pattern.newFromSingleValues(steps);
+        patterns.push(pattern);
+      });
+    });
+    return Pattern.mergePatterns(patterns);
+  }
+
 
   // Return the full block in the form of a concatenatd array of notes
   getFullBlock(){
-    let parts = this.structure.map(part=>this[part]);
+    let parts = this.structure.map(partName=>this[partName]);
 
     if(this.lines){
       let fullBlock = {};
@@ -32,22 +47,28 @@ class Block {
     }
   }
 
-  // Return the note at given step
+
+  getStep(step){
+    let index = step % PART_SIZE;
+    let part = this.getPart(step);
+    let stepAttributes = {};
+    this.lines.forEach((line)=>{
+      stepAttributes[line] = part[line].getStep(index)
+    });
+    return stepAttributes;
+  }
+
   getNote(step){
-    let fullBlock = this.getFullBlock()
-    let index = step % BLOCK_SIZE;
-    if(this.lines){
-      let note = {};
-      this.lines.forEach((line)=>{
-        note[line] = fullBlock[line][index];
-      });
-      return note;
-    }
-    else {
-      return fullBlock[index];
-    }
+    let index = step % PART_SIZE;
 
+    let part = this.getPart(step);
 
+    let stepAttributes = {};
+    this.lines.forEach((line)=>{
+      let partStep = part[line].getStep(index);
+      stepAttributes[line] = partStep.play ? partStep.note : undefined;
+    });
+    return stepAttributes;
   }
 
   // Return the part index at a given step
@@ -56,8 +77,13 @@ class Block {
   };
 
   // Return the part identifier (e.g. "A") at a given step
-  getPart(step){
+  getPartName(step){
     return this.structure[this.getPartIndex(step)];
+  }
+
+  // Return the part at a given step
+  getPart(step){
+    return this[this.getPartName(step)];
   }
 
   // Return a simplified single line part to be used as a model
@@ -100,23 +126,55 @@ class Block {
     }
   }
 
+  modulateFromTo(origin, destination){
+
+    const simpl = Tonal.Note.simplify
+    const originDegrees = Tonal.Scale.degrees(origin);
+    const destinationDegrees = Tonal.Scale.degrees(destination);
+    const modulate = (note) => {
+      if(!note) return note;
+      // Looking for the note degree in origin scale from -24° degree to 24° degree
+      for(let i = -24; i <= 24; i++){
+        if(simpl(originDegrees(i)) == simpl(note)) return simpl(destinationDegrees(i));
+      }
+      // If nothing found, return tonic by default
+       // TODO: this should never be fired, what's happening ?'
+      // console.warn(`${note} not found in ${origin}`)
+      return destinationDegrees(1)
+    };
+    ['A','B','C'].forEach(partName=>{
+          if(this.lines){
+            this.lines.forEach(line=>{
+              let newNotes = this[partName][line].getAttribute('notes').map(modulate);
+              this[partName][line].setAttribute('notes', newNotes);
+            })
+          }
+          else{
+            let newNotes = this[partName].getAttribute('notes').map(modulate);
+            this[partName].setAttribute('notes', newNotes);
+          }
+    });
+
+  }
+
+
+
+    // Method for copying the block
+    copy(){
+        return new Block(this.A, this.B, this.C, this.structure, this.lines);
+    }
+
+
   // Return a human-readable HTML block representation
   repr(){
     let structureRepr = debugSequence(this.structure, this.getPartIndex(orchestra.step));
-    return `A: ${this.partRepr('A').outerHTML}<br/>
-            B: ${this.partRepr('B').outerHTML}<br/>
-            C: ${this.partRepr('C').outerHTML}<br/>
+    let partsRepr = (partName)=>debugMultiLines(this[partName], (line)=>line.repr(this.getPartName(orchestra.step)==partName?orchestra.step%PART_SIZE:null));
+    
+    return `A: ${partsRepr('A').outerHTML}<br/>
+            B: ${partsRepr('B').outerHTML}<br/>
+            C: ${partsRepr('C').outerHTML}<br/>
             STRUCTURE: ${structureRepr.outerHTML}`;
     }
 
-  partRepr(part){
-    let index = (this.getPart(orchestra.step)==part) ? orchestra.partStep : undefined;
-    if(this.lines){
-      return debugMultiLines(this[part], (line)=>{return debugSequence(line, index)})
-    }
-    else {
-      return debugSequence(this[part], index);
-    }
-  }
 }
 

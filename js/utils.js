@@ -38,6 +38,16 @@ function debugMultiLines(object, func){
   return container;
 }
 
+function debugBoolean(value){
+  let container = document.createElement('div');
+  container.classList.add('debug-boolean');
+  if(value) container.classList.add('true');
+  else container.classList.add('false');
+  container.innerHTML = value;
+  return container;
+}
+
+
 // Return a DOM object that represent a sequence
 // index is for marking the  current element in the sequence. Keep undefined if no current element.
 function debugSequence(array, index){
@@ -47,8 +57,14 @@ function debugSequence(array, index){
     let stepElement = document.createElement('div');
     stepElement.classList.add('step');
     if(index === i) stepElement.classList.add('current');
-    if(!step) stepElement.classList.add('empty');
-    step = roundIfNumber(step);
+    if(!step){
+	  stepElement.classList.add('empty');
+	  step = ' ';
+	}
+	else{
+		step = roundIfNumber(step);
+
+	}
     stepElement.innerHTML = step;
     container.appendChild(stepElement);
   })
@@ -66,6 +82,13 @@ function newButton(name, onClick){
     conainer.appendChild(element);
 }
 
+// Return a random organic value between 0 and 1 
+function perlinpinpin(a, b){
+  let result = (noise.simplex2(a, b)+1)*0.7-0.2;
+  if(result >= 1) return 2 - result;
+  else if(this.mood <= 0) return - result;
+  return result;
+}
 
 function logLogo(version){
 let style = "color: #f9ef8a ; background-color: #25272f; padding : 10px 20px; display:block; font-weight:bold"
