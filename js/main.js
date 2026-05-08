@@ -10,6 +10,7 @@ let jief;
 let liza;
 let crocodus;
 let pierrehenry;
+let tontonflop;
 
 // Main function
 async function main(){
@@ -39,6 +40,7 @@ async function main(){
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   pierrehenry = orchestra.addAgent(new PierreHenry());
+  tontonflop = orchestra.addAgent(new TontonFlop());
 
   await orchestra.loadInstruments();
   orchestra.init();
