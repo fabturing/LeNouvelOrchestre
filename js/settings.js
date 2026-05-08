@@ -29,6 +29,10 @@ const PAN_BASSE = 0;
 let VOL_XYLO = -3; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
+// Tonton Flop joue comme il peut
+let VOL_TONTON = -5; //Volume en dB, max 0
+const PAN_TONTON= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
+
 //Normaliser volumes
 let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
 VOL_FLUTE = VOL_FLUTE + maxvol;
