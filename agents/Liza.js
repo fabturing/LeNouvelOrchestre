@@ -16,12 +16,6 @@ class Liza extends PercAgent {
     })
     this.leavingTime = 4;
 
-    this.density = {
-      hihat:Math.random(),
-      kick:1,
-      snare:1,
-    }
-
     // moods
     this.addMood('light', 40);
     this.addMood('straight', 30);

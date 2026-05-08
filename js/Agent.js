@@ -143,10 +143,13 @@ class Agent {
     this.anim.setVisibility(this.onStage)
     this.aura += Math.random()/10;
     if(!this.moodIsLocked){
-      this.mood = (noise.simplex2(this.moodPosition,this.orchestra.blockCount*MOOD_SPEED)+1)/2;
+	
+	 this.mood = perlinpinpin(this.moodPosition, this.orchestra.blockCount*MOOD_SPEED);
+
     }
   }
 
+	
   // Default method for playing a note. Should be overrided.
   playNote(note, time){
     this.instrument.triggerAttackRelease(note, "1n", time);
@@ -185,14 +188,12 @@ class Agent {
 
   // getter for if the agent is playing this step
   get isPlaying(){
-    //agent is muted ?
     if(this.muted) return false;
-    // Orchestra not playing means not playing
+    if(!this.onStage) return false;
     if(!this.orchestra.playing) return false;
-    // no current block means not playing
     if(!this.playingBlock) return false;
+    
     let note = this.playingNote;
-    // no note means not playing
     if(!note) return false;
 
     for(let line in note){

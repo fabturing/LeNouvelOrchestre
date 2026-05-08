@@ -82,6 +82,13 @@ function newButton(name, onClick){
     conainer.appendChild(element);
 }
 
+// Return a random organic value between 0 and 1 
+function perlinpinpin(a, b){
+  let result = noise.simplex2(a, b)+1)*0.7-0.2;
+  if(result >= 1) return 2 - result;
+  else if(this.mood <= 0) return - result;
+  return result;
+}
 
 function logLogo(version){
 let style = "color: #f9ef8a ; background-color: #25272f; padding : 10px 20px; display:block; font-weight:bold"
