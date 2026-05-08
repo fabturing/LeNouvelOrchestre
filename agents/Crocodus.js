@@ -39,7 +39,7 @@ class Crocodus extends BassAgent {
   }
 
   playInstrument(note, duration, time, velocite, line){
-	note = Tonal.Note.transpose(note, "-8P");
+	//note = Tonal.Note.transpose(note, "-8P");
     super.playInstrument(note, duration, time, velocite, line);
 
   }

@@ -70,9 +70,34 @@ class Liza extends PercAgent {
     }
     return Pattern.newFromPercents(pattern);
   }
-  
+  /*
+   * 
+   * 
+   *     let notesWeightedPatterns = new WeightedArray();
+    notesWeightedPatterns.add(50, this.generateNotesPattern());
+    if(leader != this && leaderPatterns.notes){
+      notesWeightedPatterns.add(50, leaderPatterns.notes);
+    }
+    if(this.previousBlock){
+      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName, line));
+    }
+    let notesPattern = Pattern.mergePatternsWeightedArray(notesWeightedPatterns);
+    part.setAttributeFromPattern('notes', notesPattern);
+
+
+*/
+
   generatePart(partName, line){
 	let part = super.generatePart(partName, line);
+	
+	// Kick and snare parts are not influenced by leader
+	if(line == 'kick' || line == 'snare'){
+	  let playsWeightedPatterns = new WeightedArray();
+	  playsWeightedPatterns.add(50, this.generatePlaysPattern(line));
+      if(this.previousBlock) playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName, line));
+      let playsPattern = Pattern.mergePatternsWeightedArray(playsWeightedPatterns);
+	  part.setAttributeFromPattern('plays', playsPattern);
+	}
 	
     if(line == 'hihat'){
 	  if (this.hasEnteredSince(4)){
@@ -113,5 +138,12 @@ class Liza extends PercAgent {
 	}
 	super.playInstrument(note, duration, time, velocite, line);
   }
+  
+   generateInfluencePatterns(partName){
+	let patterns = super.generateInfluencePatterns(partName);
+	patterns.plays = this.currentBlock?.extractPattern('plays', partName, 'snare');
+    return patterns;
+  }
+
 }
 

@@ -279,7 +279,7 @@ class Agent {
       playsWeightedPatterns.add(50, leaderPatterns.plays);
     }
     if(this.previousBlock){
-      playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName));
+      playsWeightedPatterns.add(50, this.previousBlock.extractPattern('plays', partName, line));
     }
     let playsPattern = Pattern.mergePatternsWeightedArray(playsWeightedPatterns);
     part.setAttributeFromPattern('plays', playsPattern);
@@ -291,7 +291,7 @@ class Agent {
       notesWeightedPatterns.add(50, leaderPatterns.notes);
     }
     if(this.previousBlock){
-      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName));
+      notesWeightedPatterns.add(50, this.previousBlock.extractPattern('notes', partName, line));
     }
     let notesPattern = Pattern.mergePatternsWeightedArray(notesWeightedPatterns);
     part.setAttributeFromPattern('notes', notesPattern);
