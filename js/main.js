@@ -41,7 +41,7 @@ async function main(){
   liza = orchestra.addAgent(new Liza());
   crocodus = orchestra.addAgent(new Crocodus());
   pierrehenry = orchestra.addAgent(new PierreHenry());
-  //tontonflop = orchestra.addAgent(new TontonFlop());
+  tontonflop = orchestra.addAgent(new TontonFlop());
   josephine = orchestra.addAgent(new Josephine());
 
   await orchestra.loadInstruments();

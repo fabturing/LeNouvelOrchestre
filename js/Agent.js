@@ -251,9 +251,11 @@ class Agent {
       step.chord.forEach(degree=>{
         let chordNote = this.scale[(noteIndex+degree-1)%this.scale.length];
         step.rythm.forEach((subStep, i)=>{
-          let rythmLength = Tone.Time("8n") * step.rythmLength;
-          let subStepTime = time + i * (rythmLength / step.rythm.length);
-          this.playInstrument(chordNote, duration, subStepTime, velocite, line);
+		  if(subStep){  
+			let rythmLength = Tone.Time("8n") * step.rythmLength;
+			let subStepTime = time + i * (rythmLength / step.rythm.length);
+			this.playInstrument(chordNote, duration, subStepTime, velocite, line);
+		  }
         });
       });
     }
