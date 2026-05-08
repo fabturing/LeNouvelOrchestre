@@ -84,7 +84,7 @@ function newButton(name, onClick){
 
 // Return a random organic value between 0 and 1 
 function perlinpinpin(a, b){
-  let result = noise.simplex2(a, b)+1)*0.7-0.2;
+  let result = (noise.simplex2(a, b)+1)*0.7-0.2;
   if(result >= 1) return 2 - result;
   else if(this.mood <= 0) return - result;
   return result;

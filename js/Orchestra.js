@@ -77,24 +77,19 @@ class Orchestra {
     return (tonic || this.scaleTonic) + ' ' + (mode || this.scaleMode);
   }
 
-  modulate(degree, changeMode){
+  modulate(degree, mode){
     const originScaleDegrees = Tonal.Scale.degrees(this.getScaleName());
     let newTonic = originScaleDegrees(degree);
     
     // If newTonic too high or too low, go in the other direction
-    if(Tonal.Interval.distance(LOWEST_TONIC, newTonic).startsWith('-')
-    || Tonal.Interval.distance(newTonic, HIGHEST_TONIC).startsWith('-')){
-      newTonic = originScaleDegrees(-degree);
-    }
 
-    let newMode = this.scaleMode;
-    while(changeMode && newMode == this.scaleMode){
-      newMode = randomChoice(POSSIBLE_MODES);
-    }
-    
-    let newScaleName = this.getScaleName(newTonic, newMode);
+    while (Tonal.Note.octave(newTonic)<3) {
+      newTonic = Tonal.Note.transpose(newTonic, "8P")}
+    while (Tonal.Note.octave(newTonic)>3) {
+      newTonic = Tonal.Note.transpose(newTonic, "-8P")}
+    let newScaleName = this.getScaleName(newTonic, mode);
     this.agents.forEach(agent=>agent.modulateFromTo(this.getScaleName(), newScaleName));
-    this.setScale(newTonic, newMode);
+    this.setScale(newTonic, mode);
   }
 
 
@@ -193,7 +188,15 @@ class Orchestra {
 
     const modulation = ()=>{
       let originScale = this.getScaleName();
-      this.modulate(0, true);
+      if (this.scaleMode=='minor'){
+        if (Math.random()<0.5) {this.modulate(-1, 'major')}
+        else {this.modulate(-2, 'major')}
+        }
+      else if (this.scaleMode=='major'){
+        if (Math.random()<0.5) {this.modulate(2, 'minor')}
+        else {this.modulate(3, 'minor')}
+        }
+
       return `Modulate from ${originScale} to ${this.getScaleName()}`;
     }
 
