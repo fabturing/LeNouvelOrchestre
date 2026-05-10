@@ -15,9 +15,12 @@ class TontonFlop extends PercAgent {
     });
     //
   // moods
-    this.addMood('kick1', 30);
+
     this.addMood('mix1', 50);
-    this.addMood('clap1', 30);
+    this.addMood('clap1', 50);
+    this.addMood('mix2', 50);
+    this.addMood('mix3', 50);
+    this.addMood('mix4', 50);
     /*
      this.addMood('kick2', 30);
     this.addMood('mix2', 50);
@@ -56,9 +59,18 @@ generatePlaysPattern(line){
 	  if(line=='clap')      pattern = [0,80,80,0,80,80,0,80];
       else if(line=='kick')  pattern = [0,0,0,0,0,0,0,0];
     }
-    else if(this.moodIs('kick1')){
-	  if(line=='clap')      pattern = [0,0,0,0,0,0,0,0];
-      else if(line=='kick')  pattern = [95,0,0,90,0,0,90,0];
+    else if(this.moodIs('mix2')){
+	  if(line=='clap')      pattern = [0,80,80,0,80,80,0,80];
+      else if(line=='kick')  pattern = [95,0,0,0,90,0,0,0];
+    }
+
+    else if(this.moodIs('mix3')){
+	  if(line=='clap')      pattern = [0,0,0,0,80,0,0,0];
+      else if(line=='kick')  pattern = [95,0,80,0,90,0,80,0];
+    }
+    else if(this.moodIs('mix4')){
+	  if(line=='clap')      pattern = [0,80,80,0,80,80,0,80];
+      else if(line=='kick')  pattern = [95,0,80,0,90,0,80,0];
     }
 
     return Pattern.newFromPercents(pattern);
@@ -74,22 +86,18 @@ generatePlaysPattern(line){
     playInstrument(note, duration, time, velocite, line){
     let velo = velocite;
     let rand = Math.random();
-	if(line=='clap'){
-	  if (rand<0.25) {note = 'C4'}
-	  else if (rand<0.5) {note = 'D4'}
-	  else if (rand<0.75) {note = 'E4'}
-	  else {note = 'F4'}
-
-	  note = 'C4';
-	}
-	else if (line=='kick') {
-	  velo = velo/2;
-	  if (rand<0.25) {note = 'C3'}
-	  else if (rand<0.5) {note = 'D3'}
-	  else if (rand<0.75) {note = 'E3'}
-	  else {note = 'F3'}
-
-
+	  if(line=='clap'){
+	    if (rand<0.25) {note = 'C4'}
+	    else if (rand<0.5) {note = 'D4'}
+	    else if (rand<0.75) {note = 'E4'}
+	    else {note = 'F4'}
+	  }
+	  else if (line=='kick') {
+	    velo = velo/10;
+	    if (rand<0.25) {note = 'C3'}
+	    else if (rand<0.5) {note = 'D3'}
+	    else if (rand<0.75) {note = 'E3'}
+	    else {note = 'F3'}
 	}
 	super.playInstrument(note, duration, time, velocite, line);
   }
