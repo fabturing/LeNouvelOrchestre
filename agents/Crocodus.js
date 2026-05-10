@@ -16,7 +16,7 @@ class Crocodus extends BassAgent {
 
 
   async loadInstrument(){
-    const samples = {C4: "C2.mp3"};
+    const samples = {C4: "crocco_1.mp3"};
     await this.loadSampler(samples, "samples/basse/");
     this.setPan(PAN_BASSE);
     this.setVolume(VOL_BASSE);
@@ -39,7 +39,7 @@ class Crocodus extends BassAgent {
   }
 
   playInstrument(note, duration, time, velocite, line){
-	//note = Tonal.Note.transpose(note, "-8P");
+	//note = Tonal.Note.transpose(note, "-16P");
     super.playInstrument(note, duration, time, velocite, line);
 
   }

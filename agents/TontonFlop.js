@@ -26,8 +26,14 @@ class TontonFlop extends PercAgent {
   }
 
   async loadInstrument(){
-    const samples = {C3: "kick.mp3",
-                    C4: "clap.mp3"}
+    const samples = {C3: "pied1.mp3",
+                    D3: "pied2.mp3",
+                    E3: "pied3.mp3",
+                    F3: "pied4.mp3",
+                    C4: "clap1.mp3",
+                    D4: "clap2.mp3",
+                    E4: "clap3.mp3",
+                    F4: "clap4.mp3"}
     await this.loadSampler(samples, "samples/tonton/");
 
     this.setPan(PAN_TONTON);
@@ -66,11 +72,24 @@ generatePlaysPattern(line){
   
   
     playInstrument(note, duration, time, velocite, line){
+    let velo = velocite;
+    let rand = Math.random();
 	if(line=='clap'){
+	  if (rand<0.25) {note = 'C4'}
+	  else if (rand<0.5) {note = 'D4'}
+	  else if (rand<0.75) {note = 'E4'}
+	  else {note = 'F4'}
+
 	  note = 'C4';
 	}
 	else if (line=='kick') {
-	  note = 'C3';
+	  velo = velo/2;
+	  if (rand<0.25) {note = 'C3'}
+	  else if (rand<0.5) {note = 'D3'}
+	  else if (rand<0.75) {note = 'E3'}
+	  else {note = 'F3'}
+
+
 	}
 	super.playInstrument(note, duration, time, velocite, line);
   }
