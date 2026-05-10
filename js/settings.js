@@ -22,7 +22,7 @@ let VOL_DRUM = -15.5;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -22;
+let VOL_BASSE = -23;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
