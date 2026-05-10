@@ -120,7 +120,7 @@ class Orchestra {
 
     let agentsByFatigue = this.agents.sort((agentA, agentB)=>agentB.fatigue - agentA.fatigue);
     agentsByFatigue.forEach(agent=>agent.onStage = false);
-    agentsByFatigue.slice(-3).forEach(agent=>agent.onStage = true);
+    agentsByFatigue.slice(-4).forEach(agent=>agent.onStage = true);
 
 
     this.agents.forEach(agent=>{

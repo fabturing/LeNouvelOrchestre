@@ -93,13 +93,13 @@ generatePlaysPattern(line){
 	    else {note = 'F4'}
 	  }
 	  else if (line=='kick') {
-	    velo = velo/10;
+	    velo = velo/2;
 	    if (rand<0.25) {note = 'C3'}
 	    else if (rand<0.5) {note = 'D3'}
 	    else if (rand<0.75) {note = 'E3'}
 	    else {note = 'F3'}
 	}
-	super.playInstrument(note, duration, time, velocite, line);
+	super.playInstrument(note, duration, time, velo, line);
   }
 
 
