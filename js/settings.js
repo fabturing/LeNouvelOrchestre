@@ -14,35 +14,38 @@ const VERSION = "0.2";
 // TODO: choisir le pan dynamiquement en fonction des agents qui sont sur scène pour éviter les situations où tout le monde est pané du meme côté.
 
 // Jief joue de la FLUTE
-let VOL_FLUTE = -15; //Volume en dB, max 0
+let VOL_FLUTE = -9; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
-let VOL_DRUM = -16;
+let VOL_DRUM = -7;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
-let VOL_BASSE = -23;
+let VOL_BASSE = -15;
 const PAN_BASSE = 0;
 
 // Pierre-Henry joue du XYLO
-let VOL_XYLO = -3; //Volume en dB, max 0
+let VOL_XYLO = -8; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 // Tonton Flop joue comme il peut
-let VOL_TONTON = -7; //Volume en dB, max 0
+let VOL_TONTON = -9; //Volume en dB, max 0
 const PAN_TONTON= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 // Josephine joue de l'orgue
-let VOL_JOSEPHINE = -25; //Volume en dB, max 0
+let VOL_JOSEPHINE = -35; //Volume en dB, max 0
 const PAN_JOSEPHINE= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 
 //Normaliser volumes
-let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE));
+let maxvol = Math.abs(Math.max(VOL_FLUTE, VOL_DRUM, VOL_BASSE), VOL_JOSEPHINE, VOL_XYLO, VOL_TONTON);
 VOL_FLUTE = VOL_FLUTE + maxvol;
 VOL_DRUM = VOL_DRUM + maxvol;
 VOL_BASSE = VOL_BASSE + maxvol;
+VOL_JOSEPHINE = VOL_JOSEPHINE + maxvol;
+VOL_XYLO = VOL_XYLO + maxvol;
+VOL_TONTON = VOL_TONTON + maxvol;
 
 
 /*****************************************************************************/
