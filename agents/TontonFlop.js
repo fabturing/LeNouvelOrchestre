@@ -84,7 +84,7 @@ generatePlaysPattern(line){
   
   
     playInstrument(note, duration, time, velocite, line){
-    let velo = velocite;
+    let velo = velocite - Math.random()/3;
     let rand = Math.random();
 	  if(line=='clap'){
 	    if (rand<0.25) {note = 'C4'}
@@ -93,7 +93,7 @@ generatePlaysPattern(line){
 	    else {note = 'F4'}
 	  }
 	  else if (line=='kick') {
-	    velo = velo/2;
+	    velo = (velo- Math.random()/4)/2;
 	    if (rand<0.25) {note = 'C3'}
 	    else if (rand<0.5) {note = 'D3'}
 	    else if (rand<0.75) {note = 'E3'}
