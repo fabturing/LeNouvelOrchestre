@@ -18,7 +18,7 @@ let VOL_FLUTE = -15; //Volume en dB, max 0
 const PAN_FLUTE = -0.25; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 //Liza joue des DRUM
-let VOL_DRUM = -15.5;
+let VOL_DRUM = -16;
 const PAN_DRUM = 0;
 
 //Crocodus joue de la BASSE
@@ -30,7 +30,7 @@ let VOL_XYLO = -3; //Volume en dB, max 0
 const PAN_XYLO = 0.65; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 // Tonton Flop joue comme il peut
-let VOL_TONTON = -11; //Volume en dB, max 0
+let VOL_TONTON = -7; //Volume en dB, max 0
 const PAN_TONTON= 0; //The pan : 0 = Middle, -1 = hard left, 1 = hard right.
 
 // Josephine joue de l'orgue

@@ -93,7 +93,7 @@ generatePlaysPattern(line){
 	    else {note = 'F4'}
 	  }
 	  else if (line=='kick') {
-	    velo = (velo- Math.random()/4)/2;
+	    velo = (velo- Math.random()/4)*2/3;
 	    if (rand<0.25) {note = 'C3'}
 	    else if (rand<0.5) {note = 'D3'}
 	    else if (rand<0.75) {note = 'E3'}
