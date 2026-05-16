@@ -63,6 +63,7 @@ class Part {
     this.setAttribute(attribute, pattern.generate());
   }
   
+  // This method can be used to shorten the duration of notes that overlap with the next note. 
   removeDurationsOverlap(){
 	  this.setAttributeFromFunction('durations', (index, step)=>{
 		  let duration = Math.min(step.duration, PART_SIZE-index);
@@ -74,8 +75,26 @@ class Part {
 		  return duration;
 	  });
   }
+
+  // This method can be used to transpose all notes between lowest and highest notes 
+  transposeIntoRange(lowestNote, highestNote){
+	  const dist = (a,b) => Tonal.Interval.semitones(Tonal.Interval.distance(a, b));
+	  if(dist(lowestNote, highestNote)<12){
+		throw new Error('Highest note must be at least one octave higher than the lowest note.');
+	  }
+	  this.setAttributeFromFunction('notes', (index, step)=>{
+		  let note = step.note;
+		  while(dist(lowestNote, note) < 0){
+			  note = Tonal.Note.transpose(note, "8P");
+		  }
+		  while(dist(highestNote, note) > 0){
+			  note = Tonal.Note.transpose(note, "-8P");
+		  }
+		  return note;
+	  });
+  }
   
-    repr(index){
+  repr(index){
 	let stepDetails = (i) => {
 		let step = this.getStep(i);
 		let container = document.createElement('div');

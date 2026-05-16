@@ -5,9 +5,8 @@ class Crocodus extends BassAgent {
   constructor(){
     super("Crocodus", "un crocodile qui joue de la basse, personne ne l'aime", "crocodus");
     this.anim = new Anim('crocodus', true);
-
-
-        // moods
+    
+    // moods
     this.addMood('light', 50);
     this.addMood('normal', 50);
     this.addMood('rebond', 50);
@@ -72,6 +71,10 @@ class Crocodus extends BassAgent {
 		return play;
 	  });
 	}
+	
+	//TODO: Choisir la tessiture de crocodus ici :
+	part.transposeIntoRange('G3','G4');
+	
     return part;
   }
 }
