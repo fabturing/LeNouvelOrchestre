@@ -25,14 +25,15 @@ class Liza extends PercAgent {
 
 
   async loadInstrument(){
-    const samples = {
-            C3: "C3.mp3", //kick
-            C4: "C4.mp3", //snare
-            C5: "C5.mp3", //hihat
-        };
-    await this.loadSampler(samples, "samples/drum/");
+
+    await this.loadSampler({C3: "kick.mp3"}, "samples/liza/", 'kick');
+    await this.loadSampler({C3: "snare.mp3"}, "samples/liza/", 'snare');
+    await this.loadSampler({C3: "hihat.mp3"}, "samples/liza/", 'hihat');
+    
     this.setPan(PAN_DRUM);
-    this.setVolume(VOL_DRUM);
+    this.setVolume(VOL_DRUM * 3/4, 'kick');
+    this.setVolume(VOL_DRUM, 'snare');
+    this.setVolume(VOL_DRUM, 'hihat');
   }
 
 
@@ -127,16 +128,15 @@ class Liza extends PercAgent {
   playInstrument(note, duration, time, velocite, line){
 	if(line=='hihat'){
 	  velocite = velocite - Math.random()/3
-	  note = 'C5';
 	}
 	else if (line=='kick') {
-	  note = 'C3';
-	  velocite = velocite*3/4
+	  velocite = velocite - Math.random()/5;
 	}
 	else if (line=='snare') {
 	  velocite = velocite - Math.random()/4;
-	  note = 'C4';
 	}
+
+	note = 'C3';
 	super.playInstrument(note, duration, time, velocite, line);
   }
   

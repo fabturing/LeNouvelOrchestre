@@ -30,7 +30,7 @@ class Agent {
     this.moodIsLocked = false;
     
     this.currentBlock;
-    this.instrument = new Tone.Synth().toDestination();
+    this.instrument = {main:[]};
     this.debugBox = new DebugBox('agent-debug-box', this);
     this.scale;
 
@@ -39,14 +39,19 @@ class Agent {
   // Instrument methods
 
   // Return a promise that can be awaited for the sample to be loaded
-  loadSampler(urls, baseUrl){
+  loadSampler(urls, baseUrl, line){
+	line = line || 'main'
     return new Promise((resolve, reject)=>{
-      this.instrument = new Tone.Sampler({
+      let sampler = new Tone.Sampler({
       urls: urls,
       baseUrl: baseUrl,
         onload:()=>resolve(),
         onerror:()=>reject(),
       });
+      if(!(line in this.instrument)){
+		  this.instrument[line] = [];
+	  }
+      this.instrument[line].push(sampler);
     });
   }
 
@@ -54,19 +59,24 @@ class Agent {
   setPan(pan){
     //TODO: Make this method callable multiple times (for now it might only works for the first call)
     const panner = new Tone.Panner(pan).toDestination();
-    this.instrument.connect(panner)
+	for(let line in this.instrument){
+	    this.instrument[line].forEach(instr=>instr.connect(panner));
+	}
   }
 
   // Set the volume
-  setVolume(volume){
-    this.instrument.volume.value = volume ;
+  setVolume(volume, line){
+	line = line || 'main';
+    this.instrument[line].forEach(instr=>instr.volume.value = volume);
   }
 
   // Set a filter with a value
   setFilter(value, name){
     //TODO: Make this method callable multiple times (for now it might only works for the first call)
     const filter = new Tone.Filter(value, name)
-    this.instrument.connect(filter);
+    for(let line in this.instrument){
+	    this.instrument[line].forEach(instr=>instr.connect(filter));
+	}
   }
 
   setScale(notesArray){
@@ -149,12 +159,6 @@ class Agent {
     }
   }
 
-	
-  // Default method for playing a note. Should be overrided.
-  playNote(note, time){
-    this.instrument.triggerAttackRelease(note, "1n", time);
-  }
-
   // Default method for generating a structure. Should be overrided.
   generateStructure(){
     return ['A','A','A','A'];
@@ -230,7 +234,9 @@ class Agent {
   }
 
   playInstrument(note, duration, time, velocite, line){
-	this.instrument.triggerAttackRelease(note, duration, time, velocite);
+	
+	let instr = randomChoice(this.instrument[line]);
+	instr.triggerAttackRelease(note, duration, time, velocite);
     
     let delay = Tone.Time(RYTHMIC_ANIM_FRAME_DURATION);
 	Tone.Draw.schedule(()=>{this.playingLinesNotes[line].add(note)}, time);
@@ -239,7 +245,8 @@ class Agent {
   }
   
   animateStep(stepAttributes, time){
-  };
+		//TODO: C'est quoi cette methode ??? Suprimer???
+  }
   
   playStep(step, time, line){
     if(step.play){

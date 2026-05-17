@@ -13,8 +13,7 @@ class TontonFlop extends PercAgent {
   	  if(lines.length==0) return 'idle';
       return lines.join('-');
     });
-    //
-  // moods
+	// moods
 
     this.addMood('mix1', 50);
     this.addMood('clap1', 50);
@@ -29,15 +28,17 @@ class TontonFlop extends PercAgent {
   }
 
   async loadInstrument(){
-    const samples = {C3: "pied1.mp3",
-                    D3: "pied2.mp3",
-                    E3: "pied3.mp3",
-                    F3: "pied4.mp3",
-                    C4: "clap1.mp3",
-                    D4: "clap2.mp3",
-                    E4: "clap3.mp3",
-                    F4: "clap4.mp3"}
-    await this.loadSampler(samples, "samples/tonton/");
+
+
+    await this.loadSampler({C3: "pied1.mp3"}, "samples/tonton/", 'kick');
+    await this.loadSampler({C3: "pied2.mp3"}, "samples/tonton/", 'kick');
+    await this.loadSampler({C3: "pied3.mp3"}, "samples/tonton/", 'kick');
+    await this.loadSampler({C3: "pied4.mp3"}, "samples/tonton/", 'kick');
+    
+    await this.loadSampler({C3: "clap1.mp3"}, "samples/tonton/", 'clap');
+    await this.loadSampler({C3: "clap2.mp3"}, "samples/tonton/", 'clap');
+    await this.loadSampler({C3: "clap3.mp3"}, "samples/tonton/", 'clap');
+    await this.loadSampler({C3: "clap4.mp3"}, "samples/tonton/", 'clap');
 
     this.setPan(PAN_TONTON);
     this.setVolume(VOL_TONTON);
@@ -76,33 +77,16 @@ generatePlaysPattern(line){
     return Pattern.newFromPercents(pattern);
   }
 
-
   generatePart(partName, line){
 	let part = super.generatePart(partName, line);
 	return part;
   }
   
-  
     playInstrument(note, duration, time, velocite, line){
     let velo = velocite - Math.random()/3;
-    let rand = Math.random();
-	  if(line=='clap'){
-	    if (rand<0.25) {note = 'C4'}
-	    else if (rand<0.5) {note = 'D4'}
-	    else if (rand<0.75) {note = 'E4'}
-	    else {note = 'F4'}
-	  }
-	  else if (line=='kick') {
-	    velo = (velo- Math.random()/4)*2/3;
-	    if (rand<0.25) {note = 'C3'}
-	    else if (rand<0.5) {note = 'D3'}
-	    else if (rand<0.75) {note = 'E3'}
-	    else {note = 'F3'}
-	}
+	note = 'C3';
 	super.playInstrument(note, duration, time, velo, line);
   }
-
-
 }
 
 

@@ -15,8 +15,10 @@ class Crocodus extends BassAgent {
 
 
   async loadInstrument(){
-    const samples = {C4: "crocco_1.mp3"};
-    await this.loadSampler(samples, "samples/basse/");
+    await this.loadSampler({C4: "crocco_1.mp3"}, "samples/basse/");
+    await this.loadSampler({C4: "crocco_2.mp3"}, "samples/basse/");
+    //FIXME: ce sample est en wav le convertir en mp3
+    //await this.loadSampler({C4: "crocco_3.mp3"}, "samples/basse/");
     this.setPan(PAN_BASSE);
     this.setVolume(VOL_BASSE);
     this.setFilter(750, "lowpass");
@@ -72,8 +74,8 @@ class Crocodus extends BassAgent {
 	  });
 	}
 	
-	//TODO: Choisir la tessiture de crocodus ici :
-	part.transposeIntoRange('G3','G4');
+	// TODO: Choisir la tessiture de crocodus ici :
+	// part.transposeIntoRange('G3','G4');
 	
     return part;
   }
